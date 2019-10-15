@@ -1,0 +1,45 @@
+
+<html>
+    <head>
+    <script src="/script/jquery-3.4.1.min.js"></script>
+    <script src="/script/fabric.js"></script>
+      <link rel="stylesheet" href="/css/home.css">
+    </head>
+    <body>
+<nav>
+<p> <a href="/">MosaicTokyo</a> </p>             
+<ul>
+<li><a href="./contact">Contact</a></li>
+<li><a href="./login">Log-In</a></li>                         
+<li><a href="./addImage">Upload</a></li>
+<li><img id='logo' src="https://www.snopes.com/tachyon/2019/07/olympics-logo-fake-snopes.jpg?resize=100,50" alt=""></li>
+</ul>
+</li>
+</ul>
+</nav>
+    <canvas id="c"></canvas>
+    <p id="cordination"></p>
+    <p id="zoomlevel">0</p>
+    <button id="reset">RESET</button>
+<script>
+var jdata_location=[];
+var jdata_url=[]
+var jdata_imageurl=[]
+var jdata_scale=[]
+</script>
+          
+            {% for entry in data %}
+            <script>
+            jdata_location.push("{{entry.location}}");
+            jdata_url.push("{{entry.url}}");
+            jdata_imageurl.push("{{entry.image_url}}");
+            jdata_scale.push('{{entry.scaleAmount}}')
+         </script>
+               
+            {% endfor %}
+      <script src="/script/script.js"></script>
+    </body>
+    </html>
+    
+    
+    

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Add Image</title>
+    <link rel="stylesheet" href="/css/addImage.css">
+</head>
+<body>
+<nav>       
+<p> <a href="/">MosaicTokyo</a> </p>
+<ul>
+<li><a href="./contact">Contact</a></li>
+<li><a href="./login">Log-In</a></li>                        
+<li><a href="./addImage">Upload</a></li>
+<li><img id='logo' src="https://www.snopes.com/tachyon/2019/07/olympics-logo-fake-snopes.jpg?resize=100,50" alt=""></li>
+</ul>
+</li>
+</ul>
+</nav>
+<div id="addimage-area">
+
+           <span id="highlight"><h2>Add Image Here: </h2></span>
+        <form action="/addImage" method="POST">
+            <br>
+            <h3>Where do you want your image to be?(row 5 column 4 is 54):</h3>
+            <input  type="text" name="location" class="textbox">
+            <br>
+            <h3>Image_url:</h3>
+            <input type="text" name="image_url" class="textbox">
+            <br>
+            <h3>URL to your website(this website will open when users click on your image)</h3>
+            <input type="text" name="website_url" class="textbox">
+            <br>
+            <br>
+            <input type="submit" value="Submit" id="submit">
+        </form>
+</div>
+</body>
+</html>
