@@ -1,245 +1,45 @@
-
-var myWidth = 0, myHeight = 0;
-//this function determines window size and therefore, screen size
-function alertSize() {
-if( typeof( window.innerWidth ) == 'number' ) {
-  //Non-IE
-  myWidth = window.innerWidth;
-  myHeight = window.innerHeight;
-} else if( document.documentElement && ( document.documentElement.clientWidth || document.documentElement.clientHeight ) ) {
-  //IE 6+ in 'standards compliant mode'
-  myWidth = document.documentElement.clientWidth;
-  myHeight = document.documentElement.clientHeight;
-} else if( document.body && ( document.body.clientWidth || document.body.clientHeight ) ) {
-  //IE 4 compatible
-  myWidth = document.body.clientWidth;
-  myHeight = document.body.clientHeight;
-}
-console.log( 'Width = ' + myWidth );
-console.log( 'Height = ' + myHeight );
-}
-alertSize();
-document.getElementById('c').width=myWidth*.95;
-document.getElementById('c').height=myHeight*0.9; 
-/* 
-var elWidth = img.naturalWidth || img.width;
-var elHeight = img.naturalHeight || img.height;
-var scaleX = (canvas.scaleX || 1) * canvas.width / elWidth;
-var scaleY = (canvas.scaleY || 1) * canvas.height / elHeight;
-img.width = elWidth;
-img.height = elHeight;
-img.scaleX = scaleX /{zoom scale};
-img.scaleY = scaleY /{zoom scale};
-*/
-
+function loadlayertwo(posX,posY,layer){
+   var data= {
+      location:getCurrentCordinates(posX,posY,layer),
+      layer:layer
+      }
+      $.ajax({
+       url: "/update",
+       data: data,
+       type: "GET",
+      success: function(integer) {   
+         var received=JSON.parse(integer)
+         console.log("location sent: "+ data.x+ " | "+ data.y)
+         sendDataToLoad(received['img_location'],received['img_imgurl'],received['img_scale'],received['img_level']);
+          },
+   });
+      }
+// sendDataToLoad(jdata_location,jdata_imageurl,jdata_scale,jdata_level);
+setCanvasSize();
 var canvas = new fabric.Canvas('c');
 var zoom;
 var zoomlevel=1;
-var layerone=[];
-var array=[];//layer2
-var layerthreearray=[];
-var layerfourarray=[];
-//layer one
-function loadimg(){
-fabric.Image.fromURL('https://cdn.pixabay.com/photo/2018/08/31/18/21/fantasy-3645269_960_720.jpg', function(img){
-  
-var elWidth = img.naturalWidth || img.width;
-var elHeight = img.naturalHeight || img.height;
-var scaleX = ((canvas.scaleX || 1) * canvas.width / elWidth);
-var scaleY = ((canvas.scaleY || 1) * canvas.height / elHeight);
-img.width = elWidth;
-img.height = elHeight;
-img.scaleX = scaleX;
-img.scaleY = scaleY;
-   img.hasBorders= false,
-      img.hasControls= false,
-      img.hasRotatingPoint= false; 
-       img.selectable=false;
-addtoarray_layer1(img);
- canvas.add(img);
-}); 
-}
-//end of layer one
-
-
-//layer two
-fabric.Image.fromURL('https://www.tokkoro.com/picsup/1434470-landscape.jpg', function(img){
-
-img.opacity=0;
-var elWidth = img.naturalWidth || img.width;
-var elHeight = img.naturalHeight || img.height;
-var scaleX = ((canvas.scaleX || 1) * canvas.width / elWidth)/2;
-var scaleY = ((canvas.scaleY || 1) * canvas.height / elHeight)/2;
-img.width = elWidth;
-img.height = elHeight;
-img.scaleX = scaleX;
-img.scaleY = scaleY;
-img.top=0;
-img.left=0;
-     img.hasBorders= false,
-        img.hasControls= false,
-        img.hasRotatingPoint= false; 
-   img.selectable=false;
-
-addtoarray_layer2(img);
-canvas.add(img);
-});
-
-fabric.Image.fromURL('https://www.tokkoro.com/picsup/1434470-landscape.jpg', function(img){
-img.opacity=0.0;
- var elWidth = img.naturalWidth || img.width;
-var elHeight = img.naturalHeight || img.height;
-var scaleX = ((canvas.scaleX || 1) * canvas.width / elWidth)/2;
-var scaleY = ((canvas.scaleY || 1) * canvas.height / elHeight)/2;
-img.width = elWidth;
-img.height = elHeight;
-img.scaleX = scaleX;
-img.scaleY = scaleY;
-  img.top=canvas.getHeight()/2
-     img.hasBorders= false,
-        img.hasControls= false,
-        img.hasRotatingPoint= false; 
-   img.selectable=false;
-addtoarray_layer2(img);
-canvas.add(img);
-});
-
-fabric.Image.fromURL('https://www.tokkoro.com/picsup/1434470-landscape.jpg', function(img){
-img.opacity=0.0;
-var elWidth = img.naturalWidth || img.width;
-var elHeight = img.naturalHeight || img.height;
-var scaleX = ((canvas.scaleX || 1) * canvas.width / elWidth)/2;
-var scaleY = ((canvas.scaleY || 1) * canvas.height / elHeight)/2;
-img.width = elWidth;
-img.height = elHeight;
-img.scaleX = scaleX;
-img.scaleY = scaleY;
-  img.top=canvas.getHeight()/2;
-  img.left=canvas.getWidth()/2;
-     img.hasBorders= false,
-        img.hasControls= false,
-        img.hasRotatingPoint= false; 
-   img.selectable=false;
-addtoarray_layer2(img);
-canvas.add(img);
-});
-fabric.Image.fromURL('https://www.tokkoro.com/picsup/1434470-landscape.jpg', function(img){
-
-img.opacity=0.0;
- var elWidth = img.naturalWidth || img.width;
-var elHeight = img.naturalHeight || img.height;
-var scaleX = ((canvas.scaleX || 1) * canvas.width / elWidth)/2;
-var scaleY = ((canvas.scaleY || 1) * canvas.height / elHeight)/2;
-img.width = elWidth;
-img.height = elHeight;
-img.scaleX = scaleX;
-img.scaleY = scaleY;
-   img.left=canvas.getWidth()/2;
-     img.hasBorders= false,
-        img.hasControls= false,
-        img.hasRotatingPoint= false; 
-   img.selectable=false;
-addtoarray_layer2(img);
-  canvas.add(img);
-});
-//end of layer2
-
-//layer3
-fabric.Image.fromURL('https://www.tokkoro.com/picsup/1434470-landscape.jpg', function(img){
-img.opacity=0;//transpaent
-var elWidth = img.naturalWidth || img.width;
-var elHeight = img.naturalHeight || img.height;
-var scaleX = ((canvas.scaleX || 1) * canvas.width / elWidth)/4;
-var scaleY = ((canvas.scaleY || 1) * canvas.height / elHeight)/4;
-img.width = elWidth;
-img.height = elHeight;
-img.scaleX = scaleX;
-img.scaleY = scaleY;
-img.top=0,
-img.left=0,
-img.hasBorders= false,
-img.hasControls= false,
-img.hasRotatingPoint= false; 
-img.selectable=false;
-addtoarray_layer3(img);
-canvas.add(img);
-});
-
-fabric.Image.fromURL('https://www.tokkoro.com/picsup/1434470-landscape.jpg', function(img){
-img.opacity=0;//transpaent
-var elWidth = img.naturalWidth || img.width;
-var elHeight = img.naturalHeight || img.height;
-var scaleX = ((canvas.scaleX || 1) * canvas.width / elWidth)/4;
-var scaleY = ((canvas.scaleY || 1) * canvas.height / elHeight)/4;
-img.width = elWidth;
-img.height = elHeight;
-img.scaleX = scaleX;
-img.scaleY = scaleY;
-img.top=canvas.height/4,
-img.left=canvas.getWidth()/4,
-img.hasBorders= false,
-img.hasControls= false,
-img.hasRotatingPoint= false; 
-img.selectable=false;
-addtoarray_layer3(img);
-canvas.add(img);
-});
-
-fabric.Image.fromURL('https://www.tokkoro.com/picsup/1434470-landscape.jpg', function(img){
-
-img.opacity=0;//transpaent
-var elWidth = img.naturalWidth || img.width;
-var elHeight = img.naturalHeight || img.height;
-var scaleX = ((canvas.scaleX || 1) * canvas.width / elWidth)/4;
-var scaleY = ((canvas.scaleY || 1) * canvas.height / elHeight)/4;
-img.width = elWidth;
-img.height = elHeight;
-img.scaleX = scaleX;
-img.scaleY = scaleY;
-img.top=canvas.height/4,
-img.left=0,
-img.hasBorders= false,
-img.hasControls= false,
-img.hasRotatingPoint= false; 
-img.selectable=false;
-addtoarray_layer3(img);
-canvas.add(img);
-});
-
-fabric.Image.fromURL('https://www.tokkoro.com/picsup/1434470-landscape.jpg', function(img){
-
-img.opacity=0;//transpaent
-var elWidth = img.naturalWidth || img.width;
-var elHeight = img.naturalHeight || img.height;
-var scaleX = ((canvas.scaleX || 1) * canvas.width / elWidth)/4;
-var scaleY = ((canvas.scaleY || 1) * canvas.height / elHeight)/4;
-img.width = elWidth;
-img.height = elHeight;
-img.scaleX = scaleX;
-img.scaleY = scaleY;
-img.top=0,
-img.left=canvas.width/4,
-img.hasBorders= false,
-img.hasControls= false,
-img.hasRotatingPoint= false; 
-img.selectable=false;
-addtoarray_layer3(img);
-canvas.add(img);
-});
-//end of layer 3
-
-//layer 4
-function loadlayer4(){
-for(var i=0;i<jdata_location.length;i++){
-   var locationx=locationforcanvas(jdata_location[i],4).x;
-   var locationy=locationforcanvas(jdata_location[i],4).y;
-   var scaleamount=jdata_scale[0];
-  
-loadlayer4image(i,scaleamount,locationx,locationy);
+var layeronearray=[];
+var layertwoarray=[];
+var perpixelX=canvas.width/1600;
+var perpixelY=canvas.height/1200;
+var posX;
+var posY;
+function sendDataToLoad(img_location,img_imgurl,img_scale,img_level){
+   
+for(var i=0;i<img_location.length;i++){
+   var tolocation=locationforcanvas(img_location[i],img_scale[i])
+   var locationx=tolocation.x;
+   var locationy=tolocation.y;
+   var scaleamount=img_scale[i];  
+   var level=img_level[i];
+   var imageurl= img_imgurl[i];
+loadimage(i,scaleamount,locationx,locationy,level,imageurl);
 }
 }
-function loadlayer4image(i,scaleamount,locationx,locationy){
-   fabric.Image.fromURL(jdata_imageurl[i], function(img){
+function loadimage(i,scaleamount,locationx,locationy,level,img_imgurl){
+   
+   fabric.Image.fromURL(img_imgurl, function(img){
       img.opacity=1;
       var elWidth = img.naturalWidth || img.width;
       var elHeight = img.naturalHeight || img.height;
@@ -255,87 +55,85 @@ function loadlayer4image(i,scaleamount,locationx,locationy){
       img.hasControls= false,
       img.hasRotatingPoint= false; 
       img.selectable=false;
-      addtoarray_layer4(img);
+      addtoarray(img,level);
       canvas.add(img);
    });
 }
-function locationforcanvas(location,level){
-   var y = Math.floor(location/(level*2));
-   var x= location%8;
+function locationforcanvas(location,scaleamount){
+   var x= location%scaleamount;
+   var y = Math.floor((location-x)/scaleamount);
    if(x==0){
    y-=1
-   x=8
+   if(scaleamount==16){
+      x=16 
+   }
+   if(scaleamount==80){
+      x=80
+   }// And soo on, 80,and final scale
    }
    return {
    x:x,
    y:y
    }
 }
-loadimg();
+
 
 
 function changelayers(){
-//layer1
-if(zoomlevel<5){
-
-for(var i=0;i<array.length;i++){
-array[i].opacity=0;
-}
-layerone[0].opacity=1;
-}
-//layer 2
-if(zoomlevel>=5&&zoomlevel<10){
-
-for(var i=0;i<layerthreearray.length;i++){
-layerthreearray[i].opacity=0; //sets layer 3 invisable
-}
-
-for(var i=0;i<array.length;i++){
-array[i].opacity=1;}//sets layer 2 visable
-layerone[0].opacity=0;//sets layer 1 invisable
-}
-
-//layer 3
-if(zoomlevel>=10 &&zoomlevel<=19){
-for(var i=0;i<array.length;i++){
-array[i].opacity=0;
-}
-for(var i=0;i<layerthreearray.length;i++){
-layerthreearray[i].opacity=1;
-}
-for(var i=0;i<layerfourarray.length;i++){
-   layerfourarray[i].opacity=0;
-   }
-}
-//layer 4
-if(zoomlevel==20){
-   for(var i=0;i<layerfourarray.length;i++){
-      layerfourarray[i].opacity=1;
+if(zoomlevel>300){
+   for(var i=0;i<layeronearray.length;i++){
+      layeronearray[i].opacity=0;
       }
-      for(var i=0;i<layerthreearray.length;i++){
-   layerthreearray[i].opacity=0;
+   for(var i=0;i<layertwoarray.length;i++){
+         layertwoarray[i].opacity=1; 
+      }
+     
+}
+if(zoomlevel<=300){
+   for(var i=0;i<layeronearray.length;i++){
+      layeronearray[i].opacity=1;
+      }
+      if(layertwoarray.length!=0){
+      for(var i=0;i<layertwoarray.length;i++){
+         layertwoarray[i].opacity=0;
+         }
+      }
+}
+}
+
+function addtoarray(image,level){
+   if(level==1){
+       layeronearray.push(image);
    }
-}
-
-}
-
-function addtoarray_layer1(image){
-layerone.push(image);
-}
-function addtoarray_layer2(image){
-array.push(image);
-}
-function addtoarray_layer3(image){
-layerthreearray.push(image);
-}
-function addtoarray_layer4(image){
-   layerfourarray.push(image);
+   if(level==2){
+      layertwoarray.push(image);
+   }
+  
 }
 
 
 
 
 
+
+function getCurrentCordinates(posX,posY,level){
+ if(level==1){
+    widthPerImage=100*perpixelX
+    heightPerImage=100*perpixelY
+   x=Math.floor((posX/widthPerImage)%16)+1;//x is fine
+   y=Math.floor(posY/heightPerImage);
+   
+   return y*16+x;
+ }
+ if(level==2){
+   widthPerImage=20*perpixelX
+   heightPerImage=15*perpixelY
+  x=Math.floor((posX/widthPerImage)%80)+1;//x is fine
+  y=Math.floor(posY/heightPerImage);
+  return y*80+x;
+}
+   
+}
 
 //MOVEMENTS AND BUTTONS AND INFOMATION DISPLAYS
 
@@ -377,8 +175,8 @@ getzoomlevel(delta);
 zoom = canvas.getZoom();
 zoom = zoom + delta/200;
 
-if (zoom > 20){ 
-zoom = 20;}
+if (zoom > 1000){ 
+zoom = 1000;}
 if (zoom < .7){
 zoomlevel-=1;
 zoom = 0.7;}
@@ -386,11 +184,10 @@ canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
 opt.e.preventDefault();
 opt.e.stopPropagation();
 document.getElementById('zoomlevel').innerHTML="zoomlevel "+ zoomlevel;
-if(zoomlevel==20){
-   loadlayer4();
+if(zoomlevel==3){
+   loadlayertwo(getCurrentCordinates(posX,posY,2),2);
 }
 changelayers();
-
 });
 
 canvas.on('mouse:down', function(opt) {
@@ -416,9 +213,10 @@ if (this.isDragging) {
 }  
 ////gets mouse cordinates
 var pointer = canvas.getPointer(event.e);
-var posX = pointer.x;
-var posY = pointer.y;
-document.getElementById('cordination').innerHTML=posX+" | "+posY;
+posX = pointer.x;
+posY = pointer.y;
+document.getElementById('cordination').innerHTML=posX+ "|" +posY;
+document.getElementById('location').innerHTML= 'location for layer 1: '+getCurrentCordinates(posX,posY,1)+ '  |  '+'location for layer2: '+getCurrentCordinates(posX,posY,2),'  |  '+'location for layer3:'+getCurrentCordinates(posX,posY,3);
 ///
 });
 canvas.on('mouse:up', function(opt) {
@@ -435,10 +233,29 @@ zoomlevel=0;
 zoomlevel+=1;
 
 }
-
 }
 
-
+//this function determines window size and therefore, screen size
+function setCanvasSize() {
+   var myWidth = 0, myHeight = 0;
+if( typeof( window.innerWidth ) == 'number' ) {
+  //Non-IE
+  myWidth = window.innerWidth;
+  myHeight = window.innerHeight;
+} else if( document.documentElement && ( document.documentElement.clientWidth || document.documentElement.clientHeight ) ) {
+  //IE 6+ in 'standards compliant mode'
+  myWidth = document.documentElement.clientWidth;
+  myHeight = document.documentElement.clientHeight;
+} else if( document.body && ( document.body.clientWidth || document.body.clientHeight ) ) {
+  //IE 4 compatible
+  myWidth = document.body.clientWidth;
+  myHeight = document.body.clientHeight;
+}
+document.getElementById('c').width=1600;
+document.getElementById('c').height=1200;
+// document.getElementById('c').width=myWidth*.95;
+// document.getElementById('c').height=myHeight*0.8; 
+}
 
 
 

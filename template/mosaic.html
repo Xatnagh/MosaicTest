@@ -7,7 +7,12 @@
     </head>
     <body>
 <nav>
-<p> <a href="/">MosaicTokyo</a> </p>             
+    <p id="cordination" >x | y</p>
+    <p id=location style="display: inline-block; left: 20%;">location for layer 1:  | location for layer2: |location for layer3: </p>
+    <p id="zoomlevel">0</p>
+    
+    <button id="reset">RESET</button>
+<!-- <p> <a href="/">MosaicTokyo</a> </p>             
 <ul>
 <li><a href="./contact">Contact</a></li>
 <li><a href="./login">Log-In</a></li>                         
@@ -16,27 +21,28 @@
 </ul>
 </li>
 </ul>
-</nav>
+</nav> -->
     <canvas id="c"></canvas>
-    <p id="cordination"></p>
-    <p id="zoomlevel">0</p>
-    <button id="reset">RESET</button>
+    
 <script>
 var jdata_location=[];
-var jdata_url=[]
-var jdata_imageurl=[]
-var jdata_scale=[]
+var jdata_url=[];
+var jdata_imageurl=[];
+var jdata_scale=[];
+var jdata_level=[];
 </script>
-          
+            
             {% for entry in data %}
-            <script>
+            <script>    
             jdata_location.push("{{entry.location}}");
             jdata_url.push("{{entry.url}}");
             jdata_imageurl.push("{{entry.image_url}}");
+            jdata_level.push('{{entry.level}}')
             jdata_scale.push('{{entry.scaleAmount}}')
-         </script>
-               
+            
+         </script>              
             {% endfor %}
+            
       <script src="/script/script.js"></script>
     </body>
     </html>
