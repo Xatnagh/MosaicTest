@@ -8,6 +8,9 @@ class ImageInfo(ndb.Model):
     url= ndb.StringProperty(required=False,default= 'https://www.reddit.com/r/dankmemes/')
     description=ndb.StringProperty(required=False,default="Null")
 ANCESTORY_KEY = ndb.Key("ImageInfo","ImageInfo_root")
+
+alreadyloadedlist=[] 
+alreadyloadedlist_layer3=[] 
 def getImages(i):
     return ImageInfo.query(ImageInfo.level==2,ImageInfo.location==i).fetch()
 def fetchNearByImages(location,layer): 
@@ -17,12 +20,14 @@ def fetchNearByImages(location,layer):
     img_level=[]
     if(layer==2):
         unitsinY=80
-    else:
+        maxindex=6400
+    if(layer==3):
         unitsinY=1200
+        maxindex=1440000
     #this part returned the list of near by units
-    list=[]   
+    list=[] 
     imagelist=[]
-    for i in range(location-unitsinY-3,location-unitsinY+4):
+    for i in range(location-unitsinY*3-5,location-unitsinY*3+6):
         list.append(i)
         list.append(i+unitsinY)
         list.append(i+unitsinY*2)
@@ -30,8 +35,20 @@ def fetchNearByImages(location,layer):
         list.append(i+unitsinY*4)
         list.append(i+unitsinY*5)
         list.append(i+unitsinY*6)
+        list.append(i+unitsinY*7)
+        list.append(i+unitsinY*8)
+        list.append(i+unitsinY*9)    
     list.sort() #works
-    list=[x for x in list if x >= 1 or x>6400 ]             
+    list=[x for x in list if x >= 1]   #filters out out of bround locations
+    list=[x for x in list if x <= maxindex] #filters out out of bround locations
+    if(layer==2):
+        list= set(list) - set(alreadyloadedlist) #remove items that are already loaded
+        alreadyloadedlist.extend(list) #add list to already loaded since it will be sent to load
+    
+    if(layer==3):
+        list= set(list) - set(alreadyloadedlist_layer3) 
+        alreadyloadedlist_layer3.extend(list)
+        console.log(list)
     for i in list:        
         imagelist.append(getImages(i))  
     for i in imagelist:

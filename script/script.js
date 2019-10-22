@@ -1,6 +1,6 @@
-function loadlayertwo(posX,posY,layer){
+function loadlayer(location,layer){
    var data= {
-      location:getCurrentCordinates(posX,posY,layer),
+      location:location,
       layer:layer
       }
       $.ajax({
@@ -9,12 +9,15 @@ function loadlayertwo(posX,posY,layer){
        type: "GET",
       success: function(integer) {   
          var received=JSON.parse(integer)
-         console.log("location sent: "+ data.x+ " | "+ data.y)
+         // console.log(integer)
+         console.log("location sent: "+ data.location+ " | "+ data.layer)
          sendDataToLoad(received['img_location'],received['img_imgurl'],received['img_scale'],received['img_level']);
+         lastloadx=posX;
+         lastloady=posY;
           },
    });
       }
-// sendDataToLoad(jdata_location,jdata_imageurl,jdata_scale,jdata_level);
+sendDataToLoad(jdata_location,jdata_imageurl,jdata_scale,jdata_level);
 setCanvasSize();
 var canvas = new fabric.Canvas('c');
 var zoom;
@@ -25,6 +28,10 @@ var perpixelX=canvas.width/1600;
 var perpixelY=canvas.height/1200;
 var posX;
 var posY;
+var lastdragpointx;
+var lastdragpointy;
+var lastloadx;
+var lastloady;
 function sendDataToLoad(img_location,img_imgurl,img_scale,img_level){
    
 for(var i=0;i<img_location.length;i++){
@@ -80,7 +87,7 @@ function locationforcanvas(location,scaleamount){
 
 
 function changelayers(){
-if(zoomlevel>300){
+if(zoomlevel>120){
    for(var i=0;i<layeronearray.length;i++){
       layeronearray[i].opacity=0;
       }
@@ -89,7 +96,7 @@ if(zoomlevel>300){
       }
      
 }
-if(zoomlevel<=300){
+if(zoomlevel<=120){
    for(var i=0;i<layeronearray.length;i++){
       layeronearray[i].opacity=1;
       }
@@ -108,13 +115,10 @@ function addtoarray(image,level){
    if(level==2){
       layertwoarray.push(image);
    }
-  
+  if(level==3){
+     layerthreearray.push(image)
+  }
 }
-
-
-
-
-
 
 function getCurrentCordinates(posX,posY,level){
  if(level==1){
@@ -132,7 +136,13 @@ function getCurrentCordinates(posX,posY,level){
   y=Math.floor(posY/heightPerImage);
   return y*80+x;
 }
-   
+   if(level==3){
+   widthPerImage=perpixelX
+   heightPerImage=perpixelY
+  x=Math.floor((posX/widthPerImage)%1200)+1;//x is fine
+  y=Math.floor(posY/heightPerImage);
+  return y*1200+x;
+   }
 }
 
 //MOVEMENTS AND BUTTONS AND INFOMATION DISPLAYS
@@ -184,23 +194,26 @@ canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
 opt.e.preventDefault();
 opt.e.stopPropagation();
 document.getElementById('zoomlevel').innerHTML="zoomlevel "+ zoomlevel;
-if(zoomlevel==3){
-   loadlayertwo(getCurrentCordinates(posX,posY,2),2);
+if(zoomlevel==120){
+   loadlayer(getCurrentCordinates(posX,posY,2),2);
+}
+if(zoomlevel==200){
+   loadlayer(getCurrentCordinates(posX,posY,3),3)
 }
 changelayers();
 });
 
+
 canvas.on('mouse:down', function(opt) {
 var evt = opt.e;
-if (evt.altKey === true) {
  this.isDragging = true;
- this.selection = false;
  this.lastPosX = evt.clientX;
  this.lastPosY = evt.clientY;
+if(zoomlevel>80&&this.isDragging){
+   lastdragpointx=posX;
+   lastdragpointy=posY;
 }
-
 });
-
 canvas.on('mouse:move', function(opt) {
 if (this.isDragging) {
  var e = opt.e;
@@ -209,14 +222,24 @@ if (this.isDragging) {
  this.requestRenderAll();
  this.lastPosX = e.clientX;
  this.lastPosY = e.clientY;
-
 }  
+/// loads images at second layer
+if(zoomlevel>80&&this.isDragging){
+   differenceinX=Math.abs(lastloadx-lastdragpointx);
+   differenceinY=Math.abs(lastloady-lastdragpointy);
+   lastloadx=lastdragpointx;
+   lastloady=lastdragpointy;
+   if(differenceinX>10||differenceinY>10){
+      loadlayer(getCurrentCordinates(posX,posY,2),2);
+   }
+}
+///
 ////gets mouse cordinates
 var pointer = canvas.getPointer(event.e);
 posX = pointer.x;
 posY = pointer.y;
 document.getElementById('cordination').innerHTML=posX+ "|" +posY;
-document.getElementById('location').innerHTML= 'location for layer 1: '+getCurrentCordinates(posX,posY,1)+ '  |  '+'location for layer2: '+getCurrentCordinates(posX,posY,2),'  |  '+'location for layer3:'+getCurrentCordinates(posX,posY,3);
+document.getElementById('location').innerHTML= 'location for layer 1: '+getCurrentCordinates(posX,posY,1)+ '  |  '+'location for layer2: '+getCurrentCordinates(posX,posY,2)+'  |  '+'location for layer3:'+getCurrentCordinates(posX,posY,3);
 ///
 });
 canvas.on('mouse:up', function(opt) {
@@ -231,8 +254,8 @@ zoomlevel=0;
 }
 }else{
 zoomlevel+=1;
-
 }
+
 }
 
 //this function determines window size and therefore, screen size

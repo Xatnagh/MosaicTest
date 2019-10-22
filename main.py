@@ -7,6 +7,7 @@ import jinja2
 from database import defaultdatas
 from Images import ImageInfo, fetchNearByImages
 from test import test
+from database import loadlayer3
 
 the_jinja_env = jinja2.Environment(loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
 extensions=['jinja2.ext.autoescape'],autoescape=True)
@@ -28,6 +29,7 @@ class AddImage(webapp2.RequestHandler):
 class loadImages(webapp2.RequestHandler):
     def get(self):  
         defaultdatas()
+        loadlayer3()
         homepage = the_jinja_env.get_template('/template/mosaic.html')
         self.response.write(homepage.render({"data":getData()}))
 class update(webapp2.RequestHandler):
