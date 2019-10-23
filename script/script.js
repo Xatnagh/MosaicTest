@@ -9,9 +9,10 @@ function loadlayer(location,layer){
        type: "GET",
       success: function(integer) {   
          var received=JSON.parse(integer)
-         // console.log(integer)
+        console.log(received['img_location'])
          console.log("location sent: "+ data.location+ " | "+ data.layer)
          sendDataToLoad(received['img_location'],received['img_imgurl'],received['img_scale'],received['img_level']);
+
          lastloadx=posX;
          lastloady=posY;
           },
@@ -34,18 +35,17 @@ var lastdragpointy;
 var lastloadx;
 var lastloady;
 function sendDataToLoad(img_location,img_imgurl,img_scale,img_level){
-   
-for(var i=0;i<img_location.length;i++){
-   var tolocation=locationforcanvas(img_location[i],img_scale[i])
-   var locationx=tolocation.x;
-   var locationy=tolocation.y;
-   var scaleamount=img_scale[i];  
-   var level=img_level[i];
-   var imageurl= img_imgurl[i];
-loadimage(i,scaleamount,locationx,locationy,level,imageurl);
+   for(var i=0;i<img_location.length;i++){
+      var tolocation=locationforcanvas(img_location[i],img_scale[i])
+      var locationx=tolocation.x;
+      var locationy=tolocation.y;
+      var scaleamount=img_scale[i];  
+      var level=img_level[i];
+      var imageurl= img_imgurl[i];
+   loadimage(scaleamount,locationx,locationy,level,imageurl);
+   }
 }
-}
-function loadimage(i,scaleamount,locationx,locationy,level,img_imgurl){
+function loadimage(scaleamount,locationx,locationy,level,img_imgurl){
    
    fabric.Image.fromURL(img_imgurl, function(img){
       img.opacity=1;
@@ -97,16 +97,16 @@ if(zoomlevel>120){
       }
      
 }
-if(zoomlevel<=120){
-   for(var i=0;i<layeronearray.length;i++){
-      layeronearray[i].opacity=1;
-      }
-      if(layertwoarray.length!=0){
-      for(var i=0;i<layertwoarray.length;i++){
-         layertwoarray[i].opacity=0;
-         }
-      }
-}
+// if(zoomlevel<=120){
+//    for(var i=0;i<layeronearray.length;i++){
+//       layeronearray[i].opacity=1;
+//       }
+//       if(layertwoarray.length!=0){
+//       for(var i=0;i<layertwoarray.length;i++){
+//          layertwoarray[i].opacity=0;
+//          }
+//       }
+// }
 }
 
 function addtoarray(image,level){
@@ -123,15 +123,15 @@ function addtoarray(image,level){
 
 function getCurrentCordinates(posX,posY,level){
  if(level==1){
-    widthPerImage=100*perpixelX
-    heightPerImage=100*perpixelY
+    widthPerImage=75*perpixelX
+    heightPerImage=75*perpixelY
    x=Math.floor((posX/widthPerImage)%16)+1;//x is fine
    y=Math.floor(posY/heightPerImage);
    
    return y*16+x;
  }
  if(level==2){
-   widthPerImage=20*perpixelX
+   widthPerImage=15*perpixelX
    heightPerImage=15*perpixelY
   x=Math.floor((posX/widthPerImage)%80)+1;//x is fine
   y=Math.floor(posY/heightPerImage);
@@ -195,7 +195,7 @@ canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
 opt.e.preventDefault();
 opt.e.stopPropagation();
 document.getElementById('zoomlevel').innerHTML="zoomlevel "+ zoomlevel;
-if(zoomlevel==120){
+if(zoomlevel==3){
    loadlayer(getCurrentCordinates(posX,posY,2),2);
 }
 if(zoomlevel==200){
@@ -207,9 +207,9 @@ changelayers();
 
 canvas.on('mouse:down', function(opt) {
 var evt = opt.e;
- this.isDragging = true;
- this.lastPosX = evt.clientX;
- this.lastPosY = evt.clientY;
+//  this.isDragging = true;
+//  this.lastPosX = evt.clientX;
+//  this.lastPosY = evt.clientY;
 if(zoomlevel>80&&this.isDragging){
    lastdragpointx=posX;
    lastdragpointy=posY;
@@ -237,8 +237,8 @@ if(zoomlevel>80&&this.isDragging){
 ///
 ////gets mouse cordinates
 var pointer = canvas.getPointer(event.e);
-posX = pointer.x;
-posY = pointer.y;
+posX = pointer.x*perpixelX;
+posY = pointer.y*perpixelY;
 document.getElementById('cordination').innerHTML=posX+ "|" +posY;
 document.getElementById('location').innerHTML= 'location for layer 1: '+getCurrentCordinates(posX,posY,1)+ '  |  '+'location for layer2: '+getCurrentCordinates(posX,posY,2)+'  |  '+'location for layer3:'+getCurrentCordinates(posX,posY,3);
 ///
@@ -276,8 +276,10 @@ if( typeof( window.innerWidth ) == 'number' ) {
   myHeight = document.body.clientHeight;
 }
 
-document.getElementById('c').width=myWidth*.8;
-document.getElementById('c').height=myHeight*0.8; 
+// document.getElementById('c').width=myWidth*.8;
+// document.getElementById('c').height=myHeight*0.8; 
+document.getElementById('c').width=1200;
+document.getElementById('c').height=1200; 
 }
 
 

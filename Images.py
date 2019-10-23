@@ -27,7 +27,10 @@ def fetchNearByImages(location,layer):
     #this part returned the list of near by units
     list=[] 
     imagelist=[]
-    for i in range(location-unitsinY*3-5,location-unitsinY*3+6):
+    print(location)
+    print(location-unitsinY*3-3)
+    print(location-unitsinY*3+4)
+    for i in range(location-unitsinY*3-3,location-unitsinY*3+5):
         list.append(i)
         list.append(i+unitsinY)
         list.append(i+unitsinY*2)
@@ -39,16 +42,18 @@ def fetchNearByImages(location,layer):
         list.append(i+unitsinY*8)
         list.append(i+unitsinY*9)    
     list.sort() #works
+    print(list)
     list=[x for x in list if x >= 1]   #filters out out of bround locations
     list=[x for x in list if x <= maxindex] #filters out out of bround locations
     if(layer==2):
         list= set(list) - set(alreadyloadedlist) #remove items that are already loaded
         alreadyloadedlist.extend(list) #add list to already loaded since it will be sent to load
-    
+        
     if(layer==3):
         list= set(list) - set(alreadyloadedlist_layer3) 
         alreadyloadedlist_layer3.extend(list)
-        print(list)
+        # list.sort()
+        # print(list)
     for i in list:        
         imagelist.append(getImages(i))  
     for i in imagelist:
