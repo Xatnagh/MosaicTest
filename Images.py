@@ -48,7 +48,7 @@ def fetchNearByImages(location,layer):
     if(layer==3):
         list= set(list) - set(alreadyloadedlist_layer3) 
         alreadyloadedlist_layer3.extend(list)
-        console.log(list)
+        print(list)
     for i in list:        
         imagelist.append(getImages(i))  
     for i in imagelist:

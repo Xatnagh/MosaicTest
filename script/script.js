@@ -17,14 +17,15 @@ function loadlayer(location,layer){
           },
    });
       }
+setCanvasSize(); 
 sendDataToLoad(jdata_location,jdata_imageurl,jdata_scale,jdata_level);
-setCanvasSize();
+
 var canvas = new fabric.Canvas('c');
 var zoom;
 var zoomlevel=1;
 var layeronearray=[];
 var layertwoarray=[];
-var perpixelX=canvas.width/1600;
+var perpixelX=canvas.width/1200;
 var perpixelY=canvas.height/1200;
 var posX;
 var posY;
@@ -274,10 +275,9 @@ if( typeof( window.innerWidth ) == 'number' ) {
   myWidth = document.body.clientWidth;
   myHeight = document.body.clientHeight;
 }
-document.getElementById('c').width=1600;
-document.getElementById('c').height=1200;
-// document.getElementById('c').width=myWidth*.95;
-// document.getElementById('c').height=myHeight*0.8; 
+
+document.getElementById('c').width=myWidth*.8;
+document.getElementById('c').height=myHeight*0.8; 
 }
 
 

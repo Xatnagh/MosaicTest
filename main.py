@@ -18,7 +18,7 @@ def getData():
 
 class Home(webapp2.RequestHandler):
     def get(self):
-        
+       
         homepage = the_jinja_env.get_template('/template/mosaic.html')
         self.response.write(homepage.render( {"data":getData()}))
 
@@ -29,7 +29,7 @@ class AddImage(webapp2.RequestHandler):
 class loadImages(webapp2.RequestHandler):
     def get(self):  
         defaultdatas()
-        loadlayer3()
+        # loadlayer3()
         homepage = the_jinja_env.get_template('/template/mosaic.html')
         self.response.write(homepage.render({"data":getData()}))
 class update(webapp2.RequestHandler):
