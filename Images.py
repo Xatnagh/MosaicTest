@@ -12,7 +12,14 @@ ANCESTORY_KEY = ndb.Key("ImageInfo","ImageInfo_root")
 alreadyloadedlist=[] 
 alreadyloadedlist_layer3=[] 
 def getImages(i):
-    return ImageInfo.query(ImageInfo.level==2,ImageInfo.location==i).fetch()
+    ImageExist=ImageInfo.query(ImageInfo.level==2,ImageInfo.location==i).fetch()
+    if ImageExist:
+        return ImageExist
+    
+    else:
+        placeholderImage=[ImageInfo( description=u'Null', image_url=u'https://www.tokkoro.com/picsup/1434470-landscape.jpg', level=3, location=i, scaleAmount=1200, url=u'https://www.reddit.com/r/dankmemes/')]
+        return placeholderImage
+
 def fetchNearByImages(location,layer): 
     img_location=[]
     img_imgurl=[]
@@ -30,7 +37,7 @@ def fetchNearByImages(location,layer):
     print(location)
     print(location-unitsinY*3-3)
     print(location-unitsinY*3+4)
-    for i in range(location-unitsinY*3-3,location-unitsinY*3+5):
+    for i in range(location-unitsinY*5-6,location-unitsinY*5+7):
         list.append(i)
         list.append(i+unitsinY)
         list.append(i+unitsinY*2)

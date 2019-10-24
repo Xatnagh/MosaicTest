@@ -8,10 +8,9 @@ body{
     background-color: white;
   }
   #c{
-    border:solid red 3px;
-     -webkit-user-select: none;
-    -moz-user-select: none;
-    user-select: none;
+    /* margin-left:5%; */
+    border: 3px solid #80C460;
+border-radius: 0px 2px 0px 0px;
   }
   nav p a{
     text-decoration: none;

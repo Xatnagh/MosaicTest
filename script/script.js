@@ -1,3 +1,5 @@
+setCanvasSize(); 
+
 function loadlayer(location,layer){
    var data= {
       location:location,
@@ -9,8 +11,8 @@ function loadlayer(location,layer){
        type: "GET",
       success: function(integer) {   
          var received=JSON.parse(integer)
-        console.log(received['img_location'])
-         console.log("location sent: "+ data.location+ " | "+ data.layer)
+      //   console.log(received['img_location'])
+      //    console.log("location sent: "+ data.location+ " | "+ data.layer)
          sendDataToLoad(received['img_location'],received['img_imgurl'],received['img_scale'],received['img_level']);
 
          lastloadx=posX;
@@ -18,7 +20,7 @@ function loadlayer(location,layer){
           },
    });
       }
-setCanvasSize(); 
+
 sendDataToLoad(jdata_location,jdata_imageurl,jdata_scale,jdata_level);
 
 var canvas = new fabric.Canvas('c');
@@ -26,6 +28,7 @@ var zoom;
 var zoomlevel=1;
 var layeronearray=[];
 var layertwoarray=[];
+var layerthreearray=[];
 var perpixelX=canvas.width/1200;
 var perpixelY=canvas.height/1200;
 var posX;
@@ -35,7 +38,11 @@ var lastdragpointy;
 var lastloadx;
 var lastloady;
 function sendDataToLoad(img_location,img_imgurl,img_scale,img_level){
+   
    for(var i=0;i<img_location.length;i++){
+      if(img_location[i]<=16){
+         img_imgurl[i]=('https://www.mapsofworld.com/usa/usa-maps/united-states-map.jpg')
+      }
       var tolocation=locationforcanvas(img_location[i],img_scale[i])
       var locationx=tolocation.x;
       var locationy=tolocation.y;
@@ -46,7 +53,6 @@ function sendDataToLoad(img_location,img_imgurl,img_scale,img_level){
    }
 }
 function loadimage(scaleamount,locationx,locationy,level,img_imgurl){
-   
    fabric.Image.fromURL(img_imgurl, function(img){
       img.opacity=1;
       var elWidth = img.naturalWidth || img.width;
@@ -59,6 +65,10 @@ function loadimage(scaleamount,locationx,locationy,level,img_imgurl){
       img.scaleY = (scaleY/scaleamount);
       img.left=(canvas.width/scaleamount)*(locationx-1);
       img.top=(canvas.height/scaleamount)*locationy;
+      if(img.top==0){
+          console.log("left",(canvas.width/scaleamount)*(locationx-1)," top ", img.top); 
+      }
+     
       img.hasBorders= false,
       img.hasControls= false,
       img.hasRotatingPoint= false; 
@@ -77,7 +87,10 @@ function locationforcanvas(location,scaleamount){
    }
    if(scaleamount==80){
       x=80
-   }// And soo on, 80,and final scale
+   }
+   if(scaleamount==1200){
+      x=1200
+   }
    }
    return {
    x:x,
@@ -88,25 +101,49 @@ function locationforcanvas(location,scaleamount){
 
 
 function changelayers(){
-if(zoomlevel>120){
+//layer one turn visible
+if(zoomlevel<=20){
    for(var i=0;i<layeronearray.length;i++){
-      layeronearray[i].opacity=0;
+      layeronearray[i].opacity=1;
+      }
+      if(layertwoarray.length!=0){
+      for(var i=0;i<layertwoarray.length;i++){
+         layertwoarray[i].opacity=0;
+         }
+      }
+}
+//layertwo turn visible
+if(zoomlevel>20&&zoomlevel<90){
+   for(var i=0;i<layeronearray.length;i++){
+      layeronearray[i].opacity=0.7;
       }
    for(var i=0;i<layertwoarray.length;i++){
          layertwoarray[i].opacity=1; 
       }
-     
+      if(layerthreearray.length!=0){
+         for(var i=0;i<layerthreearray.length;i++){
+            layerthreearray[i].opacity=0;
+            }
+         }
 }
-// if(zoomlevel<=120){
-//    for(var i=0;i<layeronearray.length;i++){
-//       layeronearray[i].opacity=1;
-//       }
-//       if(layertwoarray.length!=0){
-//       for(var i=0;i<layertwoarray.length;i++){
-//          layertwoarray[i].opacity=0;
-//          }
-//       }
-// }
+//layer 3 turn visible
+if(zoomlevel>=90){
+   for(var i=0;i<layeronearray.length;i++){
+      layeronearray[i].opacity=0;
+      }
+      if(layertwoarray.length!=0){
+      for(var i=0;i<layertwoarray.length;i++){
+         layertwoarray[i].opacity=0.7;
+         }
+      }
+      if(layerthreearray.length!=0){
+         for(var i=0;i<layerthreearray.length;i++){
+            layerthreearray[i].opacity=1;
+            }
+         }
+}
+
+
 }
 
 function addtoarray(image,level){
@@ -124,6 +161,8 @@ function addtoarray(image,level){
 function getCurrentCordinates(posX,posY,level){
  if(level==1){
     widthPerImage=75*perpixelX
+   //  console.log(canvas.width)
+   //  console.log(widthPerImage)
     heightPerImage=75*perpixelY
    x=Math.floor((posX/widthPerImage)%16)+1;//x is fine
    y=Math.floor(posY/heightPerImage);
@@ -172,7 +211,6 @@ panning = false;
 canvas.on('mouse:move', function(e) {
 canvas.selection = false;
 if (panning && e && e.e) {
- var units = 10;
  var delta = new fabric.Point(e.e.movementX, e.e.movementY);
  canvas.relativePan(delta);
 }
@@ -184,7 +222,7 @@ var delta = opt.e.deltaY;
 delta=-1*delta;
 getzoomlevel(delta);
 zoom = canvas.getZoom();
-zoom = zoom + delta/200;
+zoom = zoom + (delta/200)*3;
 
 if (zoom > 1000){ 
 zoom = 1000;}
@@ -195,10 +233,10 @@ canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
 opt.e.preventDefault();
 opt.e.stopPropagation();
 document.getElementById('zoomlevel').innerHTML="zoomlevel "+ zoomlevel;
-if(zoomlevel==3){
+if(zoomlevel==20){
    loadlayer(getCurrentCordinates(posX,posY,2),2);
 }
-if(zoomlevel==200){
+if(zoomlevel==90){
    loadlayer(getCurrentCordinates(posX,posY,3),3)
 }
 changelayers();
@@ -207,10 +245,10 @@ changelayers();
 
 canvas.on('mouse:down', function(opt) {
 var evt = opt.e;
-//  this.isDragging = true;
-//  this.lastPosX = evt.clientX;
-//  this.lastPosY = evt.clientY;
-if(zoomlevel>80&&this.isDragging){
+ this.isDragging = true;
+ this.lastPosX = evt.clientX;
+ this.lastPosY = evt.clientY;
+if(zoomlevel>20&&this.isDragging){
    lastdragpointx=posX;
    lastdragpointy=posY;
 }
@@ -225,20 +263,44 @@ if (this.isDragging) {
  this.lastPosY = e.clientY;
 }  
 /// loads images at second layer
-if(zoomlevel>80&&this.isDragging){
+if(zoomlevel>20){
    differenceinX=Math.abs(lastloadx-lastdragpointx);
    differenceinY=Math.abs(lastloady-lastdragpointy);
    lastloadx=lastdragpointx;
    lastloady=lastdragpointy;
    if(differenceinX>10||differenceinY>10){
       loadlayer(getCurrentCordinates(posX,posY,2),2);
+      if(zoomlevel>70){
+            for(var i=0;i<layertwoarray.length;i++){
+               layertwoarray[i].opacity=0.7;
+               }
+      }
+   }
+}
+if(zoomlevel>=90){
+   differenceinX=Math.abs(lastloadx-lastdragpointx);
+   differenceinY=Math.abs(lastloady-lastdragpointy);
+   lastloadx=lastdragpointx;
+   lastloady=lastdragpointy;
+
+   var difference;
+if(zoomlevel>70&&zoomlevel<120){
+difference=3
+}
+if(zoomlevel>=120&&zoomlevel<270){
+difference=2
+}else{difference=3}//so that the server won't get loaded a bunch of times for nothing
+
+   if(differenceinX>difference||differenceinY>difference){//after they move the mouse, this will ask server for images
+      
+      loadlayer(getCurrentCordinates(posX,posY,3),3);
    }
 }
 ///
 ////gets mouse cordinates
 var pointer = canvas.getPointer(event.e);
-posX = pointer.x*perpixelX;
-posY = pointer.y*perpixelY;
+posX = pointer.x;
+posY = pointer.y;
 document.getElementById('cordination').innerHTML=posX+ "|" +posY;
 document.getElementById('location').innerHTML= 'location for layer 1: '+getCurrentCordinates(posX,posY,1)+ '  |  '+'location for layer2: '+getCurrentCordinates(posX,posY,2)+'  |  '+'location for layer3:'+getCurrentCordinates(posX,posY,3);
 ///
@@ -265,6 +327,7 @@ function setCanvasSize() {
 if( typeof( window.innerWidth ) == 'number' ) {
   //Non-IE
   myWidth = window.innerWidth;
+
   myHeight = window.innerHeight;
 } else if( document.documentElement && ( document.documentElement.clientWidth || document.documentElement.clientHeight ) ) {
   //IE 6+ in 'standards compliant mode'
@@ -278,8 +341,9 @@ if( typeof( window.innerWidth ) == 'number' ) {
 
 // document.getElementById('c').width=myWidth*.8;
 // document.getElementById('c').height=myHeight*0.8; 
-document.getElementById('c').width=1200;
-document.getElementById('c').height=1200; 
+document.getElementById('c').width=myWidth*0.9;
+
+document.getElementById('c').height=myHeight*0.9; 
 }
 
 
