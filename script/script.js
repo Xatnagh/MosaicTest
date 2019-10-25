@@ -1,5 +1,6 @@
+
 setCanvasSize(); 
-console.log(document.getElementsByClassName('hidden')[1].style)
+
 function loadlayer(location,layer){
    lastloadx=posX;
          lastloady=posY;
@@ -230,8 +231,11 @@ if (panning && e && e.e) {
 });
 
 canvas.on('mouse:wheel', function(opt) {
+   var delta = opt.e.deltaY;
+   if(navigator.userAgent.indexOf("Firefox") > 0) {
+   delta=delta*60
+   }
 
-var delta = opt.e.deltaY;
 delta=-1*delta;
 getzoomlevel(delta);
 zoom = canvas.getZoom();

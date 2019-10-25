@@ -5,7 +5,7 @@ import urllib2
 import random
 import jinja2
 from database import defaultdatas
-from Images import ImageInfo, fetchNearByImages,alreadyloadedlist,alreadyloadedlist_layer3
+from Images import ImageInfo, fetchNearByImages,alreadyloadedlist,alreadyloadedlist_layer3,ANCESTORY_KEY
 from test import test
 from database import loadlayer3
 
@@ -14,7 +14,7 @@ extensions=['jinja2.ext.autoescape'],autoescape=True)
 
 
 def getData():
-      return ImageInfo.query(ImageInfo.level==1).order().fetch()
+      return ImageInfo.query(ImageInfo.level==1).fetch()
 
 class Home(webapp2.RequestHandler):
     def get(self):
