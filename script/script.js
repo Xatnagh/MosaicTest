@@ -1,5 +1,5 @@
 setCanvasSize(); 
-
+console.log(document.getElementsByClassName('hidden')[1].style)
 function loadlayer(location,layer){
    lastloadx=posX;
          lastloady=posY;
@@ -13,8 +13,8 @@ function loadlayer(location,layer){
        type: "GET",
       success: function(integer) {   
          var received=JSON.parse(integer)
-        console.log(received['img_location'])
-         console.log("location sent: "+ data.location+ " | "+ data.layer)
+        //console.log(received['img_location'])
+         //console.log("location sent: "+ data.location+ " | "+ data.layer)
          sendDataToLoad(received['img_location'],received['img_imgurl'],received['img_scale'],received['img_level']);
          
           },
@@ -63,10 +63,6 @@ function loadimage(scaleamount,locationx,locationy,level,img_imgurl){
       img.scaleY = (scaleY/scaleamount);
       img.left=(canvas.width/scaleamount)*(locationx-1);
       img.top=(canvas.height/scaleamount)*locationy;
-      if(img.top==0){
-          console.log("left",(canvas.width/scaleamount)*(locationx-1)," top ", img.top); 
-      }
-     
       img.hasBorders= false,
       img.hasControls= false,
       img.hasRotatingPoint= false; 
@@ -188,6 +184,21 @@ function getCurrentCordinates(posX,posY,level){
 }
 
 //MOVEMENTS AND BUTTONS AND INFOMATION DISPLAYS
+$('#show').click( function(){
+   
+  var all= document.getElementsByClassName('hidden');
+  if(all[0].style.opacity!=1){
+     for (var i = 0; i < all.length; i++) {
+   all[i].style.opacity = '1';
+  }}
+  else{
+   for (var i = 0; i < all.length; i++) {
+      all[i].style.opacity = '0';
+  }
+  
+ }
+ 
+});
 
 $("#reset").click( function()
          {
@@ -197,7 +208,7 @@ $("#reset").click( function()
          canvas.viewportTransform[4]=0;
         canvas.viewportTransform[5]=0;
          canvas.requestRenderAll();
-         // document.getElementById('zoomlevel').innerHTML="zoomlevel "+ zoomlevel;
+         document.getElementById('zoomlevel').innerHTML="zoomlevel "+ zoomlevel;
          }
       );
 var panning = false;
@@ -234,7 +245,7 @@ zoom = 0.9;}
 canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
 opt.e.preventDefault();
 opt.e.stopPropagation();
-// document.getElementById('zoomlevel').innerHTML="zoomlevel "+ zoomlevel;
+document.getElementById('zoomlevel').innerHTML="zoomlevel "+ zoomlevel;
 if(zoomlevel==20){
    loadlayer(getCurrentCordinates(posX,posY,2),2);
 }
@@ -297,8 +308,8 @@ if(differenceinX>difference||differenceinY>difference){//after they move the mou
 var pointer = canvas.getPointer(event.e);
 posX = pointer.x;
 posY = pointer.y;
-// document.getElementById('cordination').innerHTML=posX+ "|" +posY;
-// document.getElementById('location').innerHTML= 'location for layer 1: '+getCurrentCordinates(posX,posY,1)+ '  |  '+'location for layer2: '+getCurrentCordinates(posX,posY,2)+'  |  '+'location for layer3:'+getCurrentCordinates(posX,posY,3);
+document.getElementById('cordination').innerHTML=posX+ "|" +posY;
+document.getElementById('location').innerHTML= 'location for layer 1: '+getCurrentCordinates(posX,posY,1)+ '  |  '+'location for layer2: '+getCurrentCordinates(posX,posY,2)+'  |  '+'location for layer3:'+getCurrentCordinates(posX,posY,3);
 ///
 });
 canvas.on('mouse:up', function(opt) {

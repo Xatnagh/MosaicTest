@@ -34,9 +34,7 @@ def fetchNearByImages(location,layer):
     #this part returned the list of near by units
     list=[] 
     imagelist=[]
-    print(location)
-    print(location-unitsinY*3-3)
-    print(location-unitsinY*3+4)
+  
     for i in range(location-unitsinY*5-6,location-unitsinY*5+7):
         list.append(i)
         list.append(i+unitsinY)
@@ -49,7 +47,7 @@ def fetchNearByImages(location,layer):
         list.append(i+unitsinY*8)
         list.append(i+unitsinY*9)    
     list.sort() #works
-    print(list)
+    
     list=[x for x in list if x >= 1]   #filters out out of bround locations
     list=[x for x in list if x <= maxindex] #filters out out of bround locations
     if(layer==2):

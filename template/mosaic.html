@@ -4,14 +4,11 @@
     <script src="/script/jquery-3.4.1.min.js"></script>
     <script src="/script/fabric.js"></script>
       <link rel="stylesheet" href="/css/home.css">
+      <!-- <title>Mosaic Tokyo 2.0!</title> -->
     </head>
     <body>
 
-    <!-- <p id="cordination" >x | y</p>
-    <p id=location style="display: inline-block; left: 20%;">location for layer 1:  | location for layer2: |location for layer3: </p>
-    <p id="zoomlevel">0</p>
-  <button id="reset">RESET</button> -->
-  
+    
  <nav> 
  <p> <a href="/">MosaicTokyo</a> </p>             
 <ul>
@@ -24,7 +21,12 @@
 </ul>
 </nav> -
     <canvas id="c"></canvas>
-    
+    <button id="show">Press for debugging info</button>
+    <h2 id="cordination" class=hidden>x | y</h2>
+    <h2 id=location class=hidden style ="display: inline-block; left: 20%;">location for layer 1:  | location for layer2: |location for layer3: </h2>
+    <h2 id="zoomlevel" class=hidden>0</h2>
+  <button id="reset" class=hidden>RESET</button>
+  
 <script>
 var jdata_location=[];
 var jdata_url=[];
