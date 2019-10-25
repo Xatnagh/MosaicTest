@@ -14,16 +14,15 @@ function loadlayer(location,layer){
        type: "GET",
       success: function(integer) {   
          var received=JSON.parse(integer)
-        //console.log(received['img_location'])
-         //console.log("location sent: "+ data.location+ " | "+ data.layer)
+          console.log("location sent: "+ data.location+ " | "+ data.layer)
+        console.log(received['img_level']);;
          sendDataToLoad(received['img_location'],received['img_imgurl'],received['img_scale'],received['img_level']);
-         
           },
    });
       }
-
+///this loads first layer
 sendDataToLoad(jdata_location,jdata_imageurl,jdata_scale,jdata_level);
-
+///
 var canvas = new fabric.Canvas('c');
 var zoom;
 var zoomlevel=1;
@@ -45,6 +44,10 @@ function sendDataToLoad(img_location,img_imgurl,img_scale,img_level){
       var tolocation=locationforcanvas(img_location[i],img_scale[i])
       var locationx=tolocation.x;
       var locationy=tolocation.y;
+      if(img_level==2){
+         console.log(locationx,locationy)
+      }
+   
       var scaleamount=img_scale[i];  
       var level=img_level[i];
       var imageurl= img_imgurl[i];
@@ -200,7 +203,6 @@ $('#show').click( function(){
  }
  
 });
-
 $("#reset").click( function()
          {
          zoomlevel=1;
@@ -282,7 +284,7 @@ if(zoomlevel>20){
    differenceinY=Math.abs(lastloady-posY);
  
    if(differenceinX>10||differenceinY>10){
-      loadlayer(getCurrentCordinates(posX,posY,2),2);
+      
       if(zoomlevel>70){
             for(var i=0;i<layertwoarray.length;i++){
                layertwoarray[i].opacity=0.9;
@@ -303,7 +305,7 @@ difference=2
 }else{difference=1}//so that the server won't get loaded a bunch of times for nothing
 
 if(differenceinX>difference||differenceinY>difference){//after they move the mouse, this will ask server for images
-      
+
       loadlayer(getCurrentCordinates(posX,posY,3),3);
    }
 }

@@ -47,8 +47,15 @@ class fillintherest(webapp2.RequestHandler):
             listlength=len(list)
         for i in range(list[listlength-1],6401):
             ImageInfo(parent=ANCESTORY_KEY,location=i,scaleAmount=80,level=2).put()
+class contact(webapp2.RequestHandler):
+    def get(self):
+        t = the_jinja_env.get_template('/template/contact.html')
+        self.response.write(t.render())
 
-
+class LoginPage(webapp2.RequestHandler):
+    def get(self):
+        t = the_jinja_env.get_template('/template/login.html')
+        self.response.write(t.render())
         
 
        
@@ -62,8 +69,8 @@ app = webapp2.WSGIApplication([
 ('/addImage',AddImage),
  ('/load', loadImages),
  ('/update', update),
- ('/fill',fillintherest)
-# ('/contact',Contact),
-# ('/login',LoginPage)
+ ('/fill',fillintherest),
+('/contact',contact),
+('/login',LoginPage)
 ], debug=True)
 
