@@ -97,7 +97,8 @@ function locationforcanvas(location,scaleamount){
 function changelayers(){
 // layer one turn visible
 if(zoomlevel<20){
-   for(var i=0;i<layeronearray.length;i++){
+   if(layeronearray[0].opcaity!=1){
+      for(var i=0;i<layeronearray.length;i++){
       layeronearray[i].opacity=1;
       }
       if(layertwoarray.length!=0){
@@ -109,10 +110,13 @@ if(zoomlevel<20){
          for(var i=0;i<layerthreearray.length;i++){
             layerthreearray[i].opacity=0;
             }
-         }
+         } 
+   }
+  
 }
 //layertwo turn visible
-if(zoomlevel>=20&&zoomlevel<90){
+if(layertwoarray[0].opacity!=1){
+   if(zoomlevel>=20&&zoomlevel<90){
    for(var i=0;i<layeronearray.length;i++){
       layeronearray[i].opacity=0.9;
       }
@@ -125,8 +129,11 @@ if(zoomlevel>=20&&zoomlevel<90){
             }
          }
 }
+
+}
 //layer 3 turn visible
-if(zoomlevel>=90){
+if(layerthreearray[0].opacity!=0){
+  if(zoomlevel>=90){
    for(var i=0;i<layeronearray.length;i++){
       layeronearray[i].opacity=0;
       }
@@ -140,6 +147,8 @@ if(zoomlevel>=90){
             layerthreearray[i].opacity=1;
             }
          }
+}
+ 
 }
 
 
@@ -271,15 +280,19 @@ if (this.isDragging) {
  this.lastPosY = e.clientY;
 }  
 /// loads images at second layer
-if(zoomlevel>20){
+if(zoomlevel>20&&zoomlevel<90){
    differenceinX=Math.abs(lastloadx-posX);
    differenceinY=Math.abs(lastloady-posY);
  
    if(differenceinX>10||differenceinY>10){
+      loadlayer(getCurrentCordinates(posX,posY,2),2);
       if(zoomlevel>70){
-            for(var i=0;i<layertwoarray.length;i++){
+         if(layertwoarray[0].length!=0.9){
+             for(var i=0;i<layertwoarray.length;i++){
                layertwoarray[i].opacity=0.9;
                }
+         }
+           
       }
    }
 }
