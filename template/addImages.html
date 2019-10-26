@@ -15,9 +15,7 @@
 <li><a href="./contact">Contact</a></li>
 <li><a href="./login">LogIn</a></li>                        
 <li><a href="./addImage">Upload</a></li>
-<li><img id='logo' src="https://www.snopes.com/tachyon/2019/07/olympics-logo-fake-snopes.jpg?resize=100,50" alt=""></li>
-</ul>
-</li>
+<img id='logo' src="https://www.snopes.com/tachyon/2019/07/olympics-logo-fake-snopes.jpg?resize=100,50" alt="">
 </ul>
 </nav>
 <div id="addimage-area">
@@ -41,11 +39,11 @@
             <input type="submit" value="Submit" id="submit">
         </form>
         <br>
-        <button id=previewbtn style="background-color:aqua"><h1 style="color:white; font-weight: bold; "> Show Preview</h1></button>
+        <button id=previewbtn style="background-color:aqua"><h1 style="color:black; font-weight: bold; "> Show Preview</h1></button>
 </div>
 <div id=preview>
     <div id='pop'>
-        <img id ='pop_image' src="https://www.tokkoro.com/picsup/1434470-landscape.jpg" alt="http://leeford.in/wp-content/uploads/2017/09/image-not-found.jpg">
+        <img id ='pop_image' src="https://www.tokkoro.com/picsup/1434470-landscape.jpg" alt="Image Not Found">
         <p id='headers'>Description: </p> <p id='pop_description'>Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah </p>
         <br><p id='headers'>Link:   </p> <a id= 'pop_url'href="google.com">Url goes here</a> <br>
         <button id='pop_close'>Close</button>
@@ -53,14 +51,14 @@
 </div>
 <script>
     $('#previewbtn').click(function(){
-        console.log('clicked!')
+      
         const form = document.querySelector('form');
         const data = Object.fromEntries(new FormData(form).entries());
-console.log(data)
+
 imgUrl=data['image_url'];
 description=data['description']
 url=data['website_url'];
-console.log(imgUrl,description,url)
+
 document.getElementById('pop_image').src=`${imgUrl}`;
   document.getElementById('pop_description').innerHTML=`${description}`;
   document.getElementById('pop_url').innerHTML=`${url}`;
@@ -69,7 +67,7 @@ document.getElementById('pop_image').src=`${imgUrl}`;
     });
     
 $('#pop_close').click(function(){
-   console.log("button is clciked")
+  
 $('#pop').css({'display':'none'});
 });
 
