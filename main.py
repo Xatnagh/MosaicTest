@@ -5,7 +5,7 @@ import urllib2
 import random
 import jinja2
 from database import defaultdatas
-from Images import ImageInfo, fetchNearByImages,alreadyloadedlist,alreadyloadedlist_layer3,ANCESTORY_KEY
+from Images import ImageInfo, fetchNearByImages,alreadyloadedlist,alreadyloadedlist_layer3,ANCESTORY_KEY,getImageInfo
 from test import test
 from database import loadlayer3
 
@@ -57,8 +57,18 @@ class LoginPage(webapp2.RequestHandler):
         t = the_jinja_env.get_template('/template/login.html')
         self.response.write(t.render())
         
+class getImageIinfo(webapp2.RequestHandler):
+    def get(self):
+        location=int(self.request.GET.get('location'))  
+        image=getImageInfo(location)
+        data={
+            'image_imgUrl':image[0].image_url,
+            'image_description':image[0].description,
+            'image_url':image[0].url,
+            'location':location
+        }
+        self.response.write(json.dumps(data))
 
-       
 
 
         
@@ -71,6 +81,7 @@ app = webapp2.WSGIApplication([
  ('/update', update),
  ('/fill',fillintherest),
 ('/contact',contact),
-('/login',LoginPage)
+('/login',LoginPage),
+('/imageinfo',getImageIinfo)
 ], debug=True)
 

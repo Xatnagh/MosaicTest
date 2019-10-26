@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Add Image</title>
+    <script src="/script/jquery-3.4.1.min.js"></script>
     <link rel="stylesheet" href="/css/addImage.css">
 </head>
 <body>
@@ -21,7 +22,8 @@
 </nav>
 <div id="addimage-area">
            <span id="highlight"><h2>Add Image Here: </h2></span>
-        <form action="/addImage" method="POST">
+        <form action="/addImage" >
+            <!-- method="POST" -->
             <br>
             <h3>Where do you want your image to be?(row 5 column 4 is 54):</h3>
             <input  type="text" name="location" class="textbox">
@@ -29,12 +31,48 @@
             <h3>Image_url:</h3>
             <input type="text" name="image_url" class="textbox">
             <br>
+            <h3>Description:</h3>
+            <input type="text" name="description" class="textbox">
+            <br>
             <h3>URL to your website(this website will open when users click on your image)</h3>
             <input type="text" name="website_url" class="textbox">
             <br>
             <br>
             <input type="submit" value="Submit" id="submit">
         </form>
+        <br>
+        <button id=previewbtn style="background-color:aqua"><h1 style="color:white; font-weight: bold; "> Show Preview</h1></button>
 </div>
+<div id=preview>
+    <div id='pop'>
+        <img id ='pop_image' src="https://www.tokkoro.com/picsup/1434470-landscape.jpg" alt="http://leeford.in/wp-content/uploads/2017/09/image-not-found.jpg">
+        <p id='headers'>Description: </p> <p id='pop_description'>Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah </p>
+        <br><p id='headers'>Link:   </p> <a id= 'pop_url'href="google.com">Url goes here</a> <br>
+        <button id='pop_close'>Close</button>
+        </div>
+</div>
+<script>
+    $('#previewbtn').click(function(){
+        console.log('clicked!')
+        const form = document.querySelector('form');
+        const data = Object.fromEntries(new FormData(form).entries());
+console.log(data)
+imgUrl=data['image_url'];
+description=data['description']
+url=data['website_url'];
+console.log(imgUrl,description,url)
+document.getElementById('pop_image').src=`${imgUrl}`;
+  document.getElementById('pop_description').innerHTML=`${description}`;
+  document.getElementById('pop_url').innerHTML=`${url}`;
+  document.getElementById('pop_url').href=`${url}`;
+  $('#pop').css({'display':'block'});
+    });
+    
+$('#pop_close').click(function(){
+   console.log("button is clciked")
+$('#pop').css({'display':'none'});
+});
+
+</script>
 </body>
 </html>

@@ -73,7 +73,13 @@ def fetchNearByImages(location,layer):
         'img_scale':img_scale
     }
 
-    
+def getImageInfo(location):
+    imageExist=ImageInfo.query(ImageInfo.location==location,ImageInfo.level==3).fetch()
+    if imageExist:
+         return imageExist
+    else:
+        placeholderImage=[ImageInfo( description=u'Upload your own today!', image_url=u'https://d3octkd2uqmyim.cloudfront.net/media/bi/3708/upload-your-own-design-5x7-wedding-invitation-up-2x.jpg?q=1566557871', location=location, url=u'https://www.reddit.com/r/dankmemes/')]
+        return placeholderImage
     
    
     

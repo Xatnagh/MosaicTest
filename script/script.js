@@ -1,6 +1,5 @@
 
 setCanvasSize(); 
-
 function loadlayer(location,layer){
    lastloadx=posX;
          lastloady=posY;
@@ -24,6 +23,9 @@ function loadlayer(location,layer){
 sendDataToLoad(jdata_location,jdata_imageurl,jdata_scale,jdata_level);
 ///
 var canvas = new fabric.Canvas('c');
+
+
+
 var zoom;
 var zoomlevel=1;
 var layeronearray=[];
@@ -320,6 +322,43 @@ canvas.on('mouse:up', function(opt) {
 this.isDragging = false;
 this.selection = true;
 });
+
+canvas.on('mouse:dblclick',function(){
+   var location=getCurrentCordinates(posX,posY,3)
+   data={
+      location:location
+   }
+   $.ajax({
+      url:'/imageinfo',
+      data:data,
+      type:'GET',
+      success:function(recieved){
+         recieved=JSON.parse(recieved);
+         console.log('locationsent: ',data['location'])
+         console.log("recieved: ",recieved)
+         location=recieved['location'];
+         imgUrl=recieved['image_imgUrl'];
+         url=recieved['image_url'];
+         description=recieved['image_description'];
+         console.log(description)
+         imageInfoPage(imgUrl,url,description)
+      }
+   })
+});
+
+function imageInfoPage(imgUrl,url,description){
+  document.getElementById('pop_image').src=`${imgUrl}`;
+  document.getElementById('pop_description').innerHTML=`${description}`;
+  document.getElementById('pop_url').innerHTML=`${url}`;
+  document.getElementById('pop_url').href=`${url}`;
+  $('#pop').css({'display':'block'});
+   
+
+}
+
+
+
+
 function getzoomlevel(delta){
 if(delta<0){
 zoomlevel-=1;
@@ -329,7 +368,6 @@ zoomlevel=0;
 }else{
 zoomlevel+=1;
 }
-
 }
 
 //this function determines window size and therefore, screen size
@@ -361,8 +399,6 @@ $('#pop_close').click(function(){
    console.log("button is clciked")
 $('#pop').css({'display':'none'});
 $('#overlay').css({'display':'none'});
-
-
 });
 
 
