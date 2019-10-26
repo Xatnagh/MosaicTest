@@ -189,7 +189,6 @@ function getCurrentCordinates(posX,posY,level){
 
 //MOVEMENTS AND BUTTONS AND INFOMATION DISPLAYS
 $('#show').click( function(){
-   
   var all= document.getElementsByClassName('hidden');
   if(all[0].style.opacity!=1){
      for (var i = 0; i < all.length; i++) {
@@ -201,7 +200,6 @@ $('#show').click( function(){
   }
   
  }
- 
 });
 $("#reset").click( function()
          {
@@ -359,6 +357,12 @@ document.getElementById('c').width=myWidth*0.9;
 document.getElementById('c').height=myHeight*0.9; 
 }
 
+$('#pop_close').click(function(){
+   console.log("button is clciked")
+$('#pop').css({'display':'none'});
+$('#overlay').css({'display':'none'});
 
+
+});
 
 

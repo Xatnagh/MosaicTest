@@ -20,14 +20,33 @@
 </ul>
 </li>
 </ul>
-</nav> -
+</nav> 
+<div class="ms-OverlayExample">
+    <div class="ms-Overlay"></div>
+     <div id='pop'>
+    <img id ='pop_image' src="https://www.tokkoro.com/picsup/1434470-landscape.jpg" alt="">
+    <p>Description: </p> <p id='pop_description'>Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah </p>
+    <br><p>Link:   </p> <a id= 'pop_url'href="google.com">Url goes here</a> <br>
+    <button id='pop_close'>Close</button>
+    </div>
+  </div>
+  <script type="text/javascript">
+    var OverlayExamples = document.querySelectorAll(".ms-OverlayExample");
+    for (var i = 0; i < OverlayExamples.length; i++) {
+      (function() {
+        var OverlayComponent = OverlayExamples[i].querySelector(".ms-Overlay");
+        var Overlay = new fabric['Overlay'](OverlayComponent);
+      }());
+    }
+  </script>
+
+
     <canvas id="c"></canvas>
     <button id="show">Press for debugging info</button>
     <h2 id="cordination" class=hidden>x | y</h2>
     <h2 id=location class=hidden style ="display: inline-block; left: 20%;">location for layer 1:  | location for layer2: |location for layer3: </h2>
     <h2 id="zoomlevel" class=hidden>0</h2>
   <button id="reset" class=hidden>RESET</button>
-  
 <script>
 var jdata_location=[];
 var jdata_url=[];
@@ -35,7 +54,7 @@ var jdata_imageurl=[];
 var jdata_scale=[];
 var jdata_level=[];
 </script>
-            
+           
             {% for entry in data %}
             <script>    
             jdata_location.push("{{entry.location}}");
