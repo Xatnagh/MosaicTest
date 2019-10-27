@@ -14,6 +14,10 @@ function loadlayer(location,layer){
       success: function(integer) {   
          var received=JSON.parse(integer)
          sendDataToLoad(received['img_location'],received['img_imgurl'],received['img_scale'],received['img_level']);
+
+         console.log('data: sent',data['location'],' , ',data['layer'])
+         
+         console.log(received['img_location'])
           },
    });
       }
@@ -115,7 +119,7 @@ if(zoomlevel<20){
   
 }
 //layertwo turn visible
-if(layertwoarray[0].opacity!=1){
+if(layertwoarray.length!=0&&layertwoarray[0].opacity!=1){
    if(zoomlevel>=20&&zoomlevel<90){
    for(var i=0;i<layeronearray.length;i++){
       layeronearray[i].opacity=0.9;
@@ -253,10 +257,10 @@ canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
 opt.e.preventDefault();
 opt.e.stopPropagation();
 document.getElementById('zoomlevel').innerHTML="zoomlevel "+ zoomlevel;
-if(zoomlevel==20){
+if(zoomlevel==15){
    loadlayer(getCurrentCordinates(posX,posY,2),2);
 }
-if(zoomlevel==90){
+if(zoomlevel==75){
    loadlayer(getCurrentCordinates(posX,posY,3),3)
 }
 changelayers();
