@@ -32,7 +32,7 @@ sendDataToLoad(jdata_location,jdata_imageurl,jdata_scale,jdata_level);
 ///
 var canvas = new fabric.Canvas('c');
 var zoom=canvas.getZoom();
-var zoomlevel=1;
+var zoom=1;
 var layeronearray=[];
 var layertwoarray=[];
 var layerthreearray=[];
@@ -103,7 +103,7 @@ function locationforcanvas(location,scaleamount){
 
 function changelayers(){
 // layer one turn visible
-if(zoomlevel<20){
+if(zoom<20){
    if(layeronearray[0].opcaity!=1){
       for(var i=0;i<layeronearray.length;i++){
       layeronearray[i].opacity=1;
@@ -124,7 +124,7 @@ if(zoomlevel<20){
 //layertwo turn visible
 if(layertwoarray.length!=0){
    if(layertwoarray[0].opacity!=1){
-    if(zoomlevel>=20&&zoomlevel<90){
+    if(zoom>=20&&zoom<90){
          for(var i=0;i<layeronearray.length;i++){
       layeronearray[i].opacity=0.9;
       }
@@ -143,7 +143,7 @@ if(layertwoarray.length!=0){
 }
 //layer 3 turn visible
 
-  if(zoomlevel>=90){
+  if(zoom>=90){
      if(layerthreearray[0].opacity!=0){
    for(var i=0;i<layeronearray.length;i++){
       layeronearray[i].opacity=0;
@@ -220,13 +220,13 @@ $('#show').click( function(){
 });
 $("#reset").click( function()
          {
-         zoomlevel=1;
+         zoom=1;
          canvas.setZoom(1);
          changelayers();
          canvas.viewportTransform[4]=0;
         canvas.viewportTransform[5]=0;
          canvas.requestRenderAll();
-         document.getElementById('zoomlevel').innerHTML="zoomlevel "+ zoomlevel;
+         document.getElementById('zoom').innerHTML="zoom "+ zoom;
          
 
          }
@@ -294,22 +294,21 @@ canvas.on('mouse:wheel', function(opt) {
    delta=delta*60
    }
 delta=-1*delta;
-getzoomlevel(delta);
 zoom = canvas.getZoom();
 zoom = zoom + (delta/200)*4;
 if (zoom > 1000){ 
 zoom = 1000;}
 if (zoom < .7){
-zoomlevel-=1;
+zoom-=1;
 zoom = 0.9;}
 canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
 opt.e.preventDefault();
 opt.e.stopPropagation();
-document.getElementById('zoomlevel').innerHTML="zoomlevel "+ zoomlevel;
-if(zoomlevel==15){
+document.getElementById('zoomlevel').innerHTML="zoom "+ zoom;
+if(zoom.between(15,16)){
    loadlayer(getCurrentCordinates(CenterCoord.x,CenterCoord.y,2),2);
 }
-if(zoomlevel==75){
+if(zoom.between(75,76)){
    loadlayer(getCurrentCordinates(CenterCoord.x,CenterCoord.y,3),3)
 }
 changelayers();
@@ -318,13 +317,13 @@ changelayers();
 
 canvas.on('mouse:move', function(opt) {
 /// loads images at second layer
-if(zoomlevel>20&&zoomlevel<90){
+if(zoom>20&&zoom<90){
    differenceinX=Math.abs(lastloadx-CenterCoord().x);
    differenceinY=Math.abs(lastloady-CenterCoord().y);
  
    if(differenceinX>10||differenceinY>10){
       loadlayer(getCurrentCordinates(posX,posY,2),2);
-      if(zoomlevel>70){
+      if(zoom>70){
          if(layertwoarray[0].length!=0.9){
              for(var i=0;i<layertwoarray.length;i++){
                layertwoarray[i].opacity=0.9;
@@ -334,15 +333,15 @@ if(zoomlevel>20&&zoomlevel<90){
       }
    }
 }
-if(zoomlevel>=90){
+if(zoom>=90){
    differenceinX=Math.abs(lastloadx-CenterCoord().x);
    differenceinY=Math.abs(lastloady-CenterCoord().y);
  
    var difference;
-if(zoomlevel>70&&zoomlevel<120){
+if(zoom>70&&zoom<120){
 difference=3
 }
-if(zoomlevel>=120&&zoomlevel<270){
+if(zoom>=120&&zoom<270){
 difference=2
 }else{difference=1}//so that the server won't get loaded a bunch of times for nothing
 
@@ -400,17 +399,6 @@ function imageInfoPage(imgUrl,url,description){
 }
 
 
-function getzoomlevel(delta){
-if(delta<0){
-zoomlevel-=1;
-if(zoomlevel<=0){
-zoomlevel=0;
-}
-}else{
-zoomlevel+=1;
-}
-}
-
 //this function determines window size and therefore, screen size
 function setCanvasSize(){
    var myWidth = 0, myHeight = 0;
@@ -449,3 +437,11 @@ function CenterCoord(){
 
 }
 
+
+
+
+Number.prototype.between = function(a, b) {
+   var min = Math.min.apply(Math, [a, b]),
+     max = Math.max.apply(Math, [a, b]);
+   return this > min && this < max;
+ };
