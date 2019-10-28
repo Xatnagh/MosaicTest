@@ -21,10 +21,9 @@ function loadlayer(location,layer){
       success: function(integer) {   
          var received=JSON.parse(integer)
          sendDataToLoad(received['img_location'],received['img_imgurl'],received['img_scale'],received['img_level']);
-
-         console.log('data: sent',data['location'],' , ',data['layer'])
+         // console.log('data: sent',data['location'],' , ',data['layer'])
          
-         console.log(received['img_location'])
+         // console.log(received['img_location'])
           },
    });
       }
@@ -32,7 +31,7 @@ function loadlayer(location,layer){
 sendDataToLoad(jdata_location,jdata_imageurl,jdata_scale,jdata_level);
 ///
 var canvas = new fabric.Canvas('c');
-var zoom;
+var zoom=canvas.getZoom();
 var zoomlevel=1;
 var layeronearray=[];
 var layertwoarray=[];
@@ -123,19 +122,22 @@ if(zoomlevel<20){
   
 }
 //layertwo turn visible
-if(layertwoarray.length!=0&&layertwoarray[0].opacity!=1){
-   if(zoomlevel>=20&&zoomlevel<90){
-   for(var i=0;i<layeronearray.length;i++){
+if(layertwoarray.length!=0){
+   if(layertwoarray[0].opacity!=1){
+    if(zoomlevel>=20&&zoomlevel<90){
+         for(var i=0;i<layeronearray.length;i++){
       layeronearray[i].opacity=0.9;
       }
-   for(var i=0;i<layertwoarray.length;i++){
+         for(var i=0;i<layertwoarray.length;i++){
          layertwoarray[i].opacity=1; 
       }
-      if(layerthreearray.length!=0){
+   if(layerthreearray.length!=0){
          for(var i=0;i<layerthreearray.length;i++){
             layerthreearray[i].opacity=0;
             }
          }
+}
+  
 }
 
 }
@@ -281,8 +283,8 @@ canvas.on('mouse:move', function(e) {
    if (panning && e && e.e) {
    var delta = new fabric.Point(e.e.movementX, e.e.movementY);
    canvas.relativePan(delta);
-   console.log('x',CenterCoord().x);
-   console.log('y',CenterCoord().y);
+
+ 
 }
 });
 
@@ -315,11 +317,10 @@ changelayers();
 
 
 canvas.on('mouse:move', function(opt) {
-
 /// loads images at second layer
 if(zoomlevel>20&&zoomlevel<90){
-   differenceinX=Math.abs(lastloadx-posX);
-   differenceinY=Math.abs(lastloady-posY);
+   differenceinX=Math.abs(lastloadx-CenterCoord().x);
+   differenceinY=Math.abs(lastloady-CenterCoord().y);
  
    if(differenceinX>10||differenceinY>10){
       loadlayer(getCurrentCordinates(posX,posY,2),2);
@@ -334,8 +335,8 @@ if(zoomlevel>20&&zoomlevel<90){
    }
 }
 if(zoomlevel>=90){
-   differenceinX=Math.abs(lastloadx-posX);
-   differenceinY=Math.abs(lastloady-posY);
+   differenceinX=Math.abs(lastloadx-CenterCoord().x);
+   differenceinY=Math.abs(lastloady-CenterCoord().y);
  
    var difference;
 if(zoomlevel>70&&zoomlevel<120){
@@ -346,8 +347,8 @@ difference=2
 }else{difference=1}//so that the server won't get loaded a bunch of times for nothing
 
 if(differenceinX>difference||differenceinY>difference){//after they move the mouse, this will ask server for images
-   loadlayer(getCurrentCordinates(posX,posY,2),2);
-      loadlayer(getCurrentCordinates(posX,posY,3),3);
+   loadlayer(getCurrentCordinates(CenterCoord().x,CenterCoord().y,2),2);
+      loadlayer(getCurrentCordinates(CenterCoord().x,CenterCoord().y,3),3);
    }
 }
 ///
@@ -355,6 +356,10 @@ if(differenceinX>difference||differenceinY>difference){//after they move the mou
 var pointer = canvas.getPointer(event.e);
 posX = pointer.x;
 posY = pointer.y;
+if(onmobile){
+   posX=CenterCoord().x;
+   posY=CenterCoord().y;
+}
 document.getElementById('cordination').innerHTML=posX+ "|" +posY;
 document.getElementById('location').innerHTML= 'location for layer 1: '+getCurrentCordinates(posX,posY,1)+ '  |  '+'location for layer2: '+getCurrentCordinates(posX,posY,2)+'  |  '+'location for layer3:'+getCurrentCordinates(posX,posY,3);
 ///
@@ -437,7 +442,6 @@ $('#overlay').css({'display':'none'});
 });
 
 function CenterCoord(){
-  
    return{
       x:fabric.util.invertTransform(canvas.viewportTransform)[4]+(canvas.width/zoom)/2,
       y:fabric.util.invertTransform(canvas.viewportTransform)[5]+(canvas.height/zoom)/2
