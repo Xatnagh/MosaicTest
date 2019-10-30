@@ -144,7 +144,7 @@ if(layertwoarray.length!=0){
 }
 //layer 3 turn visible
 
-  if(zoom>=90){
+  if(zoom>=90&&layerthreearray.length!=0){
      if(layerthreearray[0].opacity!=0){
    for(var i=0;i<layeronearray.length;i++){
       layeronearray[i].opacity=0;
@@ -296,20 +296,23 @@ canvas.on('mouse:wheel', function(opt) {
    }
 delta=-1*delta;
 zoom = canvas.getZoom();
-zoom = zoom + (delta/200)*4;
+zoom = zoom + (delta/200)*(3+(1.05*zoom));
+
+//this limits zoom
 if (zoom > 1000){ 
 zoom = 1000;}
 if (zoom < .7){
 zoom-=1;
 zoom = 0.9;}
+//
 canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
 opt.e.preventDefault();
 opt.e.stopPropagation();
 document.getElementById('zoomlevel').innerHTML="zoom "+ zoom;
-if(zoom.between(15,16)){
+if(zoom.between(15,23)){
    loadlayer(getCurrentCordinates(CenterCoord().x,CenterCoord().y,2),2);
 }
-if(zoom.between(75,76)){
+if(zoom.between(128,134)){
    loadlayer(getCurrentCordinates(CenterCoord().x,CenterCoord().y,3),3)
 }
 changelayers();
@@ -325,7 +328,7 @@ if(zoom>20&&zoom<90){
    if(differenceinX>10||differenceinY>10){
       loadlayer(getCurrentCordinates(posX,posY,2),2);
       if(zoom>70){
-         if(layertwoarray[0].length!=0.9){
+         if(layertwoarray.length!=0.9){
              for(var i=0;i<layertwoarray.length;i++){
                layertwoarray[i].opacity=0.9;
                }
