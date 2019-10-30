@@ -7,9 +7,9 @@ def defaultdatas():
             for i in range(1,257):
                 ImageInfo(parent=ANCESTORY_KEY,location=i,scaleAmount=16,level=1).put()
             print('done for 1')    
-            # for i in range(1,6401):
-            #     ImageInfo(parent=ANCESTORY_KEY,location=i,scaleAmount=80,level=2).put()
-            # print("done") 
+            for i in range(1,201):
+                ImageInfo(parent=ANCESTORY_KEY,location=i,scaleAmount=80,level=2).put()
+                print("done") 
 def loadlayer3():
     for i in range(1,1440000):
         ImageInfo(parent=ANCESTORY_KEY,location=i,scaleAmount=1200,level=3).put()

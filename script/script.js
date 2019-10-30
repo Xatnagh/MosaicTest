@@ -8,6 +8,7 @@ onmobile=check
 
 setCanvasSize(); 
 function loadlayer(location,layer){
+   console.log('location:',location)
    lastloadx=CenterCoord().x;
          lastloady=CenterCoord().y;
    var data= {
@@ -21,9 +22,9 @@ function loadlayer(location,layer){
       success: function(integer) {   
          var received=JSON.parse(integer)
          sendDataToLoad(received['img_location'],received['img_imgurl'],received['img_scale'],received['img_level']);
-         // console.log('data: sent',data['location'],' , ',data['layer'])
+         console.log('data: sent',data['location'],' , ',data['layer'])
          
-         // console.log(received['img_location'])
+         console.log(received['img_location'])
           },
    });
       }
@@ -232,42 +233,42 @@ $("#reset").click( function()
          }
       );
       //mobile control
-      canvas.on({
-         'touch:gesture': function(e) {
-             if (e.e.touches && e.e.touches.length == 2) {
-                 pausePanning = true;
-                 var point = new fabric.Point(e.self.x, e.self.y);
-                 if (e.self.state == "start") {
-                     zoomStartScale = canvas.getZoom();
-                 }
-                 var delta = zoomStartScale * e.self.scale;
-                 canvas.zoomToPoint(point, delta);
-                 pausePanning = false;
-             }
-         },
-         'object:selected': function() {
-             pausePanning = true;
-         },
-         'selection:cleared': function() {
-             pausePanning = false;
-         },
-         'touch:drag': function(e) {
-             if (pausePanning == false && undefined != e.self.x && undefined != e.self.x) {
-                 currentX = e.self.x;
-                 currentY = e.self.y;
-                 xChange = currentX - lastX;
-                 yChange = currentY - lastY;
+   //    canvas.on({
+   //       'touch:gesture': function(e) {
+   //           if (e.e.touches && e.e.touches.length == 2) {
+   //               pausePanning = true;
+   //               var point = new fabric.Point(e.self.x, e.self.y);
+   //               if (e.self.state == "start") {
+   //                   zoomStartScale = canvas.getZoom();
+   //               }
+   //               var delta = zoomStartScale * e.self.scale;
+   //               canvas.zoomToPoint(point, delta);
+   //               pausePanning = false;
+   //           }
+   //       },
+   //       'object:selected': function() {
+   //           pausePanning = true;
+   //       },
+   //       'selection:cleared': function() {
+   //           pausePanning = false;
+   //       },
+   //       'touch:drag': function(e) {
+   //           if (pausePanning == false && undefined != e.self.x && undefined != e.self.x) {
+   //               currentX = e.self.x;
+   //               currentY = e.self.y;
+   //               xChange = currentX - lastX;
+   //               yChange = currentY - lastY;
      
-                 if( (Math.abs(currentX - lastX) <= 50) && (Math.abs(currentY - lastY) <= 50)) {
-                     var delta = new fabric.Point(xChange, yChange);
-                     canvas.relativePan(delta);
-                 }
+   //               if( (Math.abs(currentX - lastX) <= 50) && (Math.abs(currentY - lastY) <= 50)) {
+   //                   var delta = new fabric.Point(xChange, yChange);
+   //                   canvas.relativePan(delta);
+   //               }
      
-                 lastX = e.self.x;
-                 lastY = e.self.y;
-             }
-         }
-     });
+   //               lastX = e.self.x;
+   //               lastY = e.self.y;
+   //           }
+   //       }
+   //   });
      
 var panning = false;
 canvas.on('mouse:down', function(e) {
@@ -306,10 +307,10 @@ opt.e.preventDefault();
 opt.e.stopPropagation();
 document.getElementById('zoomlevel').innerHTML="zoom "+ zoom;
 if(zoom.between(15,16)){
-   loadlayer(getCurrentCordinates(CenterCoord.x,CenterCoord.y,2),2);
+   loadlayer(getCurrentCordinates(CenterCoord().x,CenterCoord().y,2),2);
 }
 if(zoom.between(75,76)){
-   loadlayer(getCurrentCordinates(CenterCoord.x,CenterCoord.y,3),3)
+   loadlayer(getCurrentCordinates(CenterCoord().x,CenterCoord().y,3),3)
 }
 changelayers();
 });
