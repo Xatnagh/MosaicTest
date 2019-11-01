@@ -23,7 +23,6 @@ function loadlayer(location,layer){
          var received=JSON.parse(integer)
          sendDataToLoad(received['img_location'],received['img_imgurl'],received['img_scale'],received['img_level']);
          console.log('data: sent',data['location'],' , ',data['layer'])
-         
          console.log(received['img_location'])
           },
    });
@@ -232,43 +231,59 @@ $("#reset").click( function()
 
          }
       );
-      //mobile control
-   //    canvas.on({
-   //       'touch:gesture': function(e) {
-   //           if (e.e.touches && e.e.touches.length == 2) {
-   //               pausePanning = true;
-   //               var point = new fabric.Point(e.self.x, e.self.y);
-   //               if (e.self.state == "start") {
-   //                   zoomStartScale = canvas.getZoom();
-   //               }
-   //               var delta = zoomStartScale * e.self.scale;
-   //               canvas.zoomToPoint(point, delta);
-   //               pausePanning = false;
-   //           }
-   //       },
-   //       'object:selected': function() {
-   //           pausePanning = true;
-   //       },
-   //       'selection:cleared': function() {
-   //           pausePanning = false;
-   //       },
-   //       'touch:drag': function(e) {
-   //           if (pausePanning == false && undefined != e.self.x && undefined != e.self.x) {
-   //               currentX = e.self.x;
-   //               currentY = e.self.y;
-   //               xChange = currentX - lastX;
-   //               yChange = currentY - lastY;
+     // mobile control
+
+var pausePanning=false;
+var lastX,lastY,xChange,yChange;
+      canvas.on({
+         'touch:gesture': function(e) {
+             if (e.e.touches && e.e.touches.length == 2) {
+                 pausePanning = true;
+                 var point = new fabric.Point(e.self.x, e.self.y);
+                 if (e.self.state == "start") {
+                     zoomStartScale = canvas.getZoom();
+                 }
+                 var delta = zoomStartScale * e.self.scale;
+                 canvas.zoomToPoint(point, delta);
+                 pausePanning = false;
+                 zoom = canvas.getZoom();
+                 console.log(zoom)
+               
+                 if(zoom.between(15,23)){
+                  loadlayer(getCurrentCordinates(CenterCoord().x,CenterCoord().y,2),2);
+               }
+               if(zoom.between(128,134)){
+                  loadlayer(getCurrentCordinates(CenterCoord().x,CenterCoord().y,3),3)
+               }
+               changelayers();
+             }
+         },
+         'object:selected': function() {
+             pausePanning = true;
+         },
+         'selection:cleared': function() {
+             pausePanning = false;
+         },
+         'touch:drag': function(e) {
+            canvas.selection=false;
+            
+             if (pausePanning == false && undefined != e.self.x && undefined != e.self.x) {
+                 currentX = e.self.x;
+                 currentY = e.self.y;
+                 xChange = (currentX - lastX)*1.5;
+                 yChange = (currentY - lastY)*1.5;
      
-   //               if( (Math.abs(currentX - lastX) <= 50) && (Math.abs(currentY - lastY) <= 50)) {
-   //                   var delta = new fabric.Point(xChange, yChange);
-   //                   canvas.relativePan(delta);
-   //               }
+                 if( (Math.abs(currentX - lastX) <= 50) && (Math.abs(currentY - lastY) <= 50)) {
+                     var delta = new fabric.Point(xChange, yChange);
+                     canvas.relativePan(delta);
+                 }
      
-   //               lastX = e.self.x;
-   //               lastY = e.self.y;
-   //           }
-   //       }
-   //   });
+                 lastX = e.self.x;
+                 lastY = e.self.y;
+             }
+             loadImagesBasedOnPanning();
+         }
+     });
      
 var panning = false;
 canvas.on('mouse:down', function(e) {
@@ -279,15 +294,15 @@ this.isDragging=true;
 canvas.on('mouse:up', function(e) {
 panning = false;
 });
-canvas.on('mouse:move', function(e) {
-   canvas.selection = false;
-   if (panning && e && e.e) {
-   var delta = new fabric.Point(e.e.movementX, e.e.movementY);
-   canvas.relativePan(delta);
+// canvas.on('mouse:move', function(e) {
+//    canvas.selection = false;
+//    if (panning && e && e.e) {
+//    var delta = new fabric.Point(e.e.movementX, e.e.movementY);
+//    canvas.relativePan(delta);
 
  
-}
-});
+// }
+// });
 
 canvas.on('mouse:wheel', function(opt) {
    var delta = opt.e.deltaY;
@@ -296,7 +311,7 @@ canvas.on('mouse:wheel', function(opt) {
    }
 delta=-1*delta;
 zoom = canvas.getZoom();
-zoom = zoom + (delta/200)*(3+(1.05*zoom));
+zoom = zoom + (delta/200)*(2+(1.025*zoom));
 
 //this limits zoom
 if (zoom > 1000){ 
@@ -319,21 +334,20 @@ changelayers();
 });
 
 
-canvas.on('mouse:move', function(opt) {
+ function loadImagesBasedOnPanning(){
 /// loads images at second layer
 if(zoom>20&&zoom<90){
    differenceinX=Math.abs(lastloadx-CenterCoord().x);
    differenceinY=Math.abs(lastloady-CenterCoord().y);
  
    if(differenceinX>10||differenceinY>10){
-      loadlayer(getCurrentCordinates(posX,posY,2),2);
+      loadlayer(getCurrentCordinates(CenterCoord().x,CenterCoord().y,2),2);
       if(zoom>70){
          if(layertwoarray.length!=0.9){
              for(var i=0;i<layertwoarray.length;i++){
                layertwoarray[i].opacity=0.9;
                }
-         }
-           
+         }    
       }
    }
 }
@@ -355,7 +369,8 @@ if(differenceinX>difference||differenceinY>difference){//after they move the mou
    }
 }
 ///
-////gets mouse cordinates
+
+///gets mouse cordinates
 var pointer = canvas.getPointer(event.e);
 posX = pointer.x;
 posY = pointer.y;
@@ -366,7 +381,7 @@ if(onmobile){
 document.getElementById('cordination').innerHTML=posX+ "|" +posY;
 document.getElementById('location').innerHTML= 'location for layer 1: '+getCurrentCordinates(posX,posY,1)+ '  |  '+'location for layer2: '+getCurrentCordinates(posX,posY,2)+'  |  '+'location for layer3:'+getCurrentCordinates(posX,posY,3);
 ///
-});
+};
 canvas.on('mouse:up', function(opt) {
 this.isDragging = false;
 this.selection = true;
