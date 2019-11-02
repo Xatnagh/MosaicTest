@@ -15,9 +15,17 @@
 <li><a href="./contact">Contact</a></li>
 <li><a href="./login">LogIn</a></li>                        
 <li><a href="./addImage">Upload</a></li>
-<img id='logo' src="https://www.snopes.com/tachyon/2019/07/olympics-logo-fake-snopes.jpg?resize=100,50" alt="">
+
 </ul>
 </nav>
+<section id="overlay">
+        <div id='pop'>
+       <img id ='pop_image' src="https://www.tokkoro.com/picsup/1434470-landscape.jpg" alt="">
+       <p id='headers'>Description: </p> <p id='pop_description'>Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah </p>
+       <br><p id='headers'>Link:   </p> <a id= 'pop_url'href="google.com">Url goes here</a> <br>
+       <button id='pop_close'>Close</button>
+       </div>
+     </section>
 <div id="addimage-area">
            <span id="highlight"><h2>Add Image Here: </h2></span>
         <form action="/addImage" >
@@ -41,20 +49,11 @@
         <br>
         <button id=previewbtn style="background-color:aqua"><h1 style="color:black; font-weight: bold; "> Show Preview</h1></button>
 </div>
-<div id=preview>
-    <div id='pop'>
-        <img id ='pop_image' src="https://www.tokkoro.com/picsup/1434470-landscape.jpg" alt="Image Not Found">
-        <p id='headers'>Description: </p> <p id='pop_description'>Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah </p>
-        <br><p id='headers'>Link:   </p> <a id= 'pop_url'href="google.com">Url goes here</a> <br>
-        <button id='pop_close'>Close</button>
-        </div>
-</div>
+
 <script>
     $('#previewbtn').click(function(){
-      
         const form = document.querySelector('form');
         const data = Object.fromEntries(new FormData(form).entries());
-
 imgUrl=data['image_url'];
 description=data['description']
 url=data['website_url'];
@@ -63,12 +62,11 @@ document.getElementById('pop_image').src=`${imgUrl}`;
   document.getElementById('pop_description').innerHTML=`${description}`;
   document.getElementById('pop_url').innerHTML=`${url}`;
   document.getElementById('pop_url').href=`${url}`;
-  $('#pop').css({'display':'block'});
+  $('#overlay').css({'display':'block'});
     });
     
 $('#pop_close').click(function(){
-  
-$('#pop').css({'display':'none'});
+$('#overlay').css({'display':'none'});
 });
 
 </script>

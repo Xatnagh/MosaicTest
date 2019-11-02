@@ -30,20 +30,9 @@ function loadlayer(location,layer){
 ///this loads first layer
 sendDataToLoad(jdata_location,jdata_imageurl,jdata_scale,jdata_level);
 ///
+
 var canvas = new fabric.Canvas('c');
-var zoom=canvas.getZoom();
-var zoom=1;
-var layeronearray=[];
-var layertwoarray=[];
-var layerthreearray=[];
-var perpixelX=canvas.width/1200;
-var perpixelY=canvas.height/1200;
-var posX;
-var posY;
-var lastdragpointx;
-var lastdragpointy;
-var lastloadx;
-var lastloady;
+
 function sendDataToLoad(img_location,img_imgurl,img_scale,img_level){
    
    for(var i=0;i<img_location.length;i++){
@@ -122,9 +111,9 @@ if(zoom<20){
   
 }
 //layertwo turn visible
-if(layertwoarray.length!=0){
+if(layertwoarray.length!=0&&zoom>20&&zoom<90){
    if(layertwoarray[0].opacity!=1){
-    if(zoom>=20&&zoom<90){
+    
          for(var i=0;i<layeronearray.length;i++){
       layeronearray[i].opacity=0.9;
       }
@@ -136,30 +125,28 @@ if(layertwoarray.length!=0){
             layerthreearray[i].opacity=0;
             }
          }
-}
+
   
 }
-
 }
 //layer 3 turn visible
 
-  if(zoom>=90&&layerthreearray.length!=0){
-     if(layerthreearray[0].opacity!=0){
+if(zoom>90&&layerthreearray.length!=0){
+     if(layerthreearray[0].opacity!=1){
+
    for(var i=0;i<layeronearray.length;i++){
-      layeronearray[i].opacity=0;
+      layeronearray[i].opacity=0.5;
       }
       if(layertwoarray.length!=0){
       for(var i=0;i<layertwoarray.length;i++){
          layertwoarray[i].opacity=0.9;
          }
       }
-      if(layerthreearray.length!=0){
-         for(var i=0;i<layerthreearray.length;i++){
+      for(var i=0;i<layerthreearray.length;i++){
             layerthreearray[i].opacity=1;
-            }
          }
+      
 }
- 
 }
 
 
@@ -226,83 +213,73 @@ $("#reset").click( function()
          canvas.viewportTransform[4]=0;
         canvas.viewportTransform[5]=0;
          canvas.requestRenderAll();
-         document.getElementById('zoom').innerHTML="zoom "+ zoom;
-         
-
+         // document.getElementById('zoom').innerHTML="zoom "+ zoom;
          }
       );
      // mobile control
 
 var pausePanning=false;
 var lastX,lastY,xChange,yChange;
-      canvas.on({
-         'touch:gesture': function(e) {
-             if (e.e.touches && e.e.touches.length == 2) {
-                 pausePanning = true;
-                 var point = new fabric.Point(e.self.x, e.self.y);
-                 if (e.self.state == "start") {
-                     zoomStartScale = canvas.getZoom();
-                 }
-                 var delta = zoomStartScale * e.self.scale;
-                 canvas.zoomToPoint(point, delta);
-                 pausePanning = false;
-                 zoom = canvas.getZoom();
-                 console.log(zoom)
-               
-                 if(zoom.between(15,23)){
-                  loadlayer(getCurrentCordinates(CenterCoord().x,CenterCoord().y,2),2);
-               }
-               if(zoom.between(128,134)){
-                  loadlayer(getCurrentCordinates(CenterCoord().x,CenterCoord().y,3),3)
-               }
-               changelayers();
-             }
-         },
-         'object:selected': function() {
-             pausePanning = true;
-         },
-         'selection:cleared': function() {
-             pausePanning = false;
-         },
-         'touch:drag': function(e) {
-            canvas.selection=false;
-            
-             if (pausePanning == false && undefined != e.self.x && undefined != e.self.x) {
-                 currentX = e.self.x;
-                 currentY = e.self.y;
-                 xChange = (currentX - lastX)*1.5;
-                 yChange = (currentY - lastY)*1.5;
-     
-                 if( (Math.abs(currentX - lastX) <= 50) && (Math.abs(currentY - lastY) <= 50)) {
-                     var delta = new fabric.Point(xChange, yChange);
-                     canvas.relativePan(delta);
-                 }
-     
-                 lastX = e.self.x;
-                 lastY = e.self.y;
-             }
-             loadImagesBasedOnPanning();
+canvas.on({
+   'touch:gesture': function(e) {
+         if (e.e.touches && e.e.touches.length == 2) {
+            pausePanning = true;
+            var point = new fabric.Point(e.self.x, e.self.y);
+            if (e.self.state == "start") {
+               zoomStartScale = canvas.getZoom();
+            }
+            var delta = zoomStartScale * e.self.scale;
+            canvas.zoomToPoint(point, delta);
+            pausePanning = false;
+            zoom = canvas.getZoom();
+            if(zoom.between(15,23)){
+            loadlayer(getCurrentCordinates(CenterCoord().x,CenterCoord().y,2),2);
          }
-     });
-     
+         if(zoom.between(128,190)){
+            loadlayer(getCurrentCordinates(CenterCoord().x,CenterCoord().y,3),3)
+         }
+         changelayers();
+         }
+   } });
+        
+    
+
 var panning = false;
-canvas.on('mouse:down', function(e) {
+canvas.on('mouse:down', function() {
 panning = true;
 this.isDragging=true;
 });
 
-canvas.on('mouse:up', function(e) {
+canvas.on('mouse:up', function() {
 panning = false;
 });
-// canvas.on('mouse:move', function(e) {
-//    canvas.selection = false;
-//    if (panning && e && e.e) {
-//    var delta = new fabric.Point(e.e.movementX, e.e.movementY);
-//    canvas.relativePan(delta);
+if(is_touch_device()){
+   canvas.on('touch:drag', function(e) {
+         
+      canvas.selection=false;
+        currentX = e.self.x;
+        currentY = e.self.y;
+        xChange = (currentX - lastX)*1.5;
+        yChange = (currentY - lastY)*1.5;
+        if( (Math.abs(currentX - lastX) <= 20) && (Math.abs(currentY - lastY) <= 20)) {
+            var delta = new fabric.Point(xChange, yChange);
+            canvas.relativePan(delta);
+        }
+        lastX = e.self.x;
+        lastY = e.self.y;
+    loadImagesBasedOnPanning();
+});
+}else{
+    canvas.on('mouse:move', function(e) {
+   canvas.selection = false;
+   if (panning && e && e.e) {
+   var delta = new fabric.Point(e.e.movementX, e.e.movementY);
+   canvas.relativePan(delta);
+   loadImagesBasedOnPanning();
+}
+});
+}
 
- 
-// }
-// });
 
 canvas.on('mouse:wheel', function(opt) {
    var delta = opt.e.deltaY;
@@ -323,11 +300,12 @@ zoom = 0.9;}
 canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
 opt.e.preventDefault();
 opt.e.stopPropagation();
-document.getElementById('zoomlevel').innerHTML="zoom "+ zoom;
+console.log(zoom)
+// document.getElementById('zoomlevel').innerHTML="zoom "+ zoom;
 if(zoom.between(15,23)){
    loadlayer(getCurrentCordinates(CenterCoord().x,CenterCoord().y,2),2);
 }
-if(zoom.between(128,134)){
+if(zoom.between(128,180)){
    loadlayer(getCurrentCordinates(CenterCoord().x,CenterCoord().y,3),3)
 }
 changelayers();
@@ -343,7 +321,7 @@ if(zoom>20&&zoom<90){
    if(differenceinX>10||differenceinY>10){
       loadlayer(getCurrentCordinates(CenterCoord().x,CenterCoord().y,2),2);
       if(zoom>70){
-         if(layertwoarray.length!=0.9){
+         if(layertwoarray.length!=0){
              for(var i=0;i<layertwoarray.length;i++){
                layertwoarray[i].opacity=0.9;
                }
@@ -378,11 +356,11 @@ if(onmobile){
    posX=CenterCoord().x;
    posY=CenterCoord().y;
 }
-document.getElementById('cordination').innerHTML=posX+ "|" +posY;
-document.getElementById('location').innerHTML= 'location for layer 1: '+getCurrentCordinates(posX,posY,1)+ '  |  '+'location for layer2: '+getCurrentCordinates(posX,posY,2)+'  |  '+'location for layer3:'+getCurrentCordinates(posX,posY,3);
+// document.getElementById('cordination').innerHTML=posX+ "|" +posY;
+// document.getElementById('location').innerHTML= 'location for layer 1: '+getCurrentCordinates(posX,posY,1)+ '  |  '+'location for layer2: '+getCurrentCordinates(posX,posY,2)+'  |  '+'location for layer3:'+getCurrentCordinates(posX,posY,3);
 ///
 };
-canvas.on('mouse:up', function(opt) {
+canvas.on('mouse:up', function() {
 this.isDragging = false;
 this.selection = true;
 });
@@ -412,8 +390,8 @@ function imageInfoPage(imgUrl,url,description){
   document.getElementById('pop_description').innerHTML=`${description}`;
   document.getElementById('pop_url').innerHTML=`${url}`;
   document.getElementById('pop_url').href=`${url}`;
-  $('#pop').css({'display':'block'});
-   
+  $('#overlay').css({'display':'block'});
+
 
 }
 
@@ -438,13 +416,12 @@ if( typeof( window.innerWidth ) == 'number' ) {
 
 // document.getElementById('c').width=myWidth*.8;
 // document.getElementById('c').height=myHeight*0.8; 
-document.getElementById('c').width=myWidth*0.9;
+document.getElementById('c').width=myWidth;
 
 document.getElementById('c').height=myHeight*0.9; 
 }
 
 $('#pop_close').click(function(){
-$('#pop').css({'display':'none'});
 $('#overlay').css({'display':'none'});
 });
 
@@ -457,10 +434,40 @@ function CenterCoord(){
 }
 
 
-
+function is_touch_device() {
+   var prefixes = ' -webkit- -moz- -o- -ms- '.split(' ');
+   var mq = function(query) {
+     return window.matchMedia(query).matches;
+   }
+ 
+   if (('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch) {
+     return true;
+   }
+ 
+   // include the 'heartz' as a way to have a non matching MQ to help terminate the join
+   // https://git.io/vznFH
+   var query = ['(', prefixes.join('touch-enabled),('), 'heartz', ')'].join('');
+   return mq(query);
+ }
 
 Number.prototype.between = function(a, b) {
    var min = Math.min.apply(Math, [a, b]),
      max = Math.max.apply(Math, [a, b]);
    return this > min && this < max;
  };
+ var zoom=canvas.getZoom();
+ var layeronearray=[];
+ var layertwoarray=[];
+ var layerthreearray=[];
+ var perpixelX=canvas.width/1200;
+ var perpixelY=canvas.height/1200;
+ var posX;
+ var posY;
+ var lastdragpointx;
+ var lastdragpointy;
+ var lastloadx;
+ var lastloady;
+
+     
+
+   

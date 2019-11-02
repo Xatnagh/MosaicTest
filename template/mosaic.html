@@ -1,6 +1,7 @@
 
 <html>
     <head>
+        <meta name="viewport" content="width=device-width, user-scalable=no">
     <script src="/script/jquery-3.4.1.min.js"></script>
     <script src="/script/fabric_with_touch.js"></script>
       <link rel="stylesheet" href="/css/home.css">
@@ -16,22 +17,28 @@
 <li><a href="./contact">Contact</a></li>
 <li><a href="./login">LogIn</a></li>                         
 <li><a href="./addImage">Upload</a></li>
-<img id='logo' src="https://www.snopes.com/tachyon/2019/07/olympics-logo-fake-snopes.jpg?resize=100,50" alt="">
 </ul>
-</nav> 
-<div class="ms-OverlayExample">
-    <canvas id="c"></canvas>
+</nav>
+ <canvas id="c"></canvas>
+
+<section id="overlay">
      <div id='pop'>
     <img id ='pop_image' src="https://www.tokkoro.com/picsup/1434470-landscape.jpg" alt="">
     <p id='headers'>Description: </p> <p id='pop_description'>Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah </p>
     <br><p id='headers'>Link:   </p> <a id= 'pop_url'href="google.com">Url goes here</a> <br>
     <button id='pop_close'>Close</button>
     </div>
-    <button id="show">Press for debugging info</button>
+  </section>
+  <!-- <div>
+     <button id="show">Press for debugging info</button>
     <h2 id="cordination" class=hidden>x | y</h2>
     <h2 id=location class=hidden style ="display: inline-block; left: 20%;">location for layer 1:  | location for layer2: |location for layer3: </h2>
     <h2 id="zoomlevel" class=hidden>0</h2>
   <button id="reset" class=hidden>RESET</button>
+
+  </div> -->
+
+
 <script>
 var jdata_location=[];
 var jdata_url=[];
@@ -39,7 +46,7 @@ var jdata_imageurl=[];
 var jdata_scale=[];
 var jdata_level=[];
 </script>
-           
+
             {% for entry in data %}
             <script>    
             jdata_location.push("{{entry.location}}");
