@@ -1,24 +1,18 @@
 
 <html>
     <head>
-        <meta name="viewport" content="width=device-width, user-scalable=no">
+        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1">
     <script src="/script/jquery-3.4.1.min.js"></script>
     <script src="/script/fabric_with_touch.js"></script>
+
       <link rel="stylesheet" href="/css/home.css">
-      <!-- <title>Mosaic Tokyo 2.0!</title> -->
+      <link rel="stylesheet" href="/css/headers.css">
+      <title>Mosaic Tokyo 2.0!</title>
     </head>
     <body>
-
-    
- <nav> 
- <p> <a href="/">MosaicTokyo</a> </p>             
-
-<ul>
-<li><a href="./contact">Contact</a></li>
-<li><a href="./login">LogIn</a></li>                         
-<li><a href="./addImage">Upload</a></li>
-</ul>
-</nav>
+        <nav id="topbar">
+          </nav>
+          
  <canvas id="c"></canvas>
 
 <section id="overlay">
@@ -59,6 +53,7 @@ var jdata_level=[];
             {% endfor %}
             
       <script src="/script/script.js"></script>
+      <script src="/script/flexibleview.js"></script>
     </body>
     </html>
     
