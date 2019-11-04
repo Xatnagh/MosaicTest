@@ -3,27 +3,28 @@ import math
 class ImageInfo(ndb.Model):
     location=ndb.IntegerProperty(required=True)
     level=ndb.IntegerProperty(required=True)
-    scaleAmount=ndb.IntegerProperty(required=True)
-    image_url= ndb.StringProperty(required=False,default= 'https://www.tokkoro.com/picsup/1434470-landscape.jpg')
+    image_url= ndb.StringProperty(required=False,default= '/images/uploadYourOwn.jpg')
     url= ndb.StringProperty(required=False,default= 'https://www.reddit.com/r/dankmemes/')
     description=ndb.StringProperty(required=False,default="Null")
 ANCESTORY_KEY = ndb.Key("ImageInfo","ImageInfo_root")
 
 alreadyloadedlist=[] 
 alreadyloadedlist_layer3=[] 
+
+#for the loading layers
 def getImages(i):
     ImageExist=ImageInfo.query(ImageInfo.level==2,ImageInfo.location==i).fetch()
     if ImageExist:
         return ImageExist
     
     else:
-        placeholderImage=[ImageInfo( description=u'Null', image_url=u'https://www.tokkoro.com/picsup/1434470-landscape.jpg', level=3, location=i, scaleAmount=1200, url=u'https://www.reddit.com/r/dankmemes/')]
+        placeholderImage=[ImageInfo( description=u'Null', image_url=u'/images/uploadYourOwn.jpg', level=3, location=i, url=u'https://www.reddit.com/r/dankmemes/')]
         return placeholderImage
 
 def fetchNearByImages(location,layer): 
     img_location=[]
     img_imgurl=[]
-    img_scale=[]
+
     img_level=[]
     if(layer==2):
         unitsinY=80
@@ -64,21 +65,22 @@ def fetchNearByImages(location,layer):
     for i in imagelist:
         img_location.append(i[0].location)
         img_imgurl.append(i[0].image_url)
-        img_scale.append(i[0].scaleAmount)
+      
         img_level.append(i[0].level)
     return {
         'img_location':img_location,
         'img_imgurl':img_imgurl,
         'img_level':img_level,
-        'img_scale':img_scale
+       
     }
 
 def getImageInfo(location):
+    #for when user click on an image
     imageExist=ImageInfo.query(ImageInfo.location==location,ImageInfo.level==3).fetch()
     if imageExist:
          return imageExist
     else:
-        placeholderImage=[ImageInfo( description=u'Upload your own today!', image_url=u'https://d3octkd2uqmyim.cloudfront.net/media/bi/3708/upload-your-own-design-5x7-wedding-invitation-up-2x.jpg?q=1566557871', location=location, url=u'https://www.reddit.com/r/dankmemes/')]
+        placeholderImage=[ImageInfo( description=u'Upload your own today!', image_url=u'/images/uploadYourOwn.jpg', location=location, url=u'https://www.reddit.com/r/dankmemes/')]
         return placeholderImage
     
    

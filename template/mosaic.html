@@ -37,7 +37,6 @@
 var jdata_location=[];
 var jdata_url=[];
 var jdata_imageurl=[];
-var jdata_scale=[];
 var jdata_level=[];
 </script>
 
@@ -46,9 +45,7 @@ var jdata_level=[];
             jdata_location.push("{{entry.location}}");
             jdata_url.push("{{entry.url}}");
             jdata_imageurl.push("{{entry.image_url}}");
-            jdata_level.push('{{entry.level}}')
-            jdata_scale.push('{{entry.scaleAmount}}')
-            
+            jdata_level.push('{{entry.level}}')  
          </script>              
             {% endfor %}
             

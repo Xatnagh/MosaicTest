@@ -7,7 +7,7 @@ import jinja2
 from database import defaultdatas
 from Images import ImageInfo, fetchNearByImages,alreadyloadedlist,alreadyloadedlist_layer3,ANCESTORY_KEY,getImageInfo
 from test import test
-from database import loadlayer3
+
 
 the_jinja_env = jinja2.Environment(loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
 extensions=['jinja2.ext.autoescape'],autoescape=True)
@@ -46,7 +46,7 @@ class fillintherest(webapp2.RequestHandler):
             list.append(i.location)
             listlength=len(list)
         for i in range(list[listlength-1],6401):
-            ImageInfo(parent=ANCESTORY_KEY,location=i,scaleAmount=80,level=2).put()
+            ImageInfo(parent=ANCESTORY_KEY,location=i,level=2).put()
 class contact(webapp2.RequestHandler):
     def get(self):
         t = the_jinja_env.get_template('/template/contact.html')

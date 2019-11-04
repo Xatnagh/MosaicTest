@@ -21,14 +21,15 @@ function loadlayer(location,layer){
        type: "GET",
       success: function(integer) {   
          var received=JSON.parse(integer)
-         sendDataToLoad(received['img_location'],received['img_imgurl'],received['img_scale'],received['img_level']);
-         console.log('data: sent',data['location'],' , ',data['layer'])
+         scale=getscale(received['img_level'][0])
+         sendDataToLoad(received['img_location'],received['img_imgurl'],scale,received['img_level']);
+         console.log('data: sent',data['location'],scale,data['layer'])
          console.log(received['img_location'])
           },
    });
       }
 ///this loads first layer
-sendDataToLoad(jdata_location,jdata_imageurl,jdata_scale,jdata_level);
+sendDataToLoad(jdata_location,jdata_imageurl,16,jdata_level);
 ///
 
 var canvas = new fabric.Canvas('c');
@@ -37,10 +38,10 @@ function sendDataToLoad(img_location,img_imgurl,img_scale,img_level){
    
    for(var i=0;i<img_location.length;i++){
      
-      var tolocation=locationforcanvas(img_location[i],img_scale[i])
+      var tolocation=locationforcanvas(img_location[i],img_scale)
       var locationx=tolocation.x;
       var locationy=tolocation.y;
-      var scaleamount=img_scale[i];  
+      var scaleamount=img_scale;  
       var level=img_level[i];
       var imageurl= img_imgurl[i];
    loadimage(scaleamount,locationx,locationy,level,imageurl);
@@ -449,7 +450,13 @@ function is_touch_device() {
    var query = ['(', prefixes.join('touch-enabled),('), 'heartz', ')'].join('');
    return mq(query);
  }
-
+function getscale(level){
+   if(level==2){
+      return 80;
+   }else{
+       return 1200;
+   }
+}
 Number.prototype.between = function(a, b) {
    var min = Math.min.apply(Math, [a, b]),
      max = Math.max.apply(Math, [a, b]);
