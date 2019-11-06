@@ -3,7 +3,7 @@ import math
 class ImageInfo(ndb.Model):
     location=ndb.IntegerProperty(required=True)
     level=ndb.IntegerProperty(required=True)
-    image_url= ndb.StringProperty(required=False,default= '/images/uploadYourOwn.jpg')
+    image_url= ndb.StringProperty(required=False,default= '/images/placeholder.jpg')
     url= ndb.StringProperty(required=False,default= 'https://www.reddit.com/r/dankmemes/')
     description=ndb.StringProperty(required=False,default="Null")
 ANCESTORY_KEY = ndb.Key("ImageInfo","ImageInfo_root")

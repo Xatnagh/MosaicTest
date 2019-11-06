@@ -6,7 +6,7 @@ if(screen.width>900){
     <ul>
               <li><a href="./contact">Contact</a></li>
               <li><a href="./login">Log-In</a></li>
-              <li><a href="./addImage">Upload</a></li>
+              <li><a href="#" onclick="modeUPLOAD(); return false;">Upload</a></li>
     </ul>
   `
 }else{
@@ -16,6 +16,6 @@ if(screen.width>900){
        <div class="dropdown-content">
    <a href="./contact">Contact</a>
    <a href="./login">LogIn</a>                     
-   <a href="./addImage">Upload</a>
+   <a href="#" onclick="modeUPLOAD(); return false;">Upload</a>
      </div>`
 }

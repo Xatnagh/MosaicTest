@@ -8,7 +8,7 @@ onmobile=check
 
 setCanvasSize(); 
 function loadlayer(location,layer){
-   console.log('location:',location)
+   // console.log('location:',location)
    lastloadx=CenterCoord().x;
          lastloady=CenterCoord().y;
    var data= {
@@ -23,8 +23,8 @@ function loadlayer(location,layer){
          var received=JSON.parse(integer)
          scale=getscale(received['img_level'][0])
          sendDataToLoad(received['img_location'],received['img_imgurl'],scale,received['img_level']);
-         console.log('data: sent',data['location'],scale,data['layer'])
-         console.log(received['img_location'])
+         // console.log('data: sent',data['location'],scale,data['layer'])
+         // console.log(received['img_location'])
           },
    });
       }
@@ -43,7 +43,12 @@ function sendDataToLoad(img_location,img_imgurl,img_scale,img_level){
       var locationy=tolocation.y;
       var scaleamount=img_scale;  
       var level=img_level[i];
-      var imageurl= img_imgurl[i];
+      if(img_imgurl.length!=1){
+         var imageurl= img_imgurl[i];
+      }else{
+         imageurl= img_imgurl[0]
+      }
+      
    loadimage(scaleamount,locationx,locationy,level,imageurl);
    }
 }
@@ -112,9 +117,8 @@ if(zoom<20){
   
 }
 //layertwo turn visible
-if(layertwoarray.length!=0&&zoom>20&&zoom<90){
-   if(layertwoarray[0].opacity!=1){
-    
+if(layertwoarray.length!=0&&zoom>20&&zoom<130){
+   if(layertwoarray[0].opacity!=0.99){
          for(var i=0;i<layeronearray.length;i++){
       layeronearray[i].opacity=0.9;
       }
@@ -132,8 +136,8 @@ if(layertwoarray.length!=0&&zoom>20&&zoom<90){
 }
 //layer 3 turn visible
 
-if(zoom>90&&layerthreearray.length!=0){
-     if(layerthreearray[0].opacity!=1){
+if(zoom>130&&layerthreearray.length!=0){
+     if(layerthreearray[0].opacity!=0.99){
 
    for(var i=0;i<layeronearray.length;i++){
       layeronearray[i].opacity=0.5;
@@ -162,6 +166,9 @@ function addtoarray(image,level){
    }
   if(level==3){
      layerthreearray.push(image)
+  }
+  if(level==4){
+     layerfourarray.push(image)
   }
 }
 
@@ -195,7 +202,7 @@ function getCurrentCordinates(posX,posY,level){
 //MOVEMENTS AND BUTTONS AND INFOMATION DISPLAYS
 $('#show').click( function(){
   var all= document.getElementsByClassName('hidden');
-  if(all[0].style.opacity!=1){
+  if(all[0].style.opacity!=0.99){
      for (var i = 0; i < all.length; i++) {
    all[i].style.opacity = '1';
   }}
@@ -233,10 +240,12 @@ canvas.on({
             canvas.zoomToPoint(point, delta);
             pausePanning = false;
             zoom = canvas.getZoom();
-            if(zoom.between(15,23)){
+            if(zoom.between(15,16)){
+               
             loadlayer(getCurrentCordinates(CenterCoord().x,CenterCoord().y,2),2);
          }
-         if(zoom.between(128,190)){
+         if(zoom.between(128,129)){
+            
             loadlayer(getCurrentCordinates(CenterCoord().x,CenterCoord().y,3),3)
          }
          changelayers();
@@ -256,7 +265,6 @@ panning = false;
 });
 if(is_touch_device()){
    canvas.on('touch:drag', function(e) {
-         
       canvas.selection=false;
         currentX = e.self.x;
         currentY = e.self.y;
@@ -277,7 +285,13 @@ if(is_touch_device()){
    var delta = new fabric.Point(e.e.movementX, e.e.movementY);
    canvas.relativePan(delta);
    loadImagesBasedOnPanning();
+   var pointer = canvas.getPointer(event.e);
+posX = pointer.x;
+posY = pointer.y;
+
 }
+///gets mouse cordinates
+
 });
 }
 
@@ -301,12 +315,14 @@ zoom = 0.9;}
 canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
 opt.e.preventDefault();
 opt.e.stopPropagation();
-console.log(zoom)
+
 // document.getElementById('zoomlevel').innerHTML="zoom "+ zoom;
 if(zoom.between(15,23)){
+   
    loadlayer(getCurrentCordinates(CenterCoord().x,CenterCoord().y,2),2);
 }
 if(zoom.between(128,180)){
+   
    loadlayer(getCurrentCordinates(CenterCoord().x,CenterCoord().y,3),3)
 }
 changelayers();
@@ -320,6 +336,7 @@ if(zoom>20&&zoom<90){
    differenceinY=Math.abs(lastloady-CenterCoord().y);
  
    if(differenceinX>10||differenceinY>10){
+     
       loadlayer(getCurrentCordinates(CenterCoord().x,CenterCoord().y,2),2);
       if(zoom>70){
          if(layertwoarray.length!=0){
@@ -343,20 +360,12 @@ difference=2
 }else{difference=1}//so that the server won't get loaded a bunch of times for nothing
 
 if(differenceinX>difference||differenceinY>difference){//after they move the mouse, this will ask server for images
+  
    loadlayer(getCurrentCordinates(CenterCoord().x,CenterCoord().y,2),2);
       loadlayer(getCurrentCordinates(CenterCoord().x,CenterCoord().y,3),3);
    }
 }
 ///
-
-///gets mouse cordinates
-var pointer = canvas.getPointer(event.e);
-posX = pointer.x;
-posY = pointer.y;
-if(onmobile){
-   posX=CenterCoord().x;
-   posY=CenterCoord().y;
-}
 // document.getElementById('cordination').innerHTML=posX+ "|" +posY;
 // document.getElementById('location').innerHTML= 'location for layer 1: '+getCurrentCordinates(posX,posY,1)+ '  |  '+'location for layer2: '+getCurrentCordinates(posX,posY,2)+'  |  '+'location for layer3:'+getCurrentCordinates(posX,posY,3);
 ///
@@ -365,25 +374,50 @@ canvas.on('mouse:up', function() {
 this.isDragging = false;
 this.selection = true;
 });
+var count=0;
+var location1;
+canvas.on('mouse:dblclick',function(e){
+   let touch = e.e.touches ? e.e.touches[0] : e.e;
+   posX=canvas.getPointer(touch).x
+   posY=canvas.getPointer(touch).y
+  if(uploading==false){ 
+         var location=getCurrentCordinates(posX,posY,3)
+         console.log(location)
+         data={
+            location:location
+         }
+         $.ajax({
+            url:'/imageinfo',
+            data:data,
+            type:'GET',
+            success:function(recieved){
+               recieved=JSON.parse(recieved);
+               location=recieved['location'];
+               imgUrl=recieved['image_imgUrl'];
+               url=recieved['image_url'];
+               description=recieved['image_description'];
+               imageInfoPage(imgUrl,url,description)
+            }
+         })
+   }else{
+      if(count==1){ 
+         var location2=getCurrentCordinates(posX,posY,3)
 
-canvas.on('mouse:dblclick',function(){
-   var location=getCurrentCordinates(posX,posY,3)
-   data={
-      location:location
-   }
-   $.ajax({
-      url:'/imageinfo',
-      data:data,
-      type:'GET',
-      success:function(recieved){
-         recieved=JSON.parse(recieved);
-         location=recieved['location'];
-         imgUrl=recieved['image_imgUrl'];
-         url=recieved['image_url'];
-         description=recieved['image_description'];
-         imageInfoPage(imgUrl,url,description)
+         console.log('location1',location1,'location2',location2)
+         count++
+         makelist(location1,location2)
       }
-   })
+      if(count==0){
+      location1=getCurrentCordinates(posX,posY,3)
+      console.log('location1',location1)
+      count++
+      }  
+      if(count==2){
+         count=0
+         location1=null
+         
+      }
+   }
 });
 
 function imageInfoPage(imgUrl,url,description){
@@ -466,6 +500,7 @@ Number.prototype.between = function(a, b) {
  var layeronearray=[];
  var layertwoarray=[];
  var layerthreearray=[];
+ var layerfourarray=[]
  var perpixelX=canvas.width/1200;
  var perpixelY=canvas.height/1200;
  var posX;
