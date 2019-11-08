@@ -8,10 +8,10 @@ def defaultdatas():
                 ImageInfo(parent=ANCESTORY_KEY,location=i,level=1).put()
             print('done for 1')    
             for i in range(1,201):
-                ImageInfo(parent=ANCESTORY_KEY,location=i,level=2).put()
+                ImageInfo(parent=ANCESTORY_KEY,location=i,level=2,image_url='/images/placeholder.jpg').put()
             print("done for 2")     
             for i in range(1):
-                ImageInfo(parent=ANCESTORY_KEY,location=i,level=3,pointer=True,pointerlist=[1,2,1201,1202],image_url='/script/test.jpg',scalewidth=2,scaleheight=2).put()
+                ImageInfo(parent=ANCESTORY_KEY,location=i,level=3,pointer=True,pointerlist=[1,2,1201,1202],image_url='/images/test.jpg',scalewidth=2,scaleheight=2).put()
 def alreadyexist(list):  
     load=False
     for i in range(len(list)):

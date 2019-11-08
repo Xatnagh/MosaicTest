@@ -64,13 +64,13 @@ function sendDataToLoad(img_location,img_imgurl,img_scale,img_scaleX,img_scaleY,
    }
 }
 function loadimage(scale,scaleamountX,scaleamountY,locationx,locationy,level,img_imgurl){
-   // console.log('scale',scale,'  x',scaleamountX,'   y', scaleamountY)
-   if(level==2){
-      console.log(scale,scaleamountX,scaleamountY,locationx,locationy,level,img_imgurl)
-   }
-   
    fabric.Image.fromURL(img_imgurl, function(img){
-      img.opacity=1;
+      if(img_imgurl=='/images/greensquare.jpg'){
+        img.opacity=1; 
+      }else{
+        img.opcaity=0.99
+      }
+      
       var elWidth = img.naturalWidth || img.width;
       var elHeight = img.naturalHeight || img.height;
       var scaleX = ((canvas.scaleX || 1) * canvas.width / elWidth);
@@ -164,9 +164,8 @@ if(zoom>130&&layerthreearray.length!=0){
          }
       }
       for(var i=0;i<layerthreearray.length;i++){
-            layerthreearray[i].opacity=1;
-         }
-      
+            layerthreearray[i].opacity=0.99;
+         }    
 }
 }
 

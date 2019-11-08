@@ -20,6 +20,7 @@ locationlist.push(i)
     locationlist.push(i+j*1200)
     }
 }
+
 console.log(locationlist)
 arraytosend={
     'arraytosend':JSON.stringify(locationlist)
@@ -30,19 +31,18 @@ $.ajax({
     data: arraytosend,
     type: "POST",
    success: function(result) {   
-      imageexist=JSON.parse(result)
-      console.log(imageexist)
+      result=JSON.parse(result)
+      console.log(result['img_location'])
+    imageexist=result['bool']
       if(imageexist){
           alert('Image already exist for another user in your chosen area')
       }else{
-          sendDataToLoad(locationlist,imageurl,1200,4)
+        sendDataToLoad(result['img_location'],result['img_imgurl'],scale,result['img_scaleX'],result['img_scaleY'],result['img_level']);
+        sendDataToLoad(locationlist,imageurl,1200,one,one,4)
       }
        }
 });
-    
-
 }
-
 
 var uploading=false;
 function modeUPLOAD(){

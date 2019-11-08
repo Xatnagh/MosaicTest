@@ -1,5 +1,6 @@
 from google.appengine.ext import ndb
 import math
+
 class ImageInfo(ndb.Model):
     location=ndb.IntegerProperty(required=True)
     level=ndb.IntegerProperty(required=True)
@@ -86,6 +87,43 @@ def fetchNearByImages(location,level):
         'img_scaleY': img_scaleheight
     }
     
+def getimagesbylocation(passedlist):
+    from database import alreadyexist
+    img_location=[]
+    img_imgurl=[]
+    img_level=[]
+    img_scalewidth=[]
+    img_scaleheight=[]
+    list=passedlist
+    imagelist=[]
+    unitsinY=1200
+    maxindex=1440000
+    list=[x for x in list if x >= 1]   #filters out out of bround locations
+    list=[x for x in list if x <= maxindex] #filters out out of bround locations
+    list= set(list) - set(alreadyloadedlist_level3) 
+    alreadyloadedlist_level3.extend(list)
+        
+        # print(list)
+    for i in list:        
+        imagelist.append(getImages(i,3))  
+
+    for i in imagelist:
+        img_location.append(i[0].location)
+        img_imgurl.append(i[0].image_url)
+        img_level.append(i[0].level)
+        img_scalewidth.append(i[0].scalewidth)
+        img_scaleheight.append(i[0].scaleheight)
+    return{
+        'img_location':img_location,
+        'img_imgurl':img_imgurl,
+        'img_level':img_level,
+        'img_scaleX': img_scalewidth,
+        'img_scaleY': img_scaleheight,
+        'bool':alreadyexist(passedlist)
+    }
+
+
+
 
 def getImageInfo(location):
     #for when user click on an image

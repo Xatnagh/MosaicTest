@@ -5,7 +5,7 @@ import urllib2
 import random
 import jinja2
 from database import defaultdatas, alreadyexist, loadtest
-from Images import ImageInfo, fetchNearByImages,alreadyloadedlist,alreadyloadedlist_level3,ANCESTORY_KEY,getImageInfo
+from Images import ImageInfo, fetchNearByImages,alreadyloadedlist,alreadyloadedlist_level3,ANCESTORY_KEY,getImageInfo,getimagesbylocation
 from test import test
 
 
@@ -43,8 +43,7 @@ class update(webapp2.RequestHandler):
     def post(self):
         locationlist=self.request.POST.get('arraytosend')
         parsedlist= json.loads(locationlist)
-        bool=alreadyexist(parsedlist)
-        self.response.write(json.dumps(bool))
+        self.response.write(json.dumps(getimagesbylocation(parsedlist)))
         
 
 class fillintherest(webapp2.RequestHandler):
