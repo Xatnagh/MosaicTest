@@ -30,12 +30,11 @@ function loadlayer(location,layer){
       }
 ///this loads first layer
 var one=[1]
-// sendDataToLoad(jdata_location,jdata_imageurl,16,one,one,jdata_level);
 
 ///
 
 var canvas = new fabric.Canvas('c');
-testcenter();
+
 var zoom=canvas.getZoom();
 function sendDataToLoad(img_location,img_imgurl,img_scale,img_scaleX,img_scaleY,img_level){
    for(var i=0;i<img_location.length;i++){
@@ -513,18 +512,7 @@ function CenterCoord(){
    }
 
 }
-function testcenter(){
-   console.log('run')
-         var rect = new fabric.Rect({
-            left: canvas.width/2,
-            top: canvas.height/2,
-            fill: 'red',
-            width: 20,
-            height: 20
-          });
-          canvas.add(rect);
-      
-}
+
 
 
 
