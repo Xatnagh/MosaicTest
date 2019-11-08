@@ -28,18 +28,13 @@ body{
     font-family: arial;
     color:black;
     font-size: 20px;
-    padding: 13px 14px;
+    padding: 13px 10px;
     text-decoration: none;
     border: black 1px solid;
   }
-  
-  nav ul li:hover ul {
-    display: block;
-  }
-  
   nav ul li {
   
-    width: 180px;
+    width: 160px;
     height:40px;
     border-radius: 4px;
   }
@@ -52,6 +47,7 @@ body{
     background-color:lightgreen;
   }
   
+
   .dropdown{
     float: right;
     position: relative;
@@ -81,7 +77,6 @@ body{
 
   }
   .dropdown-content a:hover {background-color: #ddd;}
-  .dropdown:hover .dropdown-content {display: block;}
   .dropdown:hover .dropbtn {background-color: #3e8e41;}
   
   div button{

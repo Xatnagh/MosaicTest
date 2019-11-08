@@ -5,7 +5,6 @@ var onmobile;
 onmobile=check 
 };
  mobilecheck()
-
 setCanvasSize(); 
 function loadlayer(location,layer){
    // console.log('location:',location)
@@ -31,11 +30,13 @@ function loadlayer(location,layer){
       }
 ///this loads first layer
 var one=[1]
-sendDataToLoad(jdata_location,jdata_imageurl,16,one,one,jdata_level);
+// sendDataToLoad(jdata_location,jdata_imageurl,16,one,one,jdata_level);
+
 ///
 
 var canvas = new fabric.Canvas('c');
-
+testcenter();
+var zoom=canvas.getZoom();
 function sendDataToLoad(img_location,img_imgurl,img_scale,img_scaleX,img_scaleY,img_level){
    for(var i=0;i<img_location.length;i++){
       var tolocation=locationforcanvas(img_location[i],img_scale)
@@ -109,9 +110,6 @@ function locationforcanvas(location,scaleamountX){
    y:y
    }
 }
-
-
-
 function changelayers(){
 // layer one turn visible
 if(zoom<20){
@@ -309,10 +307,41 @@ posY = pointer.y;
 
 });
 }
+function zoomcanvasbutton(zommingin){
+var centerX=CenterCoord().x
+var centerY= CenterCoord().y
+var delta=53;
+if(navigator.userAgent.indexOf("Firefox") > 0) {
+}
+if(zommingin=='false'){
+ delta=-1*delta
+}
 
+zoom = canvas.getZoom();
+zoom = zoom + (delta/200)*(2+(1.025*zoom));
+
+//this limits zoom
+if (zoom > 1000){ 
+zoom = 1000;}
+if (zoom < .7){
+zoom = 0.9;}
+//
+canvas.zoomToPoint({ x: centerX, y: centerY}, zoom);
+
+// document.getElementById('zoomlevel').innerHTML="zoom "+ zoom;
+if(zoom.between(15,23)){
+   
+   loadlayer(getCurrentCordinates(CenterCoord().x,CenterCoord().y,2),2);
+}
+if(zoom.between(128,180)){
+   
+   loadlayer(getCurrentCordinates(CenterCoord().x,CenterCoord().y,3),3)
+}
+changelayers();
+}
 
 canvas.on('mouse:wheel', function(opt) {
-   var delta = opt.e.deltaY;
+   var delta = opt.e.deltaY; 
    if(navigator.userAgent.indexOf("Firefox") > 0) {
    delta=delta*60
    }
@@ -434,21 +463,22 @@ canvas.on('mouse:dblclick',function(e){
       }
    }
 });
-
+var currentoverlay;
 function imageInfoPage(imgUrl,url,description){
   document.getElementById('pop_image').src=`${imgUrl}`;
   document.getElementById('pop_description').innerHTML=`${description}`;
   document.getElementById('pop_url').innerHTML=`${url}`;
   document.getElementById('pop_url').href=`${url}`;
   $('#overlay').css({'display':'block'});
-
+  currentoverlay='#overlay'
 
 }
 
 
 //this function determines window size and therefore, screen size
+ var myWidth = 0, myHeight = 0;
 function setCanvasSize(){
-   var myWidth = 0, myHeight = 0;
+  
 if( typeof( window.innerWidth ) == 'number' ) {
   //Non-IE
   myWidth = window.innerWidth;
@@ -473,6 +503,7 @@ document.getElementById('c').height=myHeight*0.9;
 
 $('#pop_close').click(function(){
 $('#overlay').css({'display':'none'});
+currentoverlay='false'
 });
 
 function CenterCoord(){
@@ -482,6 +513,19 @@ function CenterCoord(){
    }
 
 }
+function testcenter(){
+   console.log('run')
+         var rect = new fabric.Rect({
+            left: canvas.width/2,
+            top: canvas.height/2,
+            fill: 'red',
+            width: 20,
+            height: 20
+          });
+          canvas.add(rect);
+      
+}
+
 
 
 function is_touch_device() {
@@ -511,7 +555,6 @@ Number.prototype.between = function(a, b) {
      max = Math.max.apply(Math, [a, b]);
    return this > min && this < max;
  };
- var zoom=canvas.getZoom();
  var layeronearray=[];
  var layertwoarray=[];
  var layerthreearray=[];
@@ -527,4 +570,3 @@ Number.prototype.between = function(a, b) {
 
      
 
-   

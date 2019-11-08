@@ -61,10 +61,6 @@
   #pop_close:hover{
     background-color: blanchedalmond;
   }
-  #c{
-    border: black 1px solid;
-    
-  }
   .noscroll { overflow: hidden; }
 .hidden{
   opacity: 0;

@@ -1,6 +1,11 @@
+loadheader()
 
-if(screen.width>900){ 
-    
+$(window).resize(function() {
+loadheader()
+});
+
+function loadheader(){
+  if(document.body.clientWidth>=750){ 
     document.getElementById('topbar').innerHTML=`
     <p> <a href="/">MosaicTokyo </a> </p>
     <ul>
@@ -9,8 +14,8 @@ if(screen.width>900){
               <li><a href="#" onclick="modeUPLOAD(); return false;">Upload</a></li>
     </ul>
   `
-}
-if(screen.width<=900){
+  
+}else{
     document.getElementById('topbar').innerHTML=`<p> <a href="/">MosaicTokyo</a> </p>             
     <div class="dropdown">
     <button class="dropbtn"><img src="/images/three-bars-icon-5.jpg" alt=""></button>
@@ -19,4 +24,24 @@ if(screen.width<=900){
    <a href="./login">LogIn</a>                     
    <a href="#" onclick="modeUPLOAD(); return false;">Upload</a>
      </div>`
+     $('#canvasbtn').css({'right':'10%'});
 }
+}
+$('.dropbtn').click(function(){
+  if($('.dropdown-content').css('display')=='none'){
+    $('.dropdown-content').css({'display':'block'})
+  }else{
+    $('.dropdown-content').css({'display':'none'})
+  }
+  
+
+});
+
+
+$(document).ready(function () {
+  if (window.history && window.history.pushState) {
+      $(window).on('popstate', function () {
+          $(currentoverlay).css('display', 'none')
+      });
+  }
+});

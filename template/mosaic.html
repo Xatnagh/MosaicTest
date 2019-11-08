@@ -7,13 +7,23 @@
 
       <link rel="stylesheet" href="/css/home.css">
       <link rel="stylesheet" href="/css/headers.css">
+      <link rel="stylesheet" href="/css/canvasbuttons.css">
       <title>Mosaic Tokyo 2.0!</title>
     </head>
     <body>
         <nav id="topbar">
           </nav>
-          
- <canvas id="c"></canvas>
+<div id='canvasDiv'>
+   <canvas id="c">
+   </canvas>
+    <div id='canvasbtn'>
+    <button id="reset"></button>
+   <button id="zoomin" onclick="zoomcanvasbutton('true')"></button>
+   <button id='zoomout' onclick="zoomcanvasbutton('false')"> </button>
+   </div>
+   
+</div>
+
 
 <section id="overlay">
      <div id='pop'>

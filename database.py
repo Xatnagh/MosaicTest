@@ -15,10 +15,7 @@ def defaultdatas():
 def alreadyexist(list):  
     load=False
     for i in range(len(list)):
-        print(i)
-        print('list',list[i])
         imageexist= ImageInfo.query(ImageInfo.location==list[i], ImageInfo.level==3).fetch()
-        print(imageexist)
         if imageexist:
               
             load=True
