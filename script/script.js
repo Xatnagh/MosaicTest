@@ -22,37 +22,53 @@ function loadlayer(location,layer){
       success: function(integer) {   
          var received=JSON.parse(integer)
          scale=getscale(received['img_level'][0])
-         sendDataToLoad(received['img_location'],received['img_imgurl'],scale,received['img_level']);
-         // console.log('data: sent',data['location'],scale,data['layer'])
-         // console.log(received['img_location'])
+         
+         sendDataToLoad(received['img_location'],received['img_imgurl'],scale,received['img_scaleX'],received['img_scaleY'],received['img_level']);
+         console.log('data: sent',data['location'],data['layer'])
+         // console.log(received['img_imgurl'] )
           },
    });
       }
 ///this loads first layer
-sendDataToLoad(jdata_location,jdata_imageurl,16,jdata_level);
+var one=[1]
+sendDataToLoad(jdata_location,jdata_imageurl,16,one,one,jdata_level);
 ///
 
 var canvas = new fabric.Canvas('c');
 
-function sendDataToLoad(img_location,img_imgurl,img_scale,img_level){
-   
+function sendDataToLoad(img_location,img_imgurl,img_scale,img_scaleX,img_scaleY,img_level){
    for(var i=0;i<img_location.length;i++){
-     
       var tolocation=locationforcanvas(img_location[i],img_scale)
       var locationx=tolocation.x;
       var locationy=tolocation.y;
-      var scaleamount=img_scale;  
+      var scale=img_scale;
+      if(img_scaleX.length!=1){
+         var scaleamountX=img_scaleX[i];
+      }else{
+         var scaleamountX=img_scaleX[0];
+      }
+      if(img_scaleY.length!=1){
+         var scaleamountY=img_scaleY[i];
+      }else{
+         var scaleamountY=img_scaleY[0];
+      }
+        
       var level=img_level[i];
       if(img_imgurl.length!=1){
          var imageurl= img_imgurl[i];
       }else{
          imageurl= img_imgurl[0]
       }
-      
-   loadimage(scaleamount,locationx,locationy,level,imageurl);
+   
+   loadimage(scale,scaleamountX,scaleamountY,locationx,locationy,level,imageurl);
    }
 }
-function loadimage(scaleamount,locationx,locationy,level,img_imgurl){
+function loadimage(scale,scaleamountX,scaleamountY,locationx,locationy,level,img_imgurl){
+   // console.log('scale',scale,'  x',scaleamountX,'   y', scaleamountY)
+   if(level==2){
+      console.log(scale,scaleamountX,scaleamountY,locationx,locationy,level,img_imgurl)
+   }
+   
    fabric.Image.fromURL(img_imgurl, function(img){
       img.opacity=1;
       var elWidth = img.naturalWidth || img.width;
@@ -61,10 +77,10 @@ function loadimage(scaleamount,locationx,locationy,level,img_imgurl){
       var scaleY = ((canvas.scaleY || 1) * canvas.height / elHeight);
       img.width = elWidth;
       img.height = elHeight;
-      img.scaleX = (scaleX/scaleamount);
-      img.scaleY = (scaleY/scaleamount);
-      img.left=(canvas.width/scaleamount)*(locationx-1);
-      img.top=(canvas.height/scaleamount)*locationy;
+      img.scaleX = (scaleX/(scale/scaleamountX));
+      img.scaleY = (scaleY/(scale/scaleamountY));
+      img.left=(canvas.width/scale)*(locationx-1);
+      img.top=(canvas.height/scale)*locationy;
       img.hasBorders= false,
       img.hasControls= false,
       img.hasRotatingPoint= false; 
@@ -73,18 +89,18 @@ function loadimage(scaleamount,locationx,locationy,level,img_imgurl){
       canvas.add(img);
    });
 }
-function locationforcanvas(location,scaleamount){
-   var x= location%scaleamount;
-   var y = Math.floor((location-x)/scaleamount);
+function locationforcanvas(location,scaleamountX){
+   var x= location%scaleamountX;
+   var y = Math.floor((location-x)/scaleamountX);
    if(x==0){
    y-=1
-   if(scaleamount==16){
+   if(scaleamountX==16){
       x=16 
    }
-   if(scaleamount==80){
+   if(scaleamountX==80){
       x=80
    }
-   if(scaleamount==1200){
+   if(scaleamountX==1200){
       x=1200
    }
    }
@@ -120,7 +136,7 @@ if(zoom<20){
 if(layertwoarray.length!=0&&zoom>20&&zoom<130){
    if(layertwoarray[0].opacity!=0.99){
          for(var i=0;i<layeronearray.length;i++){
-      layeronearray[i].opacity=0.9;
+      layeronearray[i].opacity=0;
       }
          for(var i=0;i<layertwoarray.length;i++){
          layertwoarray[i].opacity=1; 

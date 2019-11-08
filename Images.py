@@ -6,30 +6,39 @@ class ImageInfo(ndb.Model):
     image_url= ndb.StringProperty(required=False,default= '/images/placeholder.jpg')
     url= ndb.StringProperty(required=False,default= 'https://www.reddit.com/r/dankmemes/')
     description=ndb.StringProperty(required=False,default="Null")
+    scalewidth= ndb.IntegerProperty(required=False, default= 1)
+    scaleheight= ndb.IntegerProperty(required=False, default= 1)
+    pointer=ndb.BooleanProperty(required=False,default=False)
+    pointerlist=ndb.IntegerProperty(required=False,repeated=True)
 ANCESTORY_KEY = ndb.Key("ImageInfo","ImageInfo_root")
-
 alreadyloadedlist=[] 
-alreadyloadedlist_layer3=[] 
-
-#for the loading layers
-def getImages(i):
-    ImageExist=ImageInfo.query(ImageInfo.level==2,ImageInfo.location==i).fetch()
+alreadyloadedlist_level3=[] 
+clearpointerslist=[]
+#for the loading levels
+def getImages(i,level):
+    ImageExist=ImageInfo.query(ImageInfo.level==level,ImageInfo.location==i).fetch()
     if ImageExist:
-        return ImageExist
-    
+        if(ImageExist[0].pointer==False):
+            return ImageExist
+        else:
+            alreadyloadedlist_level3.append(ImageExist[0].pointerlist[0]) 
+            return ImageInfo.query(ImageInfo.location==ImageExist[0].pointerlist[0]).fetch()
+    elif level==2:
+        placeholderImage=[ImageInfo( description=u'Null', image_url=u'/images/uploadYourOwn.jpg', level=2, location=i, url=u'https://www.reddit.com/r/dankmemes/')]
+        return placeholderImage
     else:
         placeholderImage=[ImageInfo( description=u'Null', image_url=u'/images/uploadYourOwn.jpg', level=3, location=i, url=u'https://www.reddit.com/r/dankmemes/')]
         return placeholderImage
-
-def fetchNearByImages(location,layer): 
+def fetchNearByImages(location,level): 
     img_location=[]
     img_imgurl=[]
-
     img_level=[]
-    if(layer==2):
+    img_scalewidth=[]
+    img_scaleheight=[]
+    if(level==2):
         unitsinY=80
         maxindex=6400
-    if(layer==3):
+    if(level==3):
         unitsinY=1200
         maxindex=1440000
     #this part returned the list of near by units
@@ -51,28 +60,32 @@ def fetchNearByImages(location,layer):
     
     list=[x for x in list if x >= 1]   #filters out out of bround locations
     list=[x for x in list if x <= maxindex] #filters out out of bround locations
-    if(layer==2):
+    if(level==2):
         list= set(list) - set(alreadyloadedlist) #remove items that are already loaded
         alreadyloadedlist.extend(list) #add list to already loaded since it will be sent to load
         
-    if(layer==3):
-        list= set(list) - set(alreadyloadedlist_layer3) 
-        alreadyloadedlist_layer3.extend(list)
+    if(level==3):
+        list= set(list) - set(alreadyloadedlist_level3) 
+        alreadyloadedlist_level3.extend(list)
         # list.sort()
         # print(list)
     for i in list:        
-        imagelist.append(getImages(i))  
+        imagelist.append(getImages(i,level))  
+
     for i in imagelist:
         img_location.append(i[0].location)
         img_imgurl.append(i[0].image_url)
-      
         img_level.append(i[0].level)
-    return {
+        img_scalewidth.append(i[0].scalewidth)
+        img_scaleheight.append(i[0].scaleheight)
+    return{
         'img_location':img_location,
         'img_imgurl':img_imgurl,
         'img_level':img_level,
-       
+        'img_scaleX': img_scalewidth,
+        'img_scaleY': img_scaleheight
     }
+    
 
 def getImageInfo(location):
     #for when user click on an image
@@ -83,7 +96,7 @@ def getImageInfo(location):
         placeholderImage=[ImageInfo( description=u'Upload your own today!', image_url=u'/images/uploadYourOwn.jpg', location=location, url=u'https://www.reddit.com/r/dankmemes/')]
         return placeholderImage
     
-   
+  
     
 
 

@@ -1,4 +1,4 @@
-makelist(1,13)
+
 function makelist(l1,l2){
 
 var locationlist=[];
@@ -19,18 +19,29 @@ locationlist.push(i)
     for(var j=1;j<height;j++){
     locationlist.push(i+j*1200)
     }
-//     console.log(locationlist)
 }
-console.log('height',height)
-console.log(bottomleft,bottomright)
-
+console.log(locationlist)
+arraytosend={
+    'arraytosend':JSON.stringify(locationlist)
+}
 var imageurl=['/images/greensquare.png']
-for(var i=0;i<locationlist.length;i++){
-    sendDataToLoad(locationlist,imageurl,1200,1200)
+$.ajax({
+    url: "/update",
+    data: arraytosend,
+    type: "POST",
+   success: function(result) {   
+      imageexist=JSON.parse(result)
+      console.log(imageexist)
+      if(imageexist){
+          alert('Image already exist for another user in your chosen area')
+      }else{
+          sendDataToLoad(locationlist,imageurl,1200,4)
+      }
+       }
+});
     
-}
-}
 
+}
 
 
 var uploading=false;

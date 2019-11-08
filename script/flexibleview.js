@@ -1,6 +1,6 @@
 
 if(screen.width>900){ 
-    console.log('boo')
+    
     document.getElementById('topbar').innerHTML=`
     <p> <a href="/">MosaicTokyo </a> </p>
     <ul>
@@ -9,7 +9,8 @@ if(screen.width>900){
               <li><a href="#" onclick="modeUPLOAD(); return false;">Upload</a></li>
     </ul>
   `
-}else{
+}
+if(screen.width<=900){
     document.getElementById('topbar').innerHTML=`<p> <a href="/">MosaicTokyo</a> </p>             
     <div class="dropdown">
     <button class="dropbtn"><img src="/images/three-bars-icon-5.jpg" alt=""></button>

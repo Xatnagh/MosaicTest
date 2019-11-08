@@ -4,8 +4,8 @@ import os
 import urllib2
 import random
 import jinja2
-from database import defaultdatas
-from Images import ImageInfo, fetchNearByImages,alreadyloadedlist,alreadyloadedlist_layer3,ANCESTORY_KEY,getImageInfo
+from database import defaultdatas, alreadyexist, loadtest
+from Images import ImageInfo, fetchNearByImages,alreadyloadedlist,alreadyloadedlist_level3,ANCESTORY_KEY,getImageInfo
 from test import test
 
 
@@ -18,6 +18,7 @@ def getData():
 
 class Home(webapp2.RequestHandler):
     def get(self):
+        # loadtest()
         alreadyloadedlist=[] 
         alreadyloadedlist_layer3=[] 
         homepage = the_jinja_env.get_template('/template/mosaic.html')
@@ -39,6 +40,13 @@ class update(webapp2.RequestHandler):
         layer=int(self.request.GET.get('layer'))
         datasentback=fetchNearByImages(location,layer)
         self.response.write(json.dumps(datasentback))
+    def post(self):
+        locationlist=self.request.POST.get('arraytosend')
+        parsedlist= json.loads(locationlist)
+        bool=alreadyexist(parsedlist)
+        self.response.write(json.dumps(bool))
+        
+
 class fillintherest(webapp2.RequestHandler):
     def get(self):
         list=[]
@@ -68,7 +76,7 @@ class getImageIinfo(webapp2.RequestHandler):
             'location':location
         }
         self.response.write(json.dumps(data))
-
+    
 
 
         
