@@ -41,6 +41,7 @@ var canvas = new fabric.Canvas('c');
 sendDataToLoad(jdata_location,jdata_imageurl,16,one,one,jdata_level);
 var zoom=canvas.getZoom();
 function sendDataToLoad(img_location,img_imgurl,img_scale,img_scaleX,img_scaleY,img_level){
+   
    for(var i=0;i<img_location.length;i++){
       var tolocation=locationforcanvas(img_location[i],img_scale)
       var locationx=tolocation.x;
@@ -68,7 +69,7 @@ function sendDataToLoad(img_location,img_imgurl,img_scale,img_scaleX,img_scaleY,
    }
 }
 function loadimage(scale,scaleamountX,scaleamountY,locationx,locationy,level,img_imgurl){
-
+   console.log(img_imgurl)
    fabric.Image.fromURL(img_imgurl, function(img){
      
       if(img_imgurl=='/images/greensquare.jpg'){

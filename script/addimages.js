@@ -24,7 +24,7 @@ locationlist.push(i)
 console.log(locationlist)
 arraytosend={
     'arraytosend':JSON.stringify(locationlist),
-    'layer':3
+    'level':3
 }
 var imageurl=['/images/greensquare.png']
 $.ajax({
@@ -33,12 +33,14 @@ $.ajax({
     type: "GET",
    success: function(result) {   
       result=JSON.parse(result)
-      console.log(result['img_location'])
+      alreadyloaded_level3=alreadyloaded_level3.concat(result['img_location'])
+      console.log(alreadyloaded_level3)
     imageexist=result['bool']
+    sendDataToLoad(result['img_location'],result['img_imgurl'],scale,result['img_scaleX'],result['img_scaleY'],result['img_level']);
+    
       if(imageexist){
           alert('Image already exist for another user in your chosen area')
       }else{
-        sendDataToLoad(result['img_location'],result['img_imgurl'],scale,result['img_scaleX'],result['img_scaleY'],result['img_level']);
         sendDataToLoad(locationlist,imageurl,1200,one,one,4)
       }
        }
