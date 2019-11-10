@@ -4,7 +4,7 @@ import os
 import urllib2
 import random
 import jinja2
-from database import defaultdatas, alreadyexist, loadtest
+from database import defaultdatas, alreadyexist, loadtest,clearlevel2
 from Images import ImageInfo,ANCESTORY_KEY,getImageInfo,getimagesbylocation
 from test import test
 
@@ -46,7 +46,12 @@ class LoginPage(webapp2.RequestHandler):
     def get(self):
         t = the_jinja_env.get_template('/template/login.html')
         self.response.write(t.render())
-        
+
+class cleardatabase(webapp2.RequestHandler):
+    def get(self):
+        clearlevel2()
+        homepage = the_jinja_env.get_template('/template/mosaic.html')
+        self.response.write(homepage.render( {"data":getData()}))
 class getImageIinfo(webapp2.RequestHandler):
     def get(self):
         location=int(self.request.GET.get('location'))  
@@ -70,6 +75,7 @@ app = webapp2.WSGIApplication([
  ('/load', loadImages),
  ('/update', update),
 ('/contact',contact),
+('/clear',cleardatabase),
 ('/login',LoginPage),
 ('/imageinfo',getImageIinfo)
 ], debug=True)

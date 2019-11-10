@@ -34,7 +34,7 @@ $.ajax({
    success: function(result) {   
       result=JSON.parse(result)
       alreadyloaded_level3=alreadyloaded_level3.concat(result['img_location'])
-      console.log(alreadyloaded_level3)
+      
     imageexist=result['bool']
     sendDataToLoad(result['img_location'],result['img_imgurl'],scale,result['img_scaleX'],result['img_scaleY'],result['img_level']);
     
