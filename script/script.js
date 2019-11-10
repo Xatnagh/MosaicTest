@@ -6,24 +6,28 @@ onmobile=check
 };
  mobilecheck()
 setCanvasSize(); 
+var alreadyloaded_level2=[]
+var alreadyloaded_level3=[]
 function loadlayer(location,layer){
-   // console.log('location:',location)
    lastloadx=CenterCoord().x;
          lastloady=CenterCoord().y;
    var data= {
-      location:location,
-      layer:layer
+      arraytosend:JSON.stringify(location),
+      level:layer
       }
       $.ajax({
        url: "/update",
        data: data,
        type: "GET",
-      success: function(integer) {   
+      success: function(integer) {
          var received=JSON.parse(integer)
          scale=getscale(received['img_level'][0])
-         
+         addtoalreadyloaded(received['img_location'],layer)//so that the same image don't load again
          sendDataToLoad(received['img_location'],received['img_imgurl'],scale,received['img_scaleX'],received['img_scaleY'],received['img_level']);
-         console.log('data: sent',data['location'],data['layer'])
+         sortdata=location.sort(function(a,b){
+            return a-b
+         })
+         console.log('data: sent',location,data['level'])
          // console.log(received['img_imgurl'] )
           },
    });
@@ -256,11 +260,11 @@ canvas.on({
             zoom = canvas.getZoom();
             if(zoom.between(15,16)){
                
-            loadlayer(getCurrentCordinates(CenterCoord().x,CenterCoord().y,2),2);
+            nearbylocations(getCurrentCordinates(CenterCoord().x,CenterCoord().y,2),2);
          }
          if(zoom.between(128,129)){
             
-            loadlayer(getCurrentCordinates(CenterCoord().x,CenterCoord().y,3),3)
+            nearbylocations(getCurrentCordinates(CenterCoord().x,CenterCoord().y,3),3)
          }
          changelayers();
          }
@@ -332,11 +336,11 @@ canvas.zoomToPoint({ x: centerX, y: centerY}, zoom);
 // document.getElementById('zoomlevel').innerHTML="zoom "+ zoom;
 if(zoom.between(15,23)){
    
-   loadlayer(getCurrentCordinates(CenterCoord().x,CenterCoord().y,2),2);
+   nearbylocations(getCurrentCordinates(CenterCoord().x,CenterCoord().y,2),2);
 }
 if(zoom.between(128,180)){
    
-   loadlayer(getCurrentCordinates(CenterCoord().x,CenterCoord().y,3),3)
+   nearbylocations(getCurrentCordinates(CenterCoord().x,CenterCoord().y,3),3)
 }
 changelayers();
 }
@@ -364,11 +368,11 @@ opt.e.stopPropagation();
 // document.getElementById('zoomlevel').innerHTML="zoom "+ zoom;
 if(zoom.between(15,23)){
    
-   loadlayer(getCurrentCordinates(CenterCoord().x,CenterCoord().y,2),2);
+   nearbylocations(getCurrentCordinates(CenterCoord().x,CenterCoord().y,2),2);
 }
 if(zoom.between(128,180)){
    
-   loadlayer(getCurrentCordinates(CenterCoord().x,CenterCoord().y,3),3)
+   nearbylocations(getCurrentCordinates(CenterCoord().x,CenterCoord().y,3),3)
 }
 changelayers();
 });
@@ -382,7 +386,7 @@ if(zoom>20&&zoom<90){
  
    if(differenceinX>10||differenceinY>10){
      
-      loadlayer(getCurrentCordinates(CenterCoord().x,CenterCoord().y,2),2);
+      nearbylocations(getCurrentCordinates(CenterCoord().x,CenterCoord().y,2),2);
       if(zoom>70){
          if(layertwoarray.length!=0){
              for(var i=0;i<layertwoarray.length;i++){
@@ -406,8 +410,8 @@ difference=2
 
 if(differenceinX>difference||differenceinY>difference){//after they move the mouse, this will ask server for images
   
-   loadlayer(getCurrentCordinates(CenterCoord().x,CenterCoord().y,2),2);
-      loadlayer(getCurrentCordinates(CenterCoord().x,CenterCoord().y,3),3);
+   nearbylocations(getCurrentCordinates(CenterCoord().x,CenterCoord().y,2),2);
+   nearbylocations(getCurrentCordinates(CenterCoord().x,CenterCoord().y,3),3);
    }
 }
 ///
@@ -501,12 +505,10 @@ document.getElementById('c').width=myWidth;
 
 document.getElementById('c').height=myHeight*0.9; 
 }
-
 $('#pop_close').click(function(){
 $('#overlay').css({'display':'none'});
 currentoverlay='false'
 });
-
 function CenterCoord(){
    return{
       x:fabric.util.invertTransform(canvas.viewportTransform)[4]+(canvas.width/zoom)/2,
@@ -514,10 +516,6 @@ function CenterCoord(){
    }
 
 }
-
-
-
-
 function is_touch_device() {
    var prefixes = ' -webkit- -moz- -o- -ms- '.split(' ');
    var mq = function(query) {
@@ -540,6 +538,59 @@ function getscale(level){
        return 1200;
    }
 }
+function addtoalreadyloaded(location,level){
+if(level==2){
+   alreadyloaded_level2.push(location)
+}
+if(level==3){
+   alreadyloaded_level3.push(location)
+}
+}
+function nearbylocations(location,level){
+      var unitsinY,maxindex;
+      var list=[]
+   if(level==2){
+      unitsinY=80
+      maxindex=6400 
+      }
+   if(level==3){
+      unitsinY=1200
+      maxindex=1440000
+   }
+   for( var i=location-unitsinY*5-6;i<location-unitsinY*5+7;i++){
+      for(var j=0;j<9;j++){
+         list.push(i+unitsinY*j)
+      }
+   }
+   list= list.filter(function(list) {
+      return list >0;
+    });
+    list= list.filter(function(list) {
+      return list <maxindex;
+    });
+    if(level==2){
+      list = list.filter( function( item ) {
+         return alreadyloaded_level2.indexOf( item ) < 0;
+       } );
+       alreadyloaded_level2=alreadyloaded_level2.concat(list)
+
+   }
+   if(level==3){
+      list = list.filter( function( item ) {
+         return alreadyloaded_level3.indexOf( item ) < 0;
+       } );
+       alreadyloaded_level3=alreadyloaded_level3.concat(list)
+   }
+
+    loadlayer(list,level)
+}
+
+
+
+
+
+
+
 Number.prototype.between = function(a, b) {
    var min = Math.min.apply(Math, [a, b]),
      max = Math.max.apply(Math, [a, b]);

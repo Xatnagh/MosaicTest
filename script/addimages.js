@@ -23,13 +23,14 @@ locationlist.push(i)
 
 console.log(locationlist)
 arraytosend={
-    'arraytosend':JSON.stringify(locationlist)
+    'arraytosend':JSON.stringify(locationlist),
+    'layer':3
 }
 var imageurl=['/images/greensquare.png']
 $.ajax({
     url: "/update",
     data: arraytosend,
-    type: "POST",
+    type: "GET",
    success: function(result) {   
       result=JSON.parse(result)
       console.log(result['img_location'])
