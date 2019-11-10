@@ -1,35 +1,35 @@
 from google.appengine.ext import ndb
 import math
 
+ 
 class ImageInfo(ndb.Model):
     location=ndb.IntegerProperty(required=True)
     level=ndb.IntegerProperty(required=True)
-    image_url= ndb.StringProperty(required=False,default= '/images/placeholder.jpg')
-    url= ndb.StringProperty(required=False,default= 'https://www.reddit.com/r/dankmemes/')
-    description=ndb.StringProperty(required=False,default="Null")
-    scalewidth= ndb.IntegerProperty(required=False, default= 1)
-    scaleheight= ndb.IntegerProperty(required=False, default= 1)
+    image_url= ndb.StringProperty(required=False)
+    url= ndb.StringProperty(required=False)
+    description=ndb.StringProperty(required=False)
+    scalewidth= ndb.IntegerProperty(required=False)
+    scaleheight= ndb.IntegerProperty(required=False)
     pointer=ndb.BooleanProperty(required=False,default=False)
+    pointerlocation=ndb.IntegerProperty(required=False)
     pointerlist=ndb.IntegerProperty(required=False,repeated=True)
+
 ANCESTORY_KEY = ndb.Key("ImageInfo","ImageInfo_root")
-alreadyloadedlist=[] 
-alreadyloadedlist_level3=[] 
-clearpointerslist=[]
-#for the loading levels
+
 def getImages(i,level):
     ImageExist=ImageInfo.query(ImageInfo.level==level,ImageInfo.location==i).fetch()
     if ImageExist:
         if(ImageExist[0].pointer==False):
             return ImageExist
         else:
-            alreadyloadedlist_level3.append(ImageExist[0].pointerlist[0]) 
             return ImageInfo.query(ImageInfo.location==ImageExist[0].pointerlist[0]).fetch()
     elif level==2:
-        placeholderImage=[ImageInfo( description=u'Null', image_url=u'/images/uploadYourOwn.jpg', level=2, location=i, url=u'https://www.reddit.com/r/dankmemes/')]
+        placeholderImage=[ImageInfo( description=u'Null', image_url=u'/images/uploadYourOwn.jpg', level=2, location=i, url=u'https://www.reddit.com/r/dankmemes/',scalewidth=1,scaleheight=1)]
         return placeholderImage
     else:
-        placeholderImage=[ImageInfo( description=u'Null', image_url=u'/images/uploadYourOwn.jpg', level=3, location=i, url=u'https://www.reddit.com/r/dankmemes/')]
+        placeholderImage=[ImageInfo( description=u'Null', image_url=u'/images/uploadYourOwn.jpg', level=3, location=i, url=u'https://www.reddit.com/r/dankmemes/',scalewidth=1,scaleheight=1)]
         return placeholderImage
+
 def fetchNearByImages(location,level): 
     img_location=[]
     img_imgurl=[]
@@ -61,15 +61,6 @@ def fetchNearByImages(location,level):
     
     list=[x for x in list if x >= 1]   #filters out out of bround locations
     list=[x for x in list if x <= maxindex] #filters out out of bround locations
-    if(level==2):
-        list= set(list) - set(alreadyloadedlist) #remove items that are already loaded
-        alreadyloadedlist.extend(list) #add list to already loaded since it will be sent to load
-        
-    if(level==3):
-        list= set(list) - set(alreadyloadedlist_level3) 
-        alreadyloadedlist_level3.extend(list)
-        # list.sort()
-        # print(list)
     for i in list:        
         imagelist.append(getImages(i,level))  
 
@@ -100,9 +91,6 @@ def getimagesbylocation(passedlist):
     maxindex=1440000
     list=[x for x in list if x >= 1]   #filters out out of bround locations
     list=[x for x in list if x <= maxindex] #filters out out of bround locations
-    list= set(list) - set(alreadyloadedlist_level3) 
-    alreadyloadedlist_level3.extend(list)
-        
         # print(list)
     for i in list:        
         imagelist.append(getImages(i,3))  
@@ -135,6 +123,5 @@ def getImageInfo(location):
         return placeholderImage
     
   
-    
 
 

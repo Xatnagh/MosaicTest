@@ -5,7 +5,7 @@ import urllib2
 import random
 import jinja2
 from database import defaultdatas, alreadyexist, loadtest
-from Images import ImageInfo, fetchNearByImages,alreadyloadedlist,alreadyloadedlist_level3,ANCESTORY_KEY,getImageInfo,getimagesbylocation
+from Images import ImageInfo, fetchNearByImages,ANCESTORY_KEY,getImageInfo,getimagesbylocation
 from test import test
 
 
@@ -15,12 +15,9 @@ extensions=['jinja2.ext.autoescape'],autoescape=True)
 
 def getData():
       return ImageInfo.query(ImageInfo.level==1).fetch()
-
 class Home(webapp2.RequestHandler):
     def get(self):
         # loadtest()
-        alreadyloadedlist=[] 
-        alreadyloadedlist_layer3=[] 
         homepage = the_jinja_env.get_template('/template/mosaic.html')
         self.response.write(homepage.render( {"data":getData()}))
 
@@ -75,7 +72,7 @@ class getImageIinfo(webapp2.RequestHandler):
             'location':location
         }
         self.response.write(json.dumps(data))
-    
+   
 
 
         

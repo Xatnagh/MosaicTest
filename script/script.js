@@ -34,7 +34,7 @@ var one=[1]
 ///
 
 var canvas = new fabric.Canvas('c');
-
+sendDataToLoad(jdata_location,jdata_imageurl,16,one,one,jdata_level);
 var zoom=canvas.getZoom();
 function sendDataToLoad(img_location,img_imgurl,img_scale,img_scaleX,img_scaleY,img_level){
    for(var i=0;i<img_location.length;i++){
@@ -64,7 +64,9 @@ function sendDataToLoad(img_location,img_imgurl,img_scale,img_scaleX,img_scaleY,
    }
 }
 function loadimage(scale,scaleamountX,scaleamountY,locationx,locationy,level,img_imgurl){
+
    fabric.Image.fromURL(img_imgurl, function(img){
+     
       if(img_imgurl=='/images/greensquare.jpg'){
         img.opacity=1; 
       }else{
@@ -133,10 +135,10 @@ if(zoom<20){
 if(layertwoarray.length!=0&&zoom>20&&zoom<130){
    if(layertwoarray[0].opacity!=0.99){
          for(var i=0;i<layeronearray.length;i++){
-      layeronearray[i].opacity=0;
+      layeronearray[i].opacity=0.5;
       }
          for(var i=0;i<layertwoarray.length;i++){
-         layertwoarray[i].opacity=1; 
+         layertwoarray[i].opacity=0.99; 
       }
    if(layerthreearray.length!=0){
          for(var i=0;i<layerthreearray.length;i++){
@@ -157,7 +159,7 @@ if(zoom>130&&layerthreearray.length!=0){
       }
       if(layertwoarray.length!=0){
       for(var i=0;i<layertwoarray.length;i++){
-         layertwoarray[i].opacity=0.9;
+         layertwoarray[i].opacity=0.8;
          }
       }
       for(var i=0;i<layerthreearray.length;i++){
