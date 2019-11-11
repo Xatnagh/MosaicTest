@@ -4,7 +4,7 @@
         <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1">
     <script src="/script/jquery-3.4.1.min.js"></script>
     <script src="/script/fabric_with_touch.js"></script>
-      <script src="dropzone.js"></script>
+      <script src="/script/dropzone.js"></script>
       <link rel="stylesheet" href="/css/home.css">
       <link rel="stylesheet" href="/css/headers.css">
       <link rel="stylesheet" href="/css/canvasbuttons.css">
@@ -13,9 +13,6 @@
     <body>
         <nav id="topbar">
           </nav>
-<div id=uploadImages>
-
-</div>
 
 
 
@@ -39,12 +36,30 @@
 
 <section id="overlay">
      <div id='pop'>
-    <img id ='pop_image' src="https://www.tokkoro.com/picsup/1434470-landscape.jpg" alt="">
+    <img id ='pop_image' src="" alt="Image not found">
     <p id='headers'>Description: </p> <p id='pop_description'>Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah Blah </p>
     <br><p id='headers'>Link:   </p> <a id= 'pop_url'href="google.com">Url goes here</a> <br>
     <button id='pop_close'>Close</button>
     </div>
   </section>
+
+
+<div id=dropzone >
+  <h2>Use Url of Image</h2>
+    <input type="text" name="Image Url goes here" id=imageurl>
+    <input type="submit" id=submit>
+  <h1>Or</h1>
+  <form action="/file-upload" class="dropzone" id=dz>
+    <div class="fallback">
+      <input name="file" type="file" multiple />
+    </div>
+  </form>
+  <section id=imagezone>
+  </section>
+  <img id=confirmbtn src="/images/confirm.png" alt="Confirm">
+  <img id=cancelbtn src="/images/cancel.png" alt="Click me to remove the file." onclick="" />
+   </div>
+
   <!-- <div>
      <button id="show">Press for debugging info</button>
     <h2 id="cordination" class=hidden>x | y</h2>
@@ -71,6 +86,7 @@ var jdata_level=[];
          </script>              
             {% endfor %}
         
+          
       <script src="/script/script.js"></script>
       
       <script src="/script/addimages.js"></script>

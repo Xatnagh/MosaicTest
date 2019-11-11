@@ -28,6 +28,7 @@ def getImages(list,level):
                 imagelist.append(ImageExist) 
             else:
                 pointerImage=ImageInfo.query(ImageInfo.location==ImageExist[0].pointerlocation,ImageInfo.level==3).fetch()
+                print(pointerImage)
                 imagelist.append(pointerImage)
         else:
             placeholderImage=[ImageInfo( description=u'Null', image_url=u'/images/uploadYourOwn.jpg', level=3, location=i, url=u'https://www.reddit.com/r/dankmemes/',scalewidth=1,scaleheight=1)]

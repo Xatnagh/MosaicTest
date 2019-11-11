@@ -6,13 +6,14 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Add Image</title>
     <script src="/script/jquery-3.4.1.min.js"></script>
+    
     <link rel="stylesheet" href="/css/addImage.css">
     <link rel="stylesheet" href="/css/headers.css">
 </head>
 <body>
+        
         <nav id="topbar">
-       
-            </nav>
+        </nav>
 <section id="overlay">
         <div id='pop'>
        <img id ='pop_image' src="" alt="">
@@ -22,15 +23,10 @@
        </div>
      </section>
 <div id="addimage-area">
-    <h1 style="color:white;">THIS PAGE IS UNDER CONSTRUCTION</h1>
+    <h1  style="color:white; margin-top: 0;">THIS PAGE IS UNDER CONSTRUCTION</h1>
            <span id="highlight"><h2>Add Image Here: </h2></span>
         <form action="/addImage" >
             <!-- method="POST" -->
-            <br>
-            
-            <br>
-            <h3>Image_url:</h3>
-            <input type="text" name="image_url" class="textbox">
             <br>
             <h3>Description:</h3>
             <input type="text" name="description" class="textbox">
@@ -46,25 +42,25 @@
 </div>
 
 <script>
+    var image = localStorage.getItem('image');
+console.log(image)
     $('#previewbtn').click(function(){
         const form = document.querySelector('form');
         const data = Object.fromEntries(new FormData(form).entries());
-imgUrl=data['image_url'];
 description=data['description']
 url=data['website_url'];
-
-document.getElementById('pop_image').src=`${imgUrl}`;
+document.getElementById('pop_image').src=image
   document.getElementById('pop_description').innerHTML=`${description}`;
   document.getElementById('pop_url').innerHTML=`${url}`;
   document.getElementById('pop_url').href=`${url}`;
   $('#overlay').css({'display':'block'});
     });
-    
 $('#pop_close').click(function(){
 $('#overlay').css({'display':'none'});
 });
 
 </script>
 <script src="/script/flexibleview.js"></script>
+<script src="/script/addimages.js"></script>
 </body>
 </html>

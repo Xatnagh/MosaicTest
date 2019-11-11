@@ -11,7 +11,7 @@ function loadheader(){
     <ul>
               <li><a href="./contact">Contact</a></li>
               <li><a href="./login">Log-In</a></li>
-              <li><a href="#" onclick="modeUPLOAD(); return false;">Upload</a></li>
+              <li><a href="#" onclick="modeUPLOAD();"id= uploadbtn>Upload</a></li>
     </ul>
   `
   
@@ -22,7 +22,7 @@ function loadheader(){
        <div class="dropdown-content">
    <a href="./contact">Contact</a>
    <a href="./login">LogIn</a>                     
-   <a href="#" onclick="modeUPLOAD(); return false;">Upload</a>
+   <a href="#" onclick="modeUPLOAD(); " id= uploadbtn>Upload</a>
      </div>`
      $('#canvasbtn').css({'right':'10%'});
 }
@@ -43,3 +43,4 @@ $(document).ready(function () {
       });
   }
 });
+

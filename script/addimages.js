@@ -7,6 +7,7 @@ if(l1<1||l2<1||l1>1440000||l2>1440000){
 }
 var topcorner= Math.max(l1,l2);
 var bottomcorner=Math.min(l1,l2);
+
 var height =Math.floor(topcorner/1200)-Math.floor(bottomcorner/1200)+1
 var bottomleft,bottomright
 if((topcorner-(height-1)*1200)<bottomcorner){
@@ -23,6 +24,8 @@ locationlist.push(i)
     locationlist.push(i+j*1200)
     }
 }
+var width= bottomright%1200-bottomleft%1200+1;
+console.log('width=', width)
 uploading=false
 arraytosend={
     'arraytosend':JSON.stringify(locationlist),
@@ -41,7 +44,8 @@ $.ajax({
       if(imageexist){
           alert('Image already exist for another user in your chosen area')
       }else{
-        sendDataToLoad(locationlist,imageurl,1200,one,one,4)
+
+        sendDataToLoad([bottomleft],[image],1200,[width],[height],[4])
       }
        }
 });
@@ -49,30 +53,100 @@ $.ajax({
 
 var uploading=false;
 function modeUPLOAD(){
+    uploading=!uploading
+    $('#dropzone').toggle()
+    $('#cancelbtn').toggle()
+    $('#confirmbtn').toggle()
+   
+    }
+
+
+function modeUPLOAD_2(){
+    $('#uploadbtn').hide()
+    $('#dropzone').hide()
+    $('#cancelbtn').hide()
+    $('#confirmbtn').hide()
     if($('#confirm').css('display')=='none'){
-          $('#confirm').css({'display':'block'})
-        }else{
-          $('#confirm').css({'display':'none'})
-        }
-    if(uploading==false){
-     alert('you are uploading')
-    uploading=true   
-    $('#confirm').click(function(){
-        
-      });
-    }else{
-        uploading=false
-        alert('you exited uploading')
-    }
-}
+        $('#confirm').css({'display':'block'})
+      }else{
+        $('#confirm').css({'display':'none'})
+      }
+    
+  }
+    
 function cancelupload(){
+    console.log('test',layerfourarray)
+    console.log(layerfourarray.length)
     for(var i=0;i<layerfourarray.length;i++){
-        layerfourarray.opacity=0;
+        layerfourarray[i].opacity=0;
     }
+    
     layerfourarray=[]
     locationlist=[]
 }
 function confirmupload(){
-    window.location.href = "./addImage";
+    if(locationlist.length!=0){
+        localStorage.setItem('image', `${image}`);
+     window.location.href = "./addImage";   
+    }
+    else{
+        alert("You didn't select where you want to put your image!")
+    }
     
+    
+}
+
+$('#cancelbtn').click(function(){
+    document.getElementById('imagezone').innerHTML=`
+    <img src="" alt=""> 
+    `
+    $('#imagezone').hide()
+    $('.dropzone')[0].dropzone.files.forEach(function(file) { 
+        file.previewElement.remove(); 
+      });
+      $('.dropzone').removeClass('dz-started');
+});
+
+$('#confirmbtn').click(function(){
+    if(document.getElementById('image')!=null){
+        image=document.getElementById('image').src 
+       modeUPLOAD_2();
+    }else{
+        alert('there is no image!')
+    }
+    
+}); 
+var Image;
+$('#submit').click(function(){
+     image=document.getElementById('imageurl').value
+    $('#imagezone').show()
+    document.getElementById('imagezone').innerHTML=`
+    <img id=image src="${image}" alt="">
+    ` 
+});
+if(document.getElementById('dz')!=null){
+    Dropzone.options.dz = {
+    autoProcessQueue: false,
+    acceptedFiles: 'image/*',
+    previewTemplate: '<div class="dz-filename"><span data-dz-name></span></div>',
+    createImageThumbnails: false,
+    accept: function(file, done) {
+      // FileReader() asynchronously reads the contents of files (or raw data buffers) stored on the user's computer.
+      var reader = new FileReader();
+      reader.onload = (function(entry) {
+        // The Image() constructor creates a new HTMLImageElement instance.
+        image = new Image(); 
+        image.src = entry.target.result;
+        image.onload = function() {
+            $('#imagezone').show()
+    document.getElementById('imagezone').innerHTML=`<img id=image src="${image.src}" alt="">` 
+          console.log(this.width);
+          console.log(this.height);
+        };
+      });
+  
+      reader.readAsDataURL(file);
+      done();
+    }
+  }
 }
