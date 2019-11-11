@@ -4,7 +4,7 @@
         <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1">
     <script src="/script/jquery-3.4.1.min.js"></script>
     <script src="/script/fabric_with_touch.js"></script>
-
+      <script src="dropzone.js"></script>
       <link rel="stylesheet" href="/css/home.css">
       <link rel="stylesheet" href="/css/headers.css">
       <link rel="stylesheet" href="/css/canvasbuttons.css">
@@ -13,9 +13,21 @@
     <body>
         <nav id="topbar">
           </nav>
+<div id=uploadImages>
+
+</div>
+
+
+
 <div id='canvasDiv'>
-   <canvas id="c">
-   </canvas>
+   <canvas id="c"></canvas>
+   <div id=confirm>
+     <img style="width: 100px; height: 100px;" onclick="cancelupload()" src="/images/cancel.png" alt="">
+<img style="width: 140px;height: 105px;" onclick="confirmupload()"  src="/images/confirm.png" alt="">
+   </div>
+
+
+
     <div id='canvasbtn'>
     <button id="reset"></button>
    <button id="zoomin" onclick="zoomcanvasbutton('true')"></button>

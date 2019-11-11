@@ -6,7 +6,6 @@
 
 #canvasDiv{
     position: relative;
-    width: 100%;
 }
 #canvasbtn{
     position: absolute;
@@ -46,4 +45,11 @@
     background: transparent url('/images/zoomout.png');
     background-size: cover;
     background-position: center center; 
+}
+#confirm{
+    position: absolute;
+    bottom:10px;
+    display: none;
+    margin-left: auto;
+
 }

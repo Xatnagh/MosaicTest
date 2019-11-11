@@ -33,8 +33,6 @@ $('.dropbtn').click(function(){
   }else{
     $('.dropdown-content').css({'display':'none'})
   }
-  
-
 });
 
 

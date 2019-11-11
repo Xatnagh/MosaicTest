@@ -17,7 +17,6 @@ def getData():
       return ImageInfo.query(ImageInfo.level==1).fetch()
 class Home(webapp2.RequestHandler):
     def get(self):
-        
         homepage = the_jinja_env.get_template('/template/mosaic.html')
         self.response.write(homepage.render( {"data":getData()}))
 

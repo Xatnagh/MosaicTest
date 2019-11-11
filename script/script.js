@@ -69,15 +69,13 @@ function sendDataToLoad(img_location,img_imgurl,img_scale,img_scaleX,img_scaleY,
    }
 }
 function loadimage(scale,scaleamountX,scaleamountY,locationx,locationy,level,img_imgurl){
-   console.log(img_imgurl)
+   if(level==3&&img_imgurl=='/images/test.jpg'){
+      console.log(img_imgurl)
+   console.log(locationx,locationy)
+   }
+   
    fabric.Image.fromURL(img_imgurl, function(img){
-     
-      if(img_imgurl=='/images/greensquare.jpg'){
-        img.opacity=1; 
-      }else{
-        img.opcaity=0.99
-      }
-      
+      img.opacity=1;
       var elWidth = img.naturalWidth || img.width;
       var elHeight = img.naturalHeight || img.height;
       var scaleX = ((canvas.scaleX || 1) * canvas.width / elWidth);
@@ -138,12 +136,12 @@ if(zoom<20){
 }
 //layertwo turn visible
 if(layertwoarray.length!=0&&zoom>20&&zoom<130){
-   if(layertwoarray[0].opacity!=0.99){
+   if(layertwoarray[0].opacity!=1){
          for(var i=0;i<layeronearray.length;i++){
-      layeronearray[i].opacity=0.5;
+      layeronearray[i].opacity=0.9;
       }
          for(var i=0;i<layertwoarray.length;i++){
-         layertwoarray[i].opacity=0.99; 
+         layertwoarray[i].opacity=1; 
       }
    if(layerthreearray.length!=0){
          for(var i=0;i<layerthreearray.length;i++){
@@ -157,7 +155,7 @@ if(layertwoarray.length!=0&&zoom>20&&zoom<130){
 //layer 3 turn visible
 
 if(zoom>130&&layerthreearray.length!=0){
-     if(layerthreearray[0].opacity!=0.99){
+     if(layerthreearray[0].opacity!=1){
 
    for(var i=0;i<layeronearray.length;i++){
       layeronearray[i].opacity=0.5;
@@ -168,7 +166,7 @@ if(zoom>130&&layerthreearray.length!=0){
          }
       }
       for(var i=0;i<layerthreearray.length;i++){
-            layerthreearray[i].opacity=0.99;
+            layerthreearray[i].opacity=1;
          }    
 }
 }
@@ -221,7 +219,7 @@ function getCurrentCordinates(posX,posY,level){
 //MOVEMENTS AND BUTTONS AND INFOMATION DISPLAYS
 $('#show').click( function(){
   var all= document.getElementsByClassName('hidden');
-  if(all[0].style.opacity!=0.99){
+  if(all[0].style.opacity!=1){
      for (var i = 0; i < all.length; i++) {
    all[i].style.opacity = '1';
   }}
@@ -503,8 +501,8 @@ if( typeof( window.innerWidth ) == 'number' ) {
 // document.getElementById('c').width=myWidth*.8;
 // document.getElementById('c').height=myHeight*0.8; 
 document.getElementById('c').width=myWidth;
+document.getElementById('c').height=myHeight*0.9;
 
-document.getElementById('c').height=myHeight*0.9; 
 }
 $('#pop_close').click(function(){
 $('#overlay').css({'display':'none'});
