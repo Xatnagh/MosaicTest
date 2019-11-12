@@ -65,9 +65,6 @@ function sendDataToLoad(img_location,img_imgurl,img_scale,img_scaleX,img_scaleY,
    }
 }
 function loadimage(scale,scaleamountX,scaleamountY,locationx,locationy,level,img_imgurl){
-   if(level==4){
-      console.log('hiu')
-   }
    fabric.Image.fromURL(img_imgurl, function(img){
       img.opacity=1;
       var elWidth = img.naturalWidth || img.width;
@@ -530,6 +527,14 @@ function getscale(level){
    }else{
        return 1200;
    }
+}
+function cancelupload(){
+   uploading=true
+   canvas.requestRenderAll()
+   layerfourarray[0].opacity=0
+   location1=' ',location2= ' '
+   layerfourarray=[]
+   locationlist=[]
 }
 function addtoalreadyloaded(location,level){
 if(level==2){

@@ -1,5 +1,13 @@
 
-
+* {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+  background: transparent;
+}
 #addimagebtn{
   margin:10px;
   padding:10px;
@@ -45,7 +53,7 @@ div a{
     font-size: 16;
     font-family: Arial, Helvetica, sans-serif;
   }
-  #pop_close{
+  .pop_close{
     margin-left: 5%;
     margin-top: 1%;
     border:coral 1px solid;
@@ -69,11 +77,19 @@ div a{
     background-color: blanchedalmond;
   }
 
-
+  #sendimagetoserver{
+    margin-top: 10px;
+    height: 100px;
+    width: 250px;
+    background-color: violet;
+  }
+  #sendimagetoserver:hover{
+    box-shadow: 5px 5px 5px 5px wheat  ;
+  }
 
   #addimage-area{
     width: 100%;
-    height:1000px;
+    height:100vh;
  background: url(https://i.ytimg.com/vi/P7dF3e1YRFo/maxresdefault.jpg) ;
  background-size: cover;
  background-repeat: no-repeat; 
@@ -89,13 +105,31 @@ h2{
 h3{
     color:white;
     font-weight: bold;
-    
-   
 }
-  .textbox{ 
-      
+#previewbtn{
+  height: 100px;
+  width: 250px;
+}
+#previewbtn:hover{
+  box-shadow: 5px 5px 5px 5px wheat  ;
+}
+  #description{ 
+    border: turquoise dotted 2px;
+    cursor: auto;
+      background-color: white;
+      font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif ;
       width: 400px;
-      height: 30px;
+      height: 250px;
+      margin-left:5%;
+      max-width: 90%;
+  }
+  #url_textbox{
+    cursor: auto;
+    width: 400px;
+    height: 30px;
+    background-color: white;
+    margin-left:5%;
+    max-width: 90%;
   }
   #submit{
       width: 90px;

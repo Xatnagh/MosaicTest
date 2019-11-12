@@ -11,53 +11,76 @@
     <link rel="stylesheet" href="/css/headers.css">
 </head>
 <body>
-        
         <nav id="topbar">
         </nav>
 <section id="overlay">
         <div id='pop'>
+        <button class='pop_close'>Close   (X)</button>
        <img id ='pop_image' src="" alt="">
        <p id='headers'>Description: </p> <p id='pop_description'> </p>
        <br><p id='headers'>Link:   </p> <a id= 'pop_url'href="google.com">Url goes here</a> <br>
-       <button id='pop_close'>Close</button>
+       <button class='pop_close'>Close   (X)</button>
        </div>
      </section>
 <div id="addimage-area">
-    <h1  style="color:white; margin-top: 0;">THIS PAGE IS UNDER CONSTRUCTION</h1>
            <span id="highlight"><h2>Add Image Here: </h2></span>
-        <form action="/addImage" >
-            <!-- method="POST" -->
             <br>
             <h3>Description:</h3>
-            <input type="text" name="description" class="textbox">
+            <textarea id="description">
+            </textarea>
+            
             <br>
-            <h3>URL to your website(this website will open when users click on your image)</h3>
-            <input type="text" name="website_url" class="textbox">
+            <h3>URL to any website you want!</h3>
+            <input type="text" name="website_url" id="url_textbox">
             <br>
-            <br>
-            <input type="submit" value="Submit" id="submit">
-        </form>
+            
         <br>
         <button id=previewbtn style="background-color:aqua"><h1 style="color:black; font-weight: bold; "> Show Preview</h1></button>
+        <br><button id=sendimagetoserver onclick="senddatatoserver()">SUBMIT</button>
 </div>
 
 <script>
     var image = localStorage.getItem('image');
-console.log(image)
+    image=JSON.stringify(image)
+    
+
     $('#previewbtn').click(function(){
-        const form = document.querySelector('form');
-        const data = Object.fromEntries(new FormData(form).entries());
-description=data['description']
-url=data['website_url'];
+        description=document.getElementById('description').value
+        url= document.getElementById('url_textbox').value
 document.getElementById('pop_image').src=image
   document.getElementById('pop_description').innerHTML=`${description}`;
   document.getElementById('pop_url').innerHTML=`${url}`;
-  document.getElementById('pop_url').href=`${url}`;
+  document.getElementById('pop_url').href=`https://${url}`;
   $('#overlay').css({'display':'block'});
     });
-$('#pop_close').click(function(){
+$('.pop_close').click(function(){
 $('#overlay').css({'display':'none'});
 });
+
+function senddatatoserver(){
+    var locationlist=localStorage.getItem('location')
+    var pointerlocation=localStorage.getItem('pointerlocation')
+    var description=document.getElementById('description').value
+    var url= document.getElementById('url_textbox').value
+    data={
+        'pointerlocation':pointerlocation,
+        'locationlist':locationlist,
+        'image':image,
+        'description':description,
+        'url':url,
+    }
+    console.log(data)
+    $.ajax({
+    url: "/update",
+    data: data,
+    type: "POST",
+   success: function(result) {   
+    alert('success!')
+}
+});
+    
+}
+
 
 </script>
 <script src="/script/flexibleview.js"></script>

@@ -1,4 +1,5 @@
 var locationlist=[]
+var bottomleft
 function makelist(l1,l2){
 if(l1<1||l2<1||l1>1440000||l2>1440000){
     alert("one of the squares you selected is outside of the mosaic, please choose your locations again")
@@ -9,7 +10,8 @@ var topcorner= Math.max(l1,l2);
 var bottomcorner=Math.min(l1,l2);
 
 var height =Math.floor(topcorner/1200)-Math.floor(bottomcorner/1200)+1
-var bottomleft,bottomright
+ bottomleft
+ var bottomright
 if((topcorner-(height-1)*1200)<bottomcorner){
     bottomleft=topcorner-(height-1)*1200 
    bottomright=bottomcorner
@@ -57,7 +59,6 @@ function modeUPLOAD(){
     $('#dropzone').toggle()
     $('#cancelbtn').toggle()
     $('#confirmbtn').toggle()
-   
     }
 
 
@@ -74,19 +75,11 @@ function modeUPLOAD_2(){
     
   }
     
-function cancelupload(){
-    console.log('test',layerfourarray)
-    console.log(layerfourarray.length)
-    for(var i=0;i<layerfourarray.length;i++){
-        layerfourarray[i].opacity=0;
-    }
-    
-    layerfourarray=[]
-    locationlist=[]
-}
 function confirmupload(){
     if(locationlist.length!=0){
         localStorage.setItem('image', `${image}`);
+        localStorage.setItem('location',JSON.stringify(locationlist) )
+        localStorage.setItem('pointerlocation',bottomleft)
      window.location.href = "./addImage";   
     }
     else{
@@ -130,12 +123,16 @@ if(document.getElementById('dz')!=null){
     acceptedFiles: 'image/*',
     previewTemplate: '<div class="dz-filename"><span data-dz-name></span></div>',
     createImageThumbnails: false,
+    renameFile: function (file) {
+      file.name = bottomleft + file.name;
+  },
     accept: function(file, done) {
       // FileReader() asynchronously reads the contents of files (or raw data buffers) stored on the user's computer.
       var reader = new FileReader();
       reader.onload = (function(entry) {
         // The Image() constructor creates a new HTMLImageElement instance.
         image = new Image(); 
+        image.name='image'
         image.src = entry.target.result;
         image.onload = function() {
             $('#imagezone').show()
@@ -149,4 +146,5 @@ if(document.getElementById('dz')!=null){
       done();
     }
   }
+  
 }

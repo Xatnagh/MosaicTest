@@ -35,12 +35,19 @@ class update(webapp2.RequestHandler):
         parsedlist= json.loads(locationlist)
         level=int(self.request.GET.get('level'))
         self.response.write(json.dumps(getimagesbylocation(parsedlist,level)))
-        
+    def post(self):
+        pointerlocation=self.request.POST.get('pointerlocation')
+        locationlist=self.request.POST.get('locationlist')
+        locationlist=json.loads(locationlist)
+        image=self.request.POST.get('image')
+        description=self.request.POST.get('description')
+        url=self.request.POST.get('url')
+        test(image)
 class contact(webapp2.RequestHandler):
     def get(self):
         t = the_jinja_env.get_template('/template/contact.html')
         self.response.write(t.render())
-
+        
 class LoginPage(webapp2.RequestHandler):
     def get(self):
         t = the_jinja_env.get_template('/template/login.html')

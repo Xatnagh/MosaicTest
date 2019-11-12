@@ -19,20 +19,21 @@ def getImages(list,level):
     imagelist=[]
     if level==2:
         for i in list:
-            placeholderImage=[ImageInfo( description=u'Null', image_url=u'images/placeholder2.jpeg', level=2, location=i, url=u'https://www.reddit.com/r/dankmemes/',scalewidth=1,scaleheight=1)]
+            placeholderImage=[ImageInfo( description=u'Null', image_url=u'images/placeholder2.jpeg', level=2, location=i,scalewidth=1,scaleheight=1)]
             imagelist.append (placeholderImage)
-    for i in list:
-        ImageExist=ImageInfo.query(ImageInfo.level==level,ImageInfo.location==i).fetch()
-        if ImageExist:
-            if(ImageExist[0].pointer==False):
-                imagelist.append(ImageExist) 
+    if level==3:
+        for i in list:
+            ImageExist=ImageInfo.query(ImageInfo.level==level,ImageInfo.location==i).fetch()
+            if ImageExist:
+                if(ImageExist[0].pointer==False):
+                    imagelist.append(ImageExist) 
+                else:
+                    pointerImage=ImageInfo.query(ImageInfo.location==ImageExist[0].pointerlocation,ImageInfo.level==3).fetch()
+                    print(pointerImage)
+                    imagelist.append(pointerImage)
             else:
-                pointerImage=ImageInfo.query(ImageInfo.location==ImageExist[0].pointerlocation,ImageInfo.level==3).fetch()
-                print(pointerImage)
-                imagelist.append(pointerImage)
-        else:
-            placeholderImage=[ImageInfo( description=u'Null', image_url=u'/images/uploadYourOwn.jpg', level=3, location=i, url=u'https://www.reddit.com/r/dankmemes/',scalewidth=1,scaleheight=1)]
-            imagelist.append (placeholderImage) 
+                placeholderImage=[ImageInfo( description=u'Null', image_url=u'/images/uploadYourOwn.jpg', level=3, location=i, url=u'https://www.reddit.com/r/dankmemes/',scalewidth=1,scaleheight=1)]
+                imagelist.append (placeholderImage) 
     return imagelist
 def getimagesbylocation(list,level):
     from database import alreadyexist

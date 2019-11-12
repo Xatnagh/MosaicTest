@@ -4,6 +4,16 @@ $(window).resize(function() {
 loadheader()
 });
 
+function homebtn(){
+  if (window.location.href.split('/').pop() === "") { 
+   return '<li><a onclick="modeUPLOAD();"id= uploadbtn>Upload</a></li>'
+}
+  else{
+    return '<li><a href="./">Home</a></li>'
+  }
+}
+
+
 function loadheader(){
   if(document.body.clientWidth>=750){ 
     document.getElementById('topbar').innerHTML=`
@@ -11,10 +21,11 @@ function loadheader(){
     <ul>
               <li><a href="./contact">Contact</a></li>
               <li><a href="./login">Log-In</a></li>
-              <li><a href="#" onclick="modeUPLOAD();"id= uploadbtn>Upload</a></li>
+              ${homebtn()}
+              
     </ul>
   `
-  
+
 }else{
     document.getElementById('topbar').innerHTML=`<p> <a href="/">MosaicTokyo</a> </p>             
     <div class="dropdown">
@@ -22,7 +33,7 @@ function loadheader(){
        <div class="dropdown-content">
    <a href="./contact">Contact</a>
    <a href="./login">LogIn</a>                     
-   <a href="#" onclick="modeUPLOAD(); " id= uploadbtn>Upload</a>
+   ${homebtn()}
      </div>`
      $('#canvasbtn').css({'right':'10%'});
 }
