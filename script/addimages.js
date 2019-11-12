@@ -56,6 +56,7 @@ $.ajax({
 var uploading=false;
 function modeUPLOAD(){
     uploading=!uploading
+    $('.dropdown-content').hide()
     $('#dropzone').toggle()
     $('#cancelbtn').toggle()
     $('#confirmbtn').toggle()
@@ -135,6 +136,7 @@ if(document.getElementById('dz')!=null){
         image.name='image'
         image.src = entry.target.result;
         image.onload = function() {
+          $('#dropzone').hide()
             $('#imagezone').show()
     document.getElementById('imagezone').innerHTML=`<img id=image src="${image.src}" alt="">` 
           console.log(this.width);

@@ -20,6 +20,7 @@
     width: 100%;
     margin-bottom: 3px;
     min-width: 70px;
+    min-width: 40px;
     background-color: transparent;
     background-image:url('/images/home.png');
     background-size: cover;
@@ -32,6 +33,7 @@
     height: 33%;
     width: 100%;
     min-width: 70px;
+    min-width: 40px;
     background: transparent url('/images/zoomin.png');
     background-size: cover;
     background-position: center center; 
@@ -42,6 +44,7 @@
     height: 33%;
     width: 100%;
     min-width: 70px;
+    min-width: 40px;
     background: transparent url('/images/zoomout.png');
     background-size: cover;
     background-position: center center; 
