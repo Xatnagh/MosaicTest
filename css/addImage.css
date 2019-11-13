@@ -120,7 +120,7 @@ h3{
       font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif ;
       width: 400px;
       height: 250px;
-      margin-left:5%;
+      margin-left:5px;
       max-width: 90%;
   }
   #url_textbox{
@@ -128,7 +128,7 @@ h3{
     width: 400px;
     height: 30px;
     background-color: white;
-    margin-left:5%;
+    margin-left:5px;
     max-width: 90%;
   }
   #submit{

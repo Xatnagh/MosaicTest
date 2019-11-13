@@ -136,7 +136,7 @@ if(document.getElementById('dz')!=null){
         image.name='image'
         image.src = entry.target.result;
         image.onload = function() {
-          $('#dropzone').hide()
+            // $('#dropzone').hide()
             $('#imagezone').show()
     document.getElementById('imagezone').innerHTML=`<img id=image src="${image.src}" alt="">` 
           console.log(this.width);
