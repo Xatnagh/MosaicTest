@@ -15,6 +15,7 @@ class ImageInfo(ndb.Model):
     pointer=ndb.BooleanProperty(required=False,default=False)
     pointerlocation=ndb.IntegerProperty(required=False)
     pointerlist=ndb.IntegerProperty(required=False,repeated=True)
+    added = ndb.DateTimeProperty(auto_now_add=True)
 
 
 ANCESTORY_KEY = ndb.Key("ImageInfo","ImageInfo_root")

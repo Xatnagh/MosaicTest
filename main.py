@@ -5,7 +5,7 @@ import urllib2
 import random
 import jinja2
 import re
-from database import defaultdatas, alreadyexist, loadtest,clearlevel2,putDataintodatabase
+from database import defaultdatas, alreadyexist, loadtest,clearlevel2,putDataintodatabase,upload_data_to_gcs
 from Images import ImageInfo,ANCESTORY_KEY,getImageInfo,getimagesbylocation
 from test import  blob_to_image_converter
 
@@ -45,6 +45,7 @@ class update(webapp2.RequestHandler):
         url=self.request.POST.get('url')
         height=int(self.request.POST.get('height'))
         width=int(self.request.POST.get('width'))
+        image=upload_data_to_gcs('mosaictest',image,pointerlocation)
         putDataintodatabase(pointerlocation,locationlist,image,description,url,width,height)
         self.response.write("success")
         
