@@ -11,7 +11,6 @@ var topcorner= Math.max(l1,l2);
 var bottomcorner=Math.min(l1,l2);
 
  height =Math.floor(topcorner/1200)-Math.floor(bottomcorner/1200)+1
- bottomleft
  var bottomright
 if((topcorner-(height-1)*1200)<bottomcorner){
     bottomleft=topcorner-(height-1)*1200 
@@ -107,6 +106,7 @@ $('#cancelbtn').click(function(){
 $('#confirmbtn').click(function(){
     if(document.getElementById('image')!=null){
         image=document.getElementById('image').src 
+        
        modeUPLOAD_2();
     }else{
         alert('there is no image!')

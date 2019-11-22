@@ -40,7 +40,7 @@ class update(webapp2.RequestHandler):
         pointerlocation=self.request.POST.get('pointerlocation')
         locationlist=self.request.POST.get('locationlist')
         locationlist=json.loads(locationlist)
-        image=self.request.POST.get('image')
+        image=self.request.get('image')
         description=self.request.POST.get('description')
         url=self.request.POST.get('url')
         height=int(self.request.POST.get('height'))

@@ -1,4 +1,7 @@
 from Images import ImageInfo, ANCESTORY_KEY
+import cloudstorage
+from google.appengine.api import app_identity
+from google.appengine.ext import blobstore
 from google.appengine.ext import ndb
 def defaultdatas():
         a=0

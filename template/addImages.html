@@ -42,14 +42,16 @@
 
 <script>
     var image = localStorage.getItem('image');
-    // image=JSON.stringify(image)
+    document.getElementById('pop_image').src=`${image}`
+    image=image.substr(image.indexOf(',') + 1);//strips off the data:/jpeg:base64 thing,so it is pure base64 data
+    console.log(image)
     $('#previewbtn').click(function(){
         description=document.getElementById('description').value
         url= document.getElementById('url_textbox').value
         if(url.substring(0,3)!='http'){
             url=`https://${url}`
         }
-document.getElementById('pop_image').src=image
+
   document.getElementById('pop_description').innerHTML=`${description}`;
   document.getElementById('pop_url').innerHTML=`${url}`;
   document.getElementById('pop_url').href=url;
@@ -58,6 +60,29 @@ document.getElementById('pop_image').src=image
 $('.pop_close').click(function(){
 $('#overlay').css({'display':'none'});
 });
+const contentType = 'image/png';
+ 
+const b64toBlob = (b64Data, contentType='', sliceSize=512) => {
+  const byteCharacters = atob(b64Data);
+  const byteArrays = [];
+
+  for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+    const slice = byteCharacters.slice(offset, offset + sliceSize);
+
+    const byteNumbers = new Array(slice.length);
+    for (let i = 0; i < slice.length; i++) {
+      byteNumbers[i] = slice.charCodeAt(i);
+    }
+
+    const byteArray = new Uint8Array(byteNumbers);
+    byteArrays.push(byteArray);
+  }
+    
+  const blob = new Blob(byteArrays, {type: contentType});
+  return blob;
+}
+image = b64toBlob(image, contentType);
+
 
 function senddatatoserver(){
     var locationlist=localStorage.getItem('location')
@@ -66,22 +91,23 @@ function senddatatoserver(){
     var width=localStorage.getItem('width');
     var description=document.getElementById('description').value
     var url= document.getElementById('url_textbox').value
-    data={
-        'pointerlocation':pointerlocation,
-        'locationlist':locationlist,
-        'image':image,
-        'description':description,
-        'url':url,
-        'height':height,
-        'width':width
-    }
-    console.log(data)
+    var data= new FormData();
+    data.append('pointerlocation',pointerlocation);
+    data.append('locationlist',locationlist );
+    data.append('image',image );
+    data.append('description',description);
+    data.append('url',url );
+    data.append('height',height );
+    data.append('width',width );
     $.ajax({
     url: "/update",
     data: data,
+    processData: false,
+contentType: false,
     type: "POST",
    success: function(result) {   
-    $("#testimg").attr({ "src": `${image}` });
+    $("#testimg").attr({ "src": `data:image/png;base64,${image}` });
+    
 }
 });
     
