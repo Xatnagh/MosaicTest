@@ -1,15 +1,16 @@
 var locationlist=[]
 var bottomleft
+var height,width;
 function makelist(l1,l2){
 if(l1<1||l2<1||l1>1440000||l2>1440000){
     alert("one of the squares you selected is outside of the mosaic, please choose your locations again")
-    location1=' '
+    location1=''
     location2= ''
 }
 var topcorner= Math.max(l1,l2);
 var bottomcorner=Math.min(l1,l2);
 
-var height =Math.floor(topcorner/1200)-Math.floor(bottomcorner/1200)+1
+ height =Math.floor(topcorner/1200)-Math.floor(bottomcorner/1200)+1
  bottomleft
  var bottomright
 if((topcorner-(height-1)*1200)<bottomcorner){
@@ -26,14 +27,13 @@ locationlist.push(i)
     locationlist.push(i+j*1200)
     }
 }
-var width= bottomright%1200-bottomleft%1200+1;
+ width= bottomright%1200-bottomleft%1200+1;
 console.log('width=', width)
 uploading=false
 arraytosend={
-    'arraytosend':JSON.stringify(locationlist),
+    'arraytosend':JSON.stringify(locationlist) ,
     'level':3
 }
-var imageurl=['/images/greensquare.png']
 $.ajax({
     url: "/update",
     data: arraytosend,
@@ -78,9 +78,11 @@ function modeUPLOAD_2(){
     
 function confirmupload(){
     if(locationlist.length!=0){
-        localStorage.setItem('image', `${image}`);
+        localStorage.setItem('image', image);
         localStorage.setItem('location',JSON.stringify(locationlist) )
         localStorage.setItem('pointerlocation',bottomleft)
+        localStorage.setItem('width',width)
+        localStorage.setItem('height',height)
      window.location.href = "./addImage";   
     }
     else{
@@ -95,6 +97,7 @@ $('#cancelbtn').click(function(){
     <img src="" alt=""> 
     `
     $('#imagezone').hide()
+    image=null
     $('.dropzone')[0].dropzone.files.forEach(function(file) { 
         file.previewElement.remove(); 
       });
@@ -110,7 +113,7 @@ $('#confirmbtn').click(function(){
     }
     
 }); 
-var Image;
+//for url images
 $('#submit').click(function(){
      image=document.getElementById('imageurl').value
     $('#imagezone').show()
@@ -118,19 +121,18 @@ $('#submit').click(function(){
     <img id=image src="${image}" alt="">
     ` 
 });
-if(document.getElementById('dz')!=null){
+
+
     Dropzone.options.dz = {
     autoProcessQueue: false,
-    acceptedFiles: 'image/*',
+    acceptedFiles: 'image/jpeg,image/png,image/jpg',
     previewTemplate: '<div class="dz-filename"><span data-dz-name></span></div>',
     createImageThumbnails: false,
-    renameFile: function (file) {
-      file.name = bottomleft + file.name;
-  },
     accept: function(file, done) {
       // FileReader() asynchronously reads the contents of files (or raw data buffers) stored on the user's computer.
       var reader = new FileReader();
       reader.onload = (function(entry) {
+        console.log(entry)
         // The Image() constructor creates a new HTMLImageElement instance.
         image = new Image(); 
         image.name='image'
@@ -139,14 +141,12 @@ if(document.getElementById('dz')!=null){
             // $('#dropzone').hide()
             $('#imagezone').show()
     document.getElementById('imagezone').innerHTML=`<img id=image src="${image.src}" alt="">` 
-          console.log(this.width);
-          console.log(this.height);
+          
         };
       });
-  
+      
       reader.readAsDataURL(file);
       done();
     }
-  }
   
 }

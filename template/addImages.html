@@ -37,20 +37,22 @@
         <br>
         <button id=previewbtn style="background-color:aqua"><h1 style="color:black; font-weight: bold; "> Show Preview</h1></button>
         <br><button id=sendimagetoserver onclick="senddatatoserver()">SUBMIT</button>
+        <img id=testimg src="/images/greensquare.png" alt="">
 </div>
 
 <script>
     var image = localStorage.getItem('image');
-    image=JSON.stringify(image)
-    
-
+    // image=JSON.stringify(image)
     $('#previewbtn').click(function(){
         description=document.getElementById('description').value
         url= document.getElementById('url_textbox').value
+        if(url.substring(0,3)!='http'){
+            url=`https://${url}`
+        }
 document.getElementById('pop_image').src=image
   document.getElementById('pop_description').innerHTML=`${description}`;
   document.getElementById('pop_url').innerHTML=`${url}`;
-  document.getElementById('pop_url').href=`https://${url}`;
+  document.getElementById('pop_url').href=url;
   $('#overlay').css({'display':'block'});
     });
 $('.pop_close').click(function(){
@@ -60,6 +62,8 @@ $('#overlay').css({'display':'none'});
 function senddatatoserver(){
     var locationlist=localStorage.getItem('location')
     var pointerlocation=localStorage.getItem('pointerlocation')
+    var height=localStorage.getItem('height');
+    var width=localStorage.getItem('width');
     var description=document.getElementById('description').value
     var url= document.getElementById('url_textbox').value
     data={
@@ -68,6 +72,8 @@ function senddatatoserver(){
         'image':image,
         'description':description,
         'url':url,
+        'height':height,
+        'width':width
     }
     console.log(data)
     $.ajax({
@@ -75,7 +81,7 @@ function senddatatoserver(){
     data: data,
     type: "POST",
    success: function(result) {   
-    alert('success!')
+    $("#testimg").attr({ "src": `${image}` });
 }
 });
     

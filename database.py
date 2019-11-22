@@ -34,5 +34,11 @@ def clearlevel2():
     result=ImageInfo.query(ImageInfo.level==2).fetch()
     print('test:',result)
     
-
+def putDataintodatabase(pointerlocation,locationlist,image,description,url,width,height):
+    if len(image)<500:
+        ImageInfo(parent=ANCESTORY_KEY,location=locationlist[0],level=3,pointer=False,pointerlist=locationlist,image_url=image,scalewidth=width,scaleheight=height).put()
+        for i in range(1,len(locationlist)):
+                ImageInfo(parent=ANCESTORY_KEY,location=locationlist[i],level=3,pointer=True,pointerlocation=locationlist[0]).put()
+    else:
+        ImageInfo(parent=ANCESTORY_KEY,location=locationlist[0],level=3,pointer=False,pointerlist=locationlist,imageblob=image,scalewidth=width,scaleheight=height).put()
 

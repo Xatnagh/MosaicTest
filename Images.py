@@ -1,18 +1,21 @@
 from google.appengine.ext import ndb
+from google.appengine.api import images
 import math
 
  
 class ImageInfo(ndb.Model):
     location=ndb.IntegerProperty(required=True)
     level=ndb.IntegerProperty(required=True)
-    image_url= ndb.StringProperty(required=False)
+    image_url= ndb.StringProperty(required=False) #for url
+    imageblob= ndb.BlobProperty(required=False) #for base64 data
     url= ndb.StringProperty(required=False)
-    description=ndb.StringProperty(required=False)
+    description=ndb.TextProperty(required=False)
     scalewidth= ndb.IntegerProperty(required=False)
     scaleheight= ndb.IntegerProperty(required=False)
     pointer=ndb.BooleanProperty(required=False,default=False)
     pointerlocation=ndb.IntegerProperty(required=False)
     pointerlist=ndb.IntegerProperty(required=False,repeated=True)
+
 
 ANCESTORY_KEY = ndb.Key("ImageInfo","ImageInfo_root")
 def getImages(list,level):

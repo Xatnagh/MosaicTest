@@ -4,9 +4,10 @@ import os
 import urllib2
 import random
 import jinja2
-from database import defaultdatas, alreadyexist, loadtest,clearlevel2
+import re
+from database import defaultdatas, alreadyexist, loadtest,clearlevel2,putDataintodatabase
 from Images import ImageInfo,ANCESTORY_KEY,getImageInfo,getimagesbylocation
-from test import test
+from test import  blob_to_image_converter
 
 
 the_jinja_env = jinja2.Environment(loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
@@ -42,7 +43,11 @@ class update(webapp2.RequestHandler):
         image=self.request.POST.get('image')
         description=self.request.POST.get('description')
         url=self.request.POST.get('url')
-        test(image)
+        height=int(self.request.POST.get('height'))
+        width=int(self.request.POST.get('width'))
+        putDataintodatabase(pointerlocation,locationlist,image,description,url,width,height)
+        self.response.write("success")
+        
 class contact(webapp2.RequestHandler):
     def get(self):
         t = the_jinja_env.get_template('/template/contact.html')
