@@ -45,3 +45,17 @@ def putDataintodatabase(pointerlocation,locationlist,image,description,url,width
     else:
         ImageInfo(parent=ANCESTORY_KEY,location=locationlist[0],level=3,pointer=False,pointerlist=locationlist,imageblob=image,scalewidth=width,scaleheight=height).put()
 
+import os
+from google.cloud import storage
+
+def upload_data_to_gcs(bucket_name, data, target_key):
+    try:
+        client = storage.Client()
+        bucket = client.bucket(bucket_name)
+        bucket.blob(target_key).upload_from_string(data)
+        return bucket.blob(target_key).public_url
+
+    except Exception as e:
+        print(e)
+
+    return None
