@@ -7,8 +7,7 @@ class ImageInfo(ndb.Model):
     location=ndb.IntegerProperty(required=True)
     level=ndb.IntegerProperty(required=True)
     image_url= ndb.StringProperty(required=False) #for url
-    imageblob= ndb.BlobProperty(required=False) #for base64 data
-    url= ndb.StringProperty(required=False)
+    url= ndb.StringProperty(required=False)#websites users link to
     description=ndb.TextProperty(required=False)
     scalewidth= ndb.IntegerProperty(required=False)
     scaleheight= ndb.IntegerProperty(required=False)

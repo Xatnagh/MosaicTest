@@ -37,25 +37,27 @@ def clearlevel2():
     result=ImageInfo.query(ImageInfo.level==2).fetch()
     print('test:',result)
     
-def putDataintodatabase(pointerlocation,locationlist,image,description,url,width,height):
+def putDataintodatabase(pointerlocation,locationlist,image,descriptionsendin,urlsentin,width,height):
     if len(image)<500:
-        ImageInfo(parent=ANCESTORY_KEY,location=locationlist[0],level=3,pointer=False,pointerlist=locationlist,image_url=image,scalewidth=width,scaleheight=height).put()
+        ImageInfo(parent=ANCESTORY_KEY,location=locationlist[0],level=3,pointer=False,pointerlist=locationlist,image_url=image,scalewidth=width,scaleheight=height,description=descriptionsendin,url=urlsentin).put()
         for i in range(1,len(locationlist)):
                 ImageInfo(parent=ANCESTORY_KEY,location=locationlist[i],level=3,pointer=True,pointerlocation=locationlist[0]).put()
     else:
         ImageInfo(parent=ANCESTORY_KEY,location=locationlist[0],level=3,pointer=False,pointerlist=locationlist,imageblob=image,scalewidth=width,scaleheight=height).put()
 
 import os
-from google.cloud import storage
-
-def upload_data_to_gcs(bucket_name, data, target_key):
-    try:
-        client = storage.Client()
-        bucket = client.bucket(bucket_name)
-        bucket.blob(target_key).upload_from_string(data)
-        return bucket.blob(target_key).public_url
-
-    except Exception as e:
-        print(e)
-
-    return None
+cloudstorage.set_default_retry_params(
+    cloudstorage.RetryParams(
+        initial_delay=0.2, max_delay=5.0, backoff_factor=2, max_retry_period=15
+        ))
+def upload_file(image,pointerlocation):
+    bucket_name = os.environ.get(
+            'mosaictest', app_identity.get_default_gcs_bucket_name())
+    bucket = '/' + bucket_name
+    filename = bucket + '/'+pointerlocation
+    write_retry_params = cloudstorage.RetryParams(backoff_factor=1.1)
+    with cloudstorage.open(
+            filename, 'w', content_type='image/png',
+            retry_params=write_retry_params) as cloudstorage_file:
+                cloudstorage_file.write(image)
+    return 'https://storage.cloud.google.com/fortest098.appspot.com/{}'.format(pointerlocation)

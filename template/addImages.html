@@ -44,7 +44,7 @@
     var image = localStorage.getItem('image');
     document.getElementById('pop_image').src=`${image}`
     image=image.substr(image.indexOf(',') + 1);//strips off the data:/jpeg:base64 thing,so it is pure base64 data
-    console.log(image)
+    
     $('#previewbtn').click(function(){
         description=document.getElementById('description').value
         url= document.getElementById('url_textbox').value
@@ -81,7 +81,7 @@ const b64toBlob = (b64Data, contentType='', sliceSize=512) => {
   const blob = new Blob(byteArrays, {type: contentType});
   return blob;
 }
-image = b64toBlob(image, contentType);
+imageblob = b64toBlob(image, contentType);
 
 
 function senddatatoserver(){
@@ -91,10 +91,13 @@ function senddatatoserver(){
     var width=localStorage.getItem('width');
     var description=document.getElementById('description').value
     var url= document.getElementById('url_textbox').value
+    if(url.substring(0,3)!='http'){
+            url=`https://${url}`
+        }
     var data= new FormData();
     data.append('pointerlocation',pointerlocation);
     data.append('locationlist',locationlist );
-    data.append('image',image );
+    data.append('image',imageblob );
     data.append('description',description);
     data.append('url',url );
     data.append('height',height );
