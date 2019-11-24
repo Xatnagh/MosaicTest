@@ -248,11 +248,18 @@ canvas.on({
             canvas.zoomToPoint(point, delta);
             pausePanning = false;
             zoom = canvas.getZoom();
-            if(zoom.between(15,16)){
+            //this limits zoom
+            if (zoom > 1000){ 
+               zoom = 1000;}
+               if (zoom < .7){
+               zoom-=1;
+               zoom = 0.9;}
+               //
+            if(zoom.between(10,16)){
                
             nearbylocations(getCurrentCordinates(CenterCoord().x,CenterCoord().y,2),2);
          }
-         if(zoom.between(128,129)){
+         if(zoom.between(100,129)){
             
             nearbylocations(getCurrentCordinates(CenterCoord().x,CenterCoord().y,3),3)
          }
@@ -458,15 +465,12 @@ canvas.on('mouse:dblclick',function(e){
       }
    }
 });
-var currentoverlay;
 function imageInfoPage(imgUrl,url,description){
   document.getElementById('pop_image').src=`${imgUrl}`;
   document.getElementById('pop_description').innerHTML=`${description}`;
   document.getElementById('pop_url').innerHTML=`${url}`;
   document.getElementById('pop_url').href=`${url}`;
   $('#overlay').css({'display':'block'});
-  currentoverlay='#overlay'
-
 }
 
 
@@ -495,7 +499,7 @@ document.getElementById('c').width=myWidth;
 document.getElementById('c').height=myHeight*0.9;
 
 }
-$('#pop_close').click(function(){
+$('.pop_close').click(function(){
 $('#overlay').css({'display':'none'});
 currentoverlay='false'
 });

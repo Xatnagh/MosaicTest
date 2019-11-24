@@ -15,19 +15,19 @@
         </nav>
 <section id="overlay">
         <div id='pop'>
-        <button class='pop_close'>Close   (X)</button>
+        <button class='pop_close'>Close </button>
        <img id ='pop_image' src="" alt="">
-       <p id='headers'>Description: </p> <p id='pop_description'> </p>
+       <p id='headers'>Description: </p> 
+       <textarea id='pop_description'  placeholder="(looks like you didn't enter a description!)"></textarea>
        <br><p id='headers'>Link:   </p> <a id= 'pop_url'href="google.com">Url goes here</a> <br>
-       <button class='pop_close'>Close   (X)</button>
+       <button class='pop_close'>Close</button>
        </div>
      </section>
 <div id="addimage-area">
            <span id="highlight"><h2>Add Image Here: </h2></span>
             <br>
             <h3>Description:</h3>
-            <textarea id="description">
-            </textarea>
+            <textarea id="description" placeholder="You can write anything here!(max rows is 20)"rows="40" cols="50"></textarea>
             
             <br>
             <h3>URL to any website you want!</h3>
@@ -37,31 +37,46 @@
         <br>
         <button id=previewbtn style="background-color:aqua"><h1 style="color:black; font-weight: bold; "> Show Preview</h1></button>
         <br><button id=sendimagetoserver onclick="senddatatoserver()">SUBMIT</button>
-        <img id=testimg src="/images/greensquare.png" alt="">
+    
 </div>
 
 <script>
     var image = localStorage.getItem('image');
     document.getElementById('pop_image').src=`${image}`
-    image=image.substr(image.indexOf(',') + 1);//strips off the data:/jpeg:base64 thing,so it is pure base64 data
+    
+    if(image.substring(0,4)=='data:'){
+      image=image.substr(image.indexOf(',') + 1);//strips off the data:/jpeg:base64 thing,so it is pure base64 data
+    imageblob = b64toBlob(image, contentType);
+    }else{
+      imageblob=image
+    }
+    
     
     $('#previewbtn').click(function(){
+      if($('#description')[0].scrollHeight>450){
+    alert('your description is long, the max lines is 30')
+  }else{
         description=document.getElementById('description').value
+        
         url= document.getElementById('url_textbox').value
         if(url.substring(0,3)!='http'){
             url=`https://${url}`
         }
-
-  document.getElementById('pop_description').innerHTML=`${description}`;
-  document.getElementById('pop_url').innerHTML=`${url}`;
-  document.getElementById('pop_url').href=url;
-  $('#overlay').css({'display':'block'});
-    });
+          document.getElementById('pop_description').innerHTML=description;
+          auto_grow()
+          document.getElementById('pop_url').innerHTML=`${url}`;
+          document.getElementById('pop_url').href=url;
+          $('#overlay').css({'display':'block'}); 
+          
+  } });
+  
+  
+  
+ 
 $('.pop_close').click(function(){
 $('#overlay').css({'display':'none'});
 });
 const contentType = 'image/png';
- 
 const b64toBlob = (b64Data, contentType='', sliceSize=512) => {
   const byteCharacters = atob(b64Data);
   const byteArrays = [];
@@ -81,7 +96,7 @@ const b64toBlob = (b64Data, contentType='', sliceSize=512) => {
   const blob = new Blob(byteArrays, {type: contentType});
   return blob;
 }
-imageblob = b64toBlob(image, contentType);
+
 
 
 function senddatatoserver(){
@@ -109,16 +124,20 @@ function senddatatoserver(){
 contentType: false,
     type: "POST",
    success: function(result) {   
-    $("#testimg").attr({ "src": `data:image/png;base64,${image}` });
-    
+    alert('success!')
+    window.location.href = "./";
 }
 });
-    
-}
 
+}
+function auto_grow() {
+    element=document.getElementById('pop_description')
+    element.style.height = "5px";
+    element.style.height =$('#description')[0].scrollHeight+"px";
+}
 
 </script>
 <script src="/script/flexibleview.js"></script>
-<script src="/script/addimages.js"></script>
+
 </body>
 </html>

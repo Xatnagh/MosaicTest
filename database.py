@@ -38,12 +38,7 @@ def clearlevel2():
     print('test:',result)
     
 def putDataintodatabase(pointerlocation,locationlist,image,descriptionsendin,urlsentin,width,height):
-    if len(image)<500:
-        ImageInfo(parent=ANCESTORY_KEY,location=locationlist[0],level=3,pointer=False,pointerlist=locationlist,image_url=image,scalewidth=width,scaleheight=height,description=descriptionsendin,url=urlsentin).put()
-        for i in range(1,len(locationlist)):
-                ImageInfo(parent=ANCESTORY_KEY,location=locationlist[i],level=3,pointer=True,pointerlocation=locationlist[0]).put()
-    else:
-        ImageInfo(parent=ANCESTORY_KEY,location=locationlist[0],level=3,pointer=False,pointerlist=locationlist,imageblob=image,scalewidth=width,scaleheight=height).put()
+        ImageInfo(parent=ANCESTORY_KEY,image_url=image,location=locationlist[0],level=3,pointer=False,pointerlist=locationlist,scalewidth=width,scaleheight=height).put()
 
 import os
 cloudstorage.set_default_retry_params(

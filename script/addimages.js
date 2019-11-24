@@ -33,6 +33,7 @@ arraytosend={
     'arraytosend':JSON.stringify(locationlist) ,
     'level':3
 }
+
 $.ajax({
     url: "/update",
     data: arraytosend,
@@ -78,6 +79,7 @@ function modeUPLOAD_2(){
 function confirmupload(){
     if(locationlist.length!=0){
         localStorage.setItem('image', image);
+       
         localStorage.setItem('location',JSON.stringify(locationlist) )
         localStorage.setItem('pointerlocation',bottomleft)
         localStorage.setItem('width',width)
@@ -106,7 +108,6 @@ $('#cancelbtn').click(function(){
 $('#confirmbtn').click(function(){
     if(document.getElementById('image')!=null){
         image=document.getElementById('image').src 
-        
        modeUPLOAD_2();
     }else{
         alert('there is no image!')

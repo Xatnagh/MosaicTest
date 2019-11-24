@@ -41,14 +41,16 @@ class update(webapp2.RequestHandler):
         pointerlocation=self.request.POST.get('pointerlocation')
         locationlist=self.request.POST.get('locationlist')
         locationlist=json.loads(locationlist)
-        image=(self.request.get('image'))
-        description=str(self.request.POST.get('description'))
-        url=str(self.request.POST.get('url'))
+        image=str((self.request.get('image')))
+        description=self.request.POST.get('description')
+        url=self.request.POST.get('url')
         height=int(self.request.POST.get('height'))
         width=int(self.request.POST.get('width'))
-        imageurl= upload_file(image,pointerlocation)
-        print description
-        print url
+        if image[0:5]=='data:':
+            imageurl= upload_file(image,pointerlocation) 
+        else:
+           imageurl=image
+        print image[0:5]
         putDataintodatabase(pointerlocation,locationlist,imageurl,description,url,width,height)
         self.response.write("success")
         
