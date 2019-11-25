@@ -18,25 +18,26 @@ class ImageInfo(ndb.Model):
 
 
 ANCESTORY_KEY = ndb.Key("ImageInfo","ImageInfo_root")
-def getImages(list,level):
+def getImages(locationlist,level):
     imagelist=[]
+    alreadyloaded=[]
     if level==2:
-        for i in list:
+        for i in locationlist:
             placeholderImage=[ImageInfo( description=u'Null', image_url=u'images/placeholder2.jpeg', level=2, location=i,scalewidth=1,scaleheight=1)]
             imagelist.append (placeholderImage)
     if level==3:
-        for i in list:
-            ImageExist=ImageInfo.query(ImageInfo.level==level,ImageInfo.location==i).fetch()
-            if ImageExist:
-                if(ImageExist[0].pointer==False):
-                    imagelist.append(ImageExist) 
+        for i in locationlist:
+            if i not in alreadyloaded:
+                ImageExist=ImageInfo.query(ImageInfo.level==level,ImageInfo.location==i).fetch()
+                if ImageExist: 
+                    if(ImageExist[0].pointer==False):
+                        imagelist.append(ImageExist) 
+                        if ImageExist[0].pointerlist:
+                            alreadyloaded.extend(ImageExist[0].pointerlist)
+                        
                 else:
-                    pointerImage=ImageInfo.query(ImageInfo.location==ImageExist[0].pointerlocation,ImageInfo.level==3).fetch()
-                    print(pointerImage)
-                    imagelist.append(pointerImage)
-            else:
-                placeholderImage=[ImageInfo( description=u'Null', image_url=u'/images/uploadYourOwn.jpg', level=3, location=i, url=u'https://www.reddit.com/r/dankmemes/',scalewidth=1,scaleheight=1)]
-                imagelist.append (placeholderImage) 
+                    placeholderImage=[ImageInfo( description=u'Null', image_url=u'/images/uploadYourOwn.jpg', level=3, location=i, url=u'https://www.reddit.com/r/dankmemes/',scalewidth=1,scaleheight=1)]
+                    imagelist.append (placeholderImage) 
     return imagelist
 def getimagesbylocation(list,level):
     from database import alreadyexist

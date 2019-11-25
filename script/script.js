@@ -66,8 +66,11 @@ function sendDataToLoad(img_location,img_imgurl,img_scale,img_scaleX,img_scaleY,
    }
 }
 function loadimage(scale,scaleamountX,scaleamountY,locationx,locationy,level,img_imgurl){
+   if(img_imgurl=='/images/test.jpg'){
+      console.log('run')
+   }
+
    fabric.Image.fromURL(img_imgurl, function(img){
-      img.opacity=1;
       var elWidth = img.naturalWidth || img.width;
       var elHeight = img.naturalHeight || img.height;
       var scaleX = ((canvas.scaleX || 1) * canvas.width / elWidth);
