@@ -5,11 +5,12 @@ loadheader()
 });
 
 function homebtn(){
-  if (window.location.href.split('/').pop() === "") { 
-   return '<li><a onclick="modeUPLOAD();"id= uploadbtn>Upload</a></li>'
+  console.log(window.location.href.split('#').pop())
+  if (window.location.href.split('/').pop() === ""||Number(window.location.href.split('#').pop())>0) { 
+      return '<a onclick="modeUPLOAD();"id= uploadbtn>Upload</a>'
 }
   else{
-    return '<li><a href="./">Home</a></li>'
+    return '<a href="./">Home</a>'
   }
 }
 
@@ -21,7 +22,8 @@ function loadheader(){
     <ul>
               <li><a href="./contact">Contact</a></li>
               <li><a href="./login">Log-In</a></li>
-              ${homebtn()}
+              <li>${homebtn()}</li>
+              
               
     </ul>
   `
@@ -35,23 +37,27 @@ function loadheader(){
    <a href="./login">LogIn</a>                     
    ${homebtn()}
      </div>`
-     $('#canvasbtn').css({'right':'10%'});
+     
 }
+
 }
 $('.dropbtn').click(function(){
-  if($('.dropdown-content').css('display')=='none'){
-    $('.dropdown-content').css({'display':'block'})
-  }else{
-    $('.dropdown-content').css({'display':'none'})
-  }
+$('.dropdown-content').toggle()
+   
 });
+var times = 0;
+function update_url() {
+   times++;
+   location.hash = times;
+}
 
-
-$(document).ready(function () {
-  if (window.history && window.history.pushState) {
-      $(window).on('popstate', function () {
-          $(currentoverlay).css('display', 'none')
-      });
-  }
-});
+window.onhashchange = function() {  
+    if(location.hash<1){
+      $('.overlay').hide()
+      times=0
+      window.location.href.split('#')[0]
+    }
+   
+  
+}
 

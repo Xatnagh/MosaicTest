@@ -9,17 +9,18 @@
 }
 #canvasbtn{
     position: absolute;
-    right:  0%;
-    bottom: 3;
-    width: 7%;
+    right: 4px;
+    bottom: 3px;
+    width: 15vw;
+    max-width: 140px;
     height: 25%;
 }
 #reset {
     border-radius: 35px;
-    height: 33%;
+    height: 32%;
     width: 100%;
     margin-bottom: 3px;
-    min-width: 70px;
+    max-width: 70px;
     min-width: 40px;
     background-color: transparent;
     background-image:url('/images/home.png');
@@ -30,9 +31,9 @@
     margin-bottom: 3px;
     border-radius: 35px;
     top:10px;
-    height: 33%;
+    height: 32%;
     width: 100%;
-    min-width: 70px;
+    max-width: 70px;
     min-width: 40px;
     background: transparent url('/images/zoomin.png');
     background-size: cover;
@@ -41,9 +42,9 @@
 #zoomout{
     padding: 3px;
     border-radius: 35px;
-    height: 33%;
+    height: 32%;
     width: 100%;
-    min-width: 70px;
+    max-width: 70px;
     min-width: 40px;
     background: transparent url('/images/zoomout.png');
     background-size: cover;
@@ -54,5 +55,4 @@
     bottom:10px;
     display: none;
     margin-left: auto;
-
 }

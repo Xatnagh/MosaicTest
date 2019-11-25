@@ -9,9 +9,9 @@ if(l1<1||l2<1||l1>1440000||l2>1440000){
 }
 var topcorner= Math.max(l1,l2);
 var bottomcorner=Math.min(l1,l2);
+var bottomright
+height =Math.floor(topcorner/1200)-Math.floor(bottomcorner/1200)+1
 
- height =Math.floor(topcorner/1200)-Math.floor(bottomcorner/1200)+1
- var bottomright
 if((topcorner-(height-1)*1200)<bottomcorner){
     bottomleft=topcorner-(height-1)*1200 
    bottomright=bottomcorner
@@ -19,47 +19,53 @@ if((topcorner-(height-1)*1200)<bottomcorner){
        bottomleft= bottomcorner
    bottomright=topcorner-(height-1)*1200
    }
+width= bottomright%1200-bottomleft%1200+1;
 
-for(var i=bottomleft;i<=bottomright;i++){
-locationlist.push(i)
-    for(var j=1;j<height;j++){
-    locationlist.push(i+j*1200)
+    if(width*height>10000){
+        alert('the area you choose is absolutely massive, please wait while the computer processes it, you might want to reset your browser if the website begin to lag')
     }
-}
- width= bottomright%1200-bottomleft%1200+1;
-console.log('width=', width)
-uploading=false
-arraytosend={
-    'arraytosend':JSON.stringify(locationlist) ,
-    'level':3
+    
+    for(var i=bottomleft;i<=bottomright;i++){
+    locationlist.push(i)
+        for(var j=1;j<height;j++){
+        locationlist.push(i+j*1200)
+        }
+    }
+    uploading=false
+    
+    arraytosend={
+        'arraytosend':JSON.stringify(locationlist) ,
+        'level':3
+    }
+    
+    $.ajax({
+        url: "/update",
+        data: arraytosend,
+        type: "GET",
+       success: function(result) {   
+          result=JSON.parse(result)
+          imageexist=result['bool']
+        var addimgscale=1200
+        sendDataToLoad(result['img_location'],result['img_imgurl'],addimgscale,result['img_scaleX'],result['img_scaleY'],result['img_level']);    
+          if(imageexist){
+              alert('Image already exist for another user in your chosen area')
+          }else{
+            alreadyloaded_level3=alreadyloaded_level3.concat(result['img_location'])
+            sendDataToLoad([bottomleft],[image],1200,[width],[height],[4])
+          }
+           }
+    });
+    
 }
 
-$.ajax({
-    url: "/update",
-    data: arraytosend,
-    type: "GET",
-   success: function(result) {   
-      result=JSON.parse(result)
-      alreadyloaded_level3=alreadyloaded_level3.concat(result['img_location'])
-    imageexist=result['bool']
-    sendDataToLoad(result['img_location'],result['img_imgurl'],scale,result['img_scaleX'],result['img_scaleY'],result['img_level']);    
-      if(imageexist){
-          alert('Image already exist for another user in your chosen area')
-      }else{
 
-        sendDataToLoad([bottomleft],[image],1200,[width],[height],[4])
-      }
-       }
-});
-}
 
 var uploading=false;
 function modeUPLOAD(){
+    update_url()
     uploading=!uploading
     $('.dropdown-content').hide()
     $('#dropzone').toggle()
-    $('#cancelbtn').toggle()
-    $('#confirmbtn').toggle()
     }
 
 
@@ -79,7 +85,6 @@ function modeUPLOAD_2(){
 function confirmupload(){
     if(locationlist.length!=0){
         localStorage.setItem('image', image);
-       
         localStorage.setItem('location',JSON.stringify(locationlist) )
         localStorage.setItem('pointerlocation',bottomleft)
         localStorage.setItem('width',width)
@@ -94,9 +99,9 @@ function confirmupload(){
 }
 
 $('#cancelbtn').click(function(){
-    document.getElementById('imagezone').innerHTML=`
-    <img src="" alt=""> 
-    `
+    $('#cancelbtn').hide()
+            $('#confirmbtn').hide()
+    document.getElementById('pewviewimg').src='';
     $('#imagezone').hide()
     image=null
     $('.dropzone')[0].dropzone.files.forEach(function(file) { 
@@ -106,8 +111,9 @@ $('#cancelbtn').click(function(){
 });
 
 $('#confirmbtn').click(function(){
-    if(document.getElementById('image')!=null){
-        image=document.getElementById('image').src 
+    
+    if(document.getElementById('pewviewimg')!=null){
+        image=document.getElementById('pewviewimg').src 
        modeUPLOAD_2();
     }else{
         alert('there is no image!')
@@ -116,32 +122,42 @@ $('#confirmbtn').click(function(){
 }); 
 //for url images
 $('#submit').click(function(){
+    $('#cancelbtn').show()
+    $('#confirmbtn').show()
      image=document.getElementById('imageurl').value
+      document.getElementById('pewviewimg').src=image
     $('#imagezone').show()
-    document.getElementById('imagezone').innerHTML=`
-    <img id=image src="${image}" alt="">
-    ` 
+    update_url()
 });
 
 
     Dropzone.options.dz = {
     autoProcessQueue: false,
+    maxFiles: 1,
     acceptedFiles: 'image/jpeg,image/png,image/jpg',
     previewTemplate: '<div class="dz-filename"><span data-dz-name></span></div>',
     createImageThumbnails: false,
+    init: function() {
+        this.on("addedfile", function() {
+            while (this.files.length > this.options.maxFiles) {
+                this.removeFile(this.files[0]);
+            }
+        });
+    },
     accept: function(file, done) {
       // FileReader() asynchronously reads the contents of files (or raw data buffers) stored on the user's computer.
       var reader = new FileReader();
       reader.onload = (function(entry) {
-        console.log(entry)
         // The Image() constructor creates a new HTMLImageElement instance.
         image = new Image(); 
         image.name='image'
         image.src = entry.target.result;
         image.onload = function() {
-            // $('#dropzone').hide()
             $('#imagezone').show()
-    document.getElementById('imagezone').innerHTML=`<img id=image src="${image.src}" alt="">` 
+            update_url()
+          $('#cancelbtn').show()
+            $('#confirmbtn').show()
+    document.getElementById('pewviewimg').src=image.src
           
         };
       });

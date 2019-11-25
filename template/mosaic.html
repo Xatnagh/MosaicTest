@@ -13,9 +13,6 @@
     <body>
         <nav id="topbar">
           </nav>
-
-
-
 <div id='canvasDiv'>
    <canvas id="c"></canvas>
    <div id=confirm>
@@ -34,18 +31,18 @@
 </div>
 
 
-<section id="overlay">
+<section id="overlay" class=overlay>
     <div id='pop'>
-    <button class='pop_close'>Close </button>
    <img id ='pop_image' src="" alt="">
+   <button class='pop_close'>Close </button>
    <p id='headers'>Description: </p> 
-   <textarea id='pop_description'  placeholder="(blank)"></textarea>
+   <textarea id='pop_description'  placeholder="This user didn't include a description" readonly></textarea>
    <br><p id='headers'>Link:   </p> <a id= 'pop_url'href="google.com">Url goes here</a> <br>
    <button class='pop_close'>Close</button>
    </div>
  </section>
 
-<div id=dropzone >
+<div id=dropzone class=overlay>
   <h2>Use Url of Image</h2>
     <input type="text" name="Image Url goes here" id=imageurl>
     <input type="submit" id=submit>
@@ -54,11 +51,14 @@
     <div class="fallback">
       <input name="file" type="file" multiple />
     </div>
+    
   </form>
-  <section id=imagezone>
-  </section>
+
+  <section id=imagezone class=overlay> 
+    <img id=pewviewimg src="" alt="">
+</section>
   <img id=confirmbtn src="/images/confirm.png" alt="Confirm">
-  <img id=cancelbtn src="/images/cancel.png" alt="Click me to remove the file." onclick="" />
+  <img id=cancelbtn src="/images/cancel.png" alt="Click me to remove the file." onclick="" /> 
    </div>
 
   <!-- <div>
