@@ -42,7 +42,7 @@ def putDataintodatabase(pointerlocation,locationlist,image,descriptionsendin,url
         if len(locationlist)>1:
             ImageInfo(parent=ANCESTORY_KEY,image_url=image,location=pointerlocation1,level=3,pointer=False,pointerlist=locationlist,scalewidth=width,scaleheight=height).put()
             for i in range(1,len(locationlist)):
-                ImageInfo(parent=ANCESTORY_KEY,location=int(i),level=3,pointer=True,pointerlocation=pointerlocation1).put()
+                ImageInfo(parent=ANCESTORY_KEY,location=locationlist[i],level=3,pointer=True,pointerlocation=pointerlocation1).put()
 
 import os
 cloudstorage.set_default_retry_params(
