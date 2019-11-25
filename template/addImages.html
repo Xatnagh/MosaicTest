@@ -44,40 +44,7 @@
 <script>
     var image = localStorage.getItem('image');
     document.getElementById('pop_image').src=`${image}`
-    
-    if(image.substring(0,4)=='data:'){
-      image=image.substr(image.indexOf(',') + 1);//strips off the data:/jpeg:base64 thing,so it is pure base64 data
-    imageblob = b64toBlob(image, contentType);
-    }else{
-      imageblob=image
-    }
-    
-    
-    $('#previewbtn').click(function(){
-      if($('#description')[0].scrollHeight>450){
-    alert('your description is long, the max lines is 30')
-  }else{
-        description=document.getElementById('description').value
-        
-        url= document.getElementById('url_textbox').value
-        if(url.substring(0,3)!='http'){
-            url=`https://${url}`
-        }
-          document.getElementById('pop_description').innerHTML=description;
-          auto_grow()
-          document.getElementById('pop_url').innerHTML=`${url}`;
-          document.getElementById('pop_url').href=url;
-          $('#overlay').css({'display':'block'}); 
-          
-  } });
-  
-  
-  
- 
-$('.pop_close').click(function(){
-$('#overlay').css({'display':'none'});
-});
-const contentType = 'image/png';
+    const contentType = 'image/png';
 const b64toBlob = (b64Data, contentType='', sliceSize=512) => {
   const byteCharacters = atob(b64Data);
   const byteArrays = [];
@@ -97,6 +64,40 @@ const b64toBlob = (b64Data, contentType='', sliceSize=512) => {
   const blob = new Blob(byteArrays, {type: contentType});
   return blob;
 }
+
+    if(image.substring(0,5)=='data:'){
+        
+      image=image.substr(image.indexOf(',') + 1);//strips off the data:/jpeg:base64 thing,so it is pure base64 data
+    imageblob = b64toBlob(image, contentType);
+    }else{
+      imageblob=image
+    }
+    
+    
+    $('#previewbtn').click(function(){
+      if($('#description')[0].scrollHeight>450){
+    alert('your description is long, the max lines is 30')
+  }else{
+        description=document.getElementById('description').value
+        url= document.getElementById('url_textbox').value
+        if(url.substring(0,3)!='http'){
+            url=`https://${url}`
+        }
+          document.getElementById('pop_description').innerHTML=description;
+          auto_grow()
+          document.getElementById('pop_url').innerHTML=`${url}`;
+          document.getElementById('pop_url').href=url;
+          $('#overlay').css({'display':'block'}); 
+          
+  } });
+  
+  
+  
+ 
+$('.pop_close').click(function(){
+$('#overlay').css({'display':'none'});
+});
+
 
 
 

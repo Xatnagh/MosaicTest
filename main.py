@@ -46,7 +46,7 @@ class update(webapp2.RequestHandler):
         url=self.request.POST.get('url')
         height=int(self.request.POST.get('height'))
         width=int(self.request.POST.get('width'))
-        if image[0:5]=='data:':
+        if len(image)>500:
             imageurl= upload_file(image,pointerlocation) 
         else:
            imageurl=image

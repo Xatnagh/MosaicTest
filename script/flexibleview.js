@@ -5,7 +5,6 @@ loadheader()
 });
 
 function homebtn(){
-  console.log(window.location.href.split('#').pop())
   if (window.location.href.split('/').pop() === ""||Number(window.location.href.split('#').pop())>0) { 
       return '<a onclick="modeUPLOAD();"id= uploadbtn>Upload</a>'
 }
