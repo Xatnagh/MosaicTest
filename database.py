@@ -59,4 +59,4 @@ def upload_file(image,pointerlocation):
             filename, 'w', content_type='image/png',
             retry_params=write_retry_params) as cloudstorage_file:
                 cloudstorage_file.write(image)
-    return 'https://storage.cloud.google.com/fortest098.appspot.com/{}'.format(pointerlocation)
+    return 'https://storage.googleapis.com/fortest098.appspot.com/{}'.format(pointerlocation)
