@@ -50,8 +50,8 @@ cloudstorage.set_default_retry_params(
         initial_delay=0.2, max_delay=5.0, backoff_factor=2, max_retry_period=15
         ))
 def upload_file(image,pointerlocation):
-    bucket_name = os.environ.get(
-            'mosaictest', app_identity.get_default_gcs_bucket_name())
+    bucket_name ='mosaictest'
+            
     bucket = '/' + bucket_name
     filename = bucket + '/'+pointerlocation
     write_retry_params = cloudstorage.RetryParams(backoff_factor=1.1)
@@ -60,3 +60,24 @@ def upload_file(image,pointerlocation):
             retry_params=write_retry_params) as cloudstorage_file:
                 cloudstorage_file.write(image)
     return 'https://storage.googleapis.com/fortest098.appspot.com/{}'.format(pointerlocation)
+
+def update_layer2(image,location):
+    bucket_name = 'mosaictestlayer2'
+    bucket = '/' + bucket_name
+    filename = bucket + '/'+location
+    write_retry_params = cloudstorage.RetryParams(backoff_factor=1.1)
+    with cloudstorage.open(
+            filename, 'w', content_type='image/png',
+            retry_params=write_retry_params) as cloudstorage_file:
+                cloudstorage_file.write(image)
+    return 'https://storage.googleapis.com/mosaictestlayer2/{}'.format(pointerlocation)
+def update_layer1(image,location):
+    bucket_name = 'mosaictestlayer2'
+    bucket = '/' + bucket_name
+    filename = bucket + '/'+location
+    write_retry_params = cloudstorage.RetryParams(backoff_factor=1.1)
+    with cloudstorage.open(
+            filename, 'w', content_type='image/png',
+            retry_params=write_retry_params) as cloudstorage_file:
+                cloudstorage_file.write(image)
+    return 'https://storage.googleapis.com/mosaictestlayer1/{}'.format(location)

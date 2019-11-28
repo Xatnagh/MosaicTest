@@ -16,7 +16,12 @@
   width: auto;
   height: auto;
 }
-
+#c{
+  position: absolute;
+  height: 1450px;
+  width: 900px;
+  border:solid 3px black;
+}
 
 
 #headers{

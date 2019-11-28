@@ -1,4 +1,26 @@
 
+function canvastoblob(){
+   var canvas = document.getElementById('c');
+
+   canvas.toBlob(function(blob) {
+     var newImg = document.createElement('img'),
+         url = URL.createObjectURL(blob);
+   
+     newImg.onload = function() {
+       // no longer need to read the blob so it's revoked
+       URL.revokeObjectURL(url);
+     };
+   
+     newImg.src = url;
+     document.body.appendChild(newImg);
+     console.log(blob.size/1000000,'mb')
+   });
+   
+}
+
+
+
+
 var onmobile;
  function mobilecheck() {
    var check = false;
@@ -30,13 +52,18 @@ function loadlayer(location,layer){
           },
    });
       }
-///this loads first layer
 var one=[1]
 
-///
-
 var canvas = new fabric.Canvas('c');
-sendDataToLoad(jdata_location,jdata_imageurl,16,one,one,jdata_level);
+
+
+function centeronlocation(){
+   canvas.setZoom(80)
+   canvas.viewportTransform[4]=0
+   canvas.viewportTransform[5]=0
+   canvas.requestRenderAll();
+}
+
 var zoom=canvas.getZoom();
 function sendDataToLoad(img_location,img_imgurl,img_scale,img_scaleX,img_scaleY,img_level){
    
@@ -66,10 +93,6 @@ function sendDataToLoad(img_location,img_imgurl,img_scale,img_scaleX,img_scaleY,
    }
 }
 function loadimage(scale,scaleamountX,scaleamountY,locationx,locationy,level,img_imgurl){
-   if(img_imgurl=='/images/test.jpg'){
-      console.log('run')
-   }
-
    fabric.Image.fromURL(img_imgurl, function(img){
       var elWidth = img.naturalWidth || img.width;
       var elHeight = img.naturalHeight || img.height;
@@ -428,6 +451,9 @@ if(differenceinX>difference||differenceinY>difference){//after they move the mou
 // document.getElementById('location').innerHTML= 'location for layer 1: '+getCurrentCordinates(posX,posY,1)+ '  |  '+'location for layer2: '+getCurrentCordinates(posX,posY,2)+'  |  '+'location for layer3:'+getCurrentCordinates(posX,posY,3);
 ///
 };
+
+
+
 canvas.on('mouse:up', function() {
 this.isDragging = false;
 this.selection = true;
@@ -514,7 +540,6 @@ document.getElementById('c').height=myHeight*0.9;
 }
 $('.pop_close').click(function(){
 $('#overlay').css({'display':'none'});
-currentoverlay='false'
 });
 function CenterCoord(){
    return{
@@ -601,14 +626,58 @@ function nearbylocations(location,level){
 }
 function removeLS(){
    if(localStorage.length!=0){
-      localStorage.removeItem('image');
+      localStorage.clear();
    }
 }
 
+function loadlocationimage(location,layer){//give it a location and a layer and it will load everything in it
+if(layer==2){
+var scale=15;
+var scaleamount=1200
+}else{
+var scale=5
+var scaleamount=80
+}
 
+   var locationstart=(location-1)*scale+1
+   var locationlist=getlocationarray(locationstart,layer);
+   arraytosend={
+      'arraytosend':JSON.stringify(locationlist) ,
+      'level':layer+1
+  }
+  
+  $.ajax({
+      url: "/update",
+      data: arraytosend,
+      type: "GET",
+     success: function(result) {   
+        result=JSON.parse(result)
+      sendDataToLoad(result['img_location'],result['img_imgurl'],scaleamount,result['img_scaleX'],result['img_scaleY'],result['img_level']);  
+         }
+  });
+   
 
+}
 
-
+function getlocationarray(locationstart,layer){
+   var arrayofcurrentlayer=[];
+if(layer==2){
+for(var i=0;i<15;i++){
+   for(var j=locationstart;j<locationstart+15;j++){
+      arrayofcurrentlayer.push(j+1200*i)
+   }
+}
+console.log(arrayofcurrentlayer)
+return arrayofcurrentlayer
+}if(layer==1){
+   for(var i=locationstart;i<locationstart+5;i++){
+      for(var j=0;j<5;j++){
+         arrayofcurrentlayer.push(i+80*j)
+      }
+   }
+   return arrayofcurrentlayer
+}
+}
 
 Number.prototype.between = function(a, b) {
    var min = Math.min.apply(Math, [a, b]),

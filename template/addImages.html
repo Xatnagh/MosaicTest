@@ -38,8 +38,10 @@
         <br>
         <button id=previewbtn style="background-color:aqua"><h1 style="color:black; font-weight: bold; "> Show Preview</h1></button>
         <br><button id=sendimagetoserver onclick="senddatatoserver()">SUBMIT</button>
-    
 </div>
+<canvas id=c></canvas>
+
+
 
 <script>
     var image = localStorage.getItem('image');
@@ -112,9 +114,9 @@ function senddatatoserver(){
             url=`https://${url}`
         }
     var data= new FormData();
+    data.append('image',imageblob );
     data.append('pointerlocation',pointerlocation);
     data.append('locationlist',locationlist );
-    data.append('image',imageblob );
     data.append('description',description);
     data.append('url',url );
     data.append('height',height );

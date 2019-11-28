@@ -22,15 +22,16 @@ if((topcorner-(height-1)*1200)<bottomcorner){
 width= bottomright%1200-bottomleft%1200+1;
 
     if(width*height>10000){
-        alert('the area you choose is absolutely massive, please wait while the computer processes it, you might want to reset your browser if the website begin to lag')
+        alert('the area you chose is absolutely massive, please wait while the computer processes it, you might want to reset your browser if the website begin to lag')
     }
     
-    for(var i=bottomleft;i<=bottomright;i++){
-    locationlist.push(i)
-        for(var j=1;j<height;j++){
-        locationlist.push(i+j*1200)
+    for(var i=1;i<height;i++){
+    
+        for(var j=bottomleft;j<=bottomright;j++){
+        locationlist.push(j+i*1200)
         }
     }
+    getlayersoflocation()
     uploading=false
     
     arraytosend={
@@ -48,7 +49,8 @@ width= bottomright%1200-bottomleft%1200+1;
         var addimgscale=1200
         sendDataToLoad(result['img_location'],result['img_imgurl'],addimgscale,result['img_scaleX'],result['img_scaleY'],result['img_level']);    
           if(imageexist){
-              alert('Image already exist for another user in your chosen area')
+              alert('Image already exist for another user in your chosen area!')
+              uploading=true;
           }else{
             alreadyloaded_level3=alreadyloaded_level3.concat(result['img_location'])
             sendDataToLoad([bottomleft],[image],1200,[width],[height],[4])
@@ -84,8 +86,9 @@ function modeUPLOAD_2(){
     
 function confirmupload(){
     if(locationlist.length!=0){
+        getlayersoflocation(locationlist)
         localStorage.setItem('image', image);
-        localStorage.setItem('location',JSON.stringify(locationlist) )
+        localStorage.setItem('location',JSON.stringify(locationlist))
         localStorage.setItem('pointerlocation',bottomleft)
         localStorage.setItem('width',width)
         localStorage.setItem('height',height)
@@ -93,9 +96,12 @@ function confirmupload(){
     }
     else{
         alert("You didn't select where you want to put your image!")
-    }
-    
-    
+    }  
+}
+function getlayersoflocation(locationlist){
+    var layer1=[];
+    var layer2=[];
+
 }
 
 $('#cancelbtn').click(function(){
