@@ -9,53 +9,40 @@ if(l1<1||l2<1||l1>1440000||l2>1440000){
     uploading=true;
     return;
 }
-// if(l1==1440000||l2==1440000){
-//     alert("sorry but the most bottom corner is not available")
-//     location1=null
-//     location2=null
-//     uploading=true;
-//     return;
-// }
 var topcorner= Math.max(l1,l2);
 var bottomcorner=Math.min(l1,l2);
 var bottomright
 
-height =Math.floor(topcorner/1201)-Math.floor(bottomcorner/1201)+1
+height =Math.floor(topcorner/1200.00001)-Math.floor(bottomcorner/1200.00001)+1
 
-// if(topcorner%1200==0||bottomcorner%1200==0){
-// height+=1
-// }
-console.log(height)
 if((topcorner-(height-1)*1200)<bottomcorner){
+   
     bottomleft=topcorner-(height-1)*1200 
    bottomright=bottomcorner
    }else{
     bottomleft= bottomcorner
    bottomright=topcorner-(height-1)*1200
    }
-   console.log('test',bottomright,bottomleft)
-width= bottomright%1200-bottomleft%1200+1;
-if(bottomright%1200==0){
-    width=1200-bottomleft%1200+1;
-}
-console.log(width)
+   console.log(bottomright,bottomleft)
+width= bottomright-bottomleft+1;
+console.log('width',width)
+
     if(width*height>10000){
         alert('the area you chose is absolutely massive, please wait while the computer processes it, you might want to reset your browser if the website begin to lag')
     }
     
     for(var i=0;i<height;i++){
-    
         for(var j=bottomleft;j<=bottomright;j++){
         locationlist.push(j+i*1200)
         }
     }
-    
+    console.log('locationlistlength:',locationlist.length)
     uploading=false
-    // temp=getlayersoflocation(locationlist)
-    // var layer1=temp['layer1']
-    // var layer2=temp['layer2']
-    // console.log('layer1',layer1)
-    // console.log('layer2',layer2)
+    temp=getlayersoflocation(locationlist)
+  var layer1=temp['layer1']
+    var layer2=temp['layer2']
+   console.log('layer1',layer1)
+    console.log('layer2',layer2)
     arraytosend={
         'arraytosend':JSON.stringify(locationlist) ,
         'level':3,
@@ -127,54 +114,36 @@ function confirmupload(){
         alert("You didn't select where you want to put your image!")
     }  
 }
-// 1438800,
 
-getlayersoflocation(locationlist)
+
 function getlayersoflocation(locationlist){
     var x,y,location;
     var layer1=[];
     var layer2=[];
-for(var i=0;i<locationlist.length;i++){
-    y=Math.floor(locationlist[i]/1200/15)+1;
-    x=Math.floor((locationlist[i]/15)%80)+1
-   if(locationlist[i]/1200/15%1==0){
-    y-=1
-   }
-   if((locationlist[i]/15)%1==0){
-       x-=1
-   }
-   if((locationlist[i]/15)%80==0){
-    x=80
-   }
-  console.log('x',x)
-   console.log('y',y)
-   location=x+80*(y-1);
-  layer2.push(location)
+for( var i=0;i<locationlist.length;i++){//100%works
+  x=Math.floor(locationlist[i]/15.000001)%80+1
+  y=Math.floor(locationlist[i]/15.000001/1200)
+location=x+y*80
+layer2.push(location)
 }
- layer2 = [...new Set(layer2)];
+layer2=[...new Set(layer2)]
+   
 
-
-
-
- 
- for(var i=0;i<layer2.length;i++){
-    x=Math.floor((layer2[i]/5)%16)+1
-    if((layer2[i]/5)%1==0){
-        x-=1
-    }
-    y=Math.floor(layer2[i]/80/5);
-    location=x+16*y;
-   layer1.push(location)
- }
-  layer1 = [...new Set(layer1)];
-  console.log('layer1',layer1)
-  console.log('layer2',layer2)
-  return{
-      'layer1':layer1,
-      'layer2':layer2
+for( var i=0;i<locationlist.length;i++){//100%works
+    x=Math.floor(layer2[i]/5.000001)%16+1
+    y=Math.floor(layer2[i]/5.000001/80)
+  location=x+y*16
+  layer1.push(location)
   }
+  layer1=[...new Set(layer1)]
+  layer1.pop()
+return{
+    'layer2':layer2,
+    'layer1':layer1
 }
 
+
+}
 
 $('#cancelbtn').click(function(){
     $('#cancelbtn').hide()

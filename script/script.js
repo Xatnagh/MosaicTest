@@ -474,7 +474,7 @@ canvas.on('mouse:dblclick',function(e){
    posY=canvas.getPointer(touch).y
   if(uploading==false){ 
          var location=getCurrentCordinates(posX,posY,3)
-         
+         console.log('show info for',location)
          data={
             location:location
          }
