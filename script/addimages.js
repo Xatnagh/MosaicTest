@@ -31,29 +31,34 @@ width= bottomright%1200-bottomleft%1200+1;
         locationlist.push(j+i*1200)
         }
     }
-    getlayersoflocation()
     uploading=false
-    console.log(locationlist)
+    temp=getlayersoflocation(locationlist)
+    var layer1=temp['layer1']
+    var layer2=temp['layer2']
+    console.log(layer1,layer2)
     arraytosend={
         'arraytosend':JSON.stringify(locationlist) ,
-        'level':3
+        'level':3,
+        
     }
     
     $.ajax({
         url: "/update",
         data: arraytosend,
         type: "GET",
-       success: function(result) {   
-          result=JSON.parse(result)
-          imageexist=result['bool']
+       success: function(layer3image,layer2image) {   
+          layer3image=JSON.parse(layer3image)
+          layer2image=JSON.parse(layer2image)
+
+          imageexist=layer3image['bool']
         var addimgscale=1200
-        sendDataToLoad(result['img_location'],result['img_imgurl'],addimgscale,result['img_scaleX'],result['img_scaleY'],result['img_level']);    
+        sendDataToLoad(layer3image['img_location'],layer3image['img_imgurl'],addimgscale,layer3image['img_scaleX'],layer3image['img_scaleY'],layer3image['img_level']);    
           if(imageexist){
               alert('Image already exist for another user in your chosen area!')
               uploading=true;
               locationlist=[]
           }else{
-            alreadyloaded_level3=alreadyloaded_level3.concat(result['img_location'])
+            alreadyloaded_level3=alreadyloaded_level3.concat(layer3image['img_location'])
             sendDataToLoad([bottomleft],[image],1200,[width],[height],[4])
           }
            }
@@ -100,10 +105,35 @@ function confirmupload(){
     }  
 }
 function getlayersoflocation(locationlist){
+    var x,y,location;
     var layer1=[];
     var layer2=[];
-
+for(var i=0;i<locationlist.length;i++){
+   x=Math.floor((locationlist[i]/15)%80)+1
+   if((locationlist[i]/15)%1==0){
+       x-=1
+   }
+   y=Math.floor(locationlist[i]/1200/15);
+   location=x+80*y;
+  layer2.push(location)
 }
+ layer2 = [...new Set(layer2)];
+ for(var i=0;i<layer2.length;i++){
+    x=Math.floor((layer2[i]/5)%16)+1
+    if((locationlist[i]/15)%1==0){
+        x-=1
+    }
+    y=Math.floor(layer2[i]/80/5);
+    location=x+16*y;
+   layer1.push(location)
+ }
+  layer1 = [...new Set(layer1)];
+  return{
+      'layer1':layer1,
+      'layer2':layer2
+  }
+}
+
 
 $('#cancelbtn').click(function(){
     $('#cancelbtn').hide()

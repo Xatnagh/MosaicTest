@@ -40,7 +40,6 @@ def getImages(locationlist,level):
                     imagelist.append (placeholderImage) 
     return imagelist
 def getimagesbylocation(list,level):
-    print list
     from database import alreadyexist
     img_location=[]
     img_imgurl=[]
