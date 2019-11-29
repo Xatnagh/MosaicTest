@@ -70,6 +70,7 @@ var zoom=canvas.getZoom();
 function sendDataToLoad(img_location,img_imgurl,img_scale,img_scaleX,img_scaleY,img_level){
    
    for(var i=0;i<img_location.length;i++){
+      
       var tolocation=locationforcanvas(img_location[i],img_scale)
       var locationx=tolocation.x;
       var locationy=tolocation.y;
@@ -95,6 +96,7 @@ function sendDataToLoad(img_location,img_imgurl,img_scale,img_scaleX,img_scaleY,
    }
 }
 function loadimage(scale,scaleamountX,scaleamountY,locationx,locationy,level,img_imgurl){
+   
    fabric.Image.fromURL(img_imgurl, function(img){
       var elWidth = img.naturalWidth || img.width;
       var elHeight = img.naturalHeight || img.height;
@@ -472,8 +474,7 @@ canvas.on('mouse:dblclick',function(e){
    posY=canvas.getPointer(touch).y
   if(uploading==false){ 
          var location=getCurrentCordinates(posX,posY,3)
-         getlayersoflocation([location])
-         console.log(location)
+         
          data={
             location:location
          }
@@ -592,16 +593,17 @@ if(level==3){
    alreadyloaded_level3.push(location)
 }
 }
+
 function nearbylocations(location,level){
       var unitsinY,maxindex;
       var list=[]
    if(level==2){
       unitsinY=80
-      maxindex=6400 
+      maxindex=6401 
       }
    if(level==3){
       unitsinY=1200
-      maxindex=1440000
+      maxindex=1440001
    }
    for( var i=location-unitsinY*5-6;i<location-unitsinY*5+7;i++){
       for(var j=0;j<9;j++){

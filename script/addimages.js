@@ -4,23 +4,41 @@ var height,width;
 function makelist(l1,l2){
 if(l1<1||l2<1||l1>1440000||l2>1440000){
     alert("one of the squares you selected is outside of the mosaic, please choose your locations again")
-    location1=''
-    location2= ''
+    location1=null
+    location2=null
+    uploading=true;
+    return;
 }
+// if(l1==1440000||l2==1440000){
+//     alert("sorry but the most bottom corner is not available")
+//     location1=null
+//     location2=null
+//     uploading=true;
+//     return;
+// }
 var topcorner= Math.max(l1,l2);
 var bottomcorner=Math.min(l1,l2);
 var bottomright
-height =Math.floor(topcorner/1200)-Math.floor(bottomcorner/1200)+1
 
+height =Math.floor(topcorner/1201)-Math.floor(bottomcorner/1201)+1
+
+// if(topcorner%1200==0||bottomcorner%1200==0){
+// height+=1
+// }
+console.log(height)
 if((topcorner-(height-1)*1200)<bottomcorner){
     bottomleft=topcorner-(height-1)*1200 
    bottomright=bottomcorner
    }else{
-       bottomleft= bottomcorner
+    bottomleft= bottomcorner
    bottomright=topcorner-(height-1)*1200
    }
+   console.log('test',bottomright,bottomleft)
 width= bottomright%1200-bottomleft%1200+1;
-
+if(bottomright%1200==0){
+    width=1200-bottomleft%1200+1;
+}
+console.log(width)
     if(width*height>10000){
         alert('the area you chose is absolutely massive, please wait while the computer processes it, you might want to reset your browser if the website begin to lag')
     }
@@ -31,12 +49,13 @@ width= bottomright%1200-bottomleft%1200+1;
         locationlist.push(j+i*1200)
         }
     }
+    
     uploading=false
-    temp=getlayersoflocation(locationlist)
-    var layer1=temp['layer1']
-    var layer2=temp['layer2']
-    console.log('layer1',layer1)
-    console.log('layer2',layer2)
+    // temp=getlayersoflocation(locationlist)
+    // var layer1=temp['layer1']
+    // var layer2=temp['layer2']
+    // console.log('layer1',layer1)
+    // console.log('layer2',layer2)
     arraytosend={
         'arraytosend':JSON.stringify(locationlist) ,
         'level':3,
