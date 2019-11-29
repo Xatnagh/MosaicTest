@@ -57,7 +57,7 @@ var one=[1]
 var canvas = new fabric.Canvas('c');
 
 
-function centeronlocation(location){
+function centeronlocation(location,level){
    canvas.setZoom(80)
    loadlocationimage(1,2)
    
@@ -112,6 +112,7 @@ function loadimage(scale,scaleamountX,scaleamountY,locationx,locationy,level,img
       img.selectable=false;
       addtoarray(img,level);
       canvas.add(img);
+      canvas.requestRenderAll();
    });
 }
 function locationforcanvas(location,scaleamountX){
@@ -464,11 +465,14 @@ var count=0;
 var location1;
 canvas.on('mouse:dblclick',function(e){
    update_url()
+   
+
    let touch = e.e.touches ? e.e.touches[0] : e.e;
    posX=canvas.getPointer(touch).x
    posY=canvas.getPointer(touch).y
   if(uploading==false){ 
          var location=getCurrentCordinates(posX,posY,3)
+         getlayersoflocation([location])
          console.log(location)
          data={
             location:location

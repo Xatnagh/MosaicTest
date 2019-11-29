@@ -35,7 +35,8 @@ width= bottomright%1200-bottomleft%1200+1;
     temp=getlayersoflocation(locationlist)
     var layer1=temp['layer1']
     var layer2=temp['layer2']
-    console.log(layer1,layer2)
+    console.log('layer1',layer1)
+    console.log('layer2',layer2)
     arraytosend={
         'arraytosend':JSON.stringify(locationlist) ,
         'level':3,
@@ -46,10 +47,8 @@ width= bottomright%1200-bottomleft%1200+1;
         url: "/update",
         data: arraytosend,
         type: "GET",
-       success: function(layer3image,layer2image) {   
-          layer3image=JSON.parse(layer3image)
-          layer2image=JSON.parse(layer2image)
-
+       success: function(layer3image) {   
+          layer3image=JSON.parse(layer3image)       
           imageexist=layer3image['bool']
         var addimgscale=1200
         sendDataToLoad(layer3image['img_location'],layer3image['img_imgurl'],addimgscale,layer3image['img_scaleX'],layer3image['img_scaleY'],layer3image['img_level']);    
@@ -92,6 +91,11 @@ function modeUPLOAD_2(){
     
 function confirmupload(){
     if(locationlist.length!=0){
+        var temp=getlayersoflocation(locationlist)
+        var layer1=temp['layer1']
+    var layer2=temp['layer2']
+    console.log('layer1',layer1)
+    console.log('layer2',layer2)
         getlayersoflocation(locationlist)
         localStorage.setItem('image', image);
         localStorage.setItem('location',JSON.stringify(locationlist))
@@ -104,23 +108,39 @@ function confirmupload(){
         alert("You didn't select where you want to put your image!")
     }  
 }
+// 1438800,
+
+getlayersoflocation(locationlist)
 function getlayersoflocation(locationlist){
     var x,y,location;
     var layer1=[];
     var layer2=[];
 for(var i=0;i<locationlist.length;i++){
-   x=Math.floor((locationlist[i]/15)%80)+1
+    y=Math.floor(locationlist[i]/1200/15)+1;
+    x=Math.floor((locationlist[i]/15)%80)+1
+   if(locationlist[i]/1200/15%1==0){
+    y-=1
+   }
    if((locationlist[i]/15)%1==0){
        x-=1
    }
-   y=Math.floor(locationlist[i]/1200/15);
-   location=x+80*y;
+   if((locationlist[i]/15)%80==0){
+    x=80
+   }
+  console.log('x',x)
+   console.log('y',y)
+   location=x+80*(y-1);
   layer2.push(location)
 }
  layer2 = [...new Set(layer2)];
+
+
+
+
+ 
  for(var i=0;i<layer2.length;i++){
     x=Math.floor((layer2[i]/5)%16)+1
-    if((locationlist[i]/15)%1==0){
+    if((layer2[i]/5)%1==0){
         x-=1
     }
     y=Math.floor(layer2[i]/80/5);
@@ -128,6 +148,8 @@ for(var i=0;i<locationlist.length;i++){
    layer1.push(location)
  }
   layer1 = [...new Set(layer1)];
+  console.log('layer1',layer1)
+  console.log('layer2',layer2)
   return{
       'layer1':layer1,
       'layer2':layer2
