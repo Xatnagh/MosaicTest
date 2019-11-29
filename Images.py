@@ -40,6 +40,7 @@ def getImages(locationlist,level):
                     imagelist.append (placeholderImage) 
     return imagelist
 def getimagesbylocation(list,level):
+    print list
     from database import alreadyexist
     img_location=[]
     img_imgurl=[]
@@ -52,6 +53,7 @@ def getimagesbylocation(list,level):
         # print(list)
           
     imagelist=getImages(list,level)
+    
     if len(imagelist)!=0:
         for i in imagelist:
             img_location.append(i[0].location)
@@ -65,6 +67,7 @@ def getimagesbylocation(list,level):
         'img_level':img_level,
         'img_scaleX': img_scalewidth,
         'img_scaleY': img_scaleheight,
+
         'bool':alreadyexist(list)
     }
 

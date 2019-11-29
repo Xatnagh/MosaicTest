@@ -57,8 +57,10 @@ var one=[1]
 var canvas = new fabric.Canvas('c');
 
 
-function centeronlocation(){
+function centeronlocation(location){
    canvas.setZoom(80)
+   loadlocationimage(1,2)
+   
    canvas.viewportTransform[4]=0
    canvas.viewportTransform[5]=0
    canvas.requestRenderAll();

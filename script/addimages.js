@@ -25,7 +25,7 @@ width= bottomright%1200-bottomleft%1200+1;
         alert('the area you chose is absolutely massive, please wait while the computer processes it, you might want to reset your browser if the website begin to lag')
     }
     
-    for(var i=1;i<height;i++){
+    for(var i=0;i<height;i++){
     
         for(var j=bottomleft;j<=bottomright;j++){
         locationlist.push(j+i*1200)
@@ -33,7 +33,7 @@ width= bottomright%1200-bottomleft%1200+1;
     }
     getlayersoflocation()
     uploading=false
-    
+    console.log(locationlist)
     arraytosend={
         'arraytosend':JSON.stringify(locationlist) ,
         'level':3
@@ -51,6 +51,7 @@ width= bottomright%1200-bottomleft%1200+1;
           if(imageexist){
               alert('Image already exist for another user in your chosen area!')
               uploading=true;
+              locationlist=[]
           }else{
             alreadyloaded_level3=alreadyloaded_level3.concat(result['img_location'])
             sendDataToLoad([bottomleft],[image],1200,[width],[height],[4])
