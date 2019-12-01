@@ -33,6 +33,7 @@ setCanvasSize();
 var alreadyloaded_level2=[]
 var alreadyloaded_level3=[]
 function loadlayer(location,layer){
+   
    lastloadx=CenterCoord().x;
          lastloady=CenterCoord().y;
    var data= {
@@ -57,20 +58,30 @@ var one=[1]
 var canvas = new fabric.Canvas('c');
 
 
-function centeronlocation(location,level){
-   canvas.setZoom(80)
-   loadlocationimage(1,2)
+function blobfromlocation(location,level){
+   if(level==2){
+      scale=80
+   }else{scale=16}
+   var tolocation=locationforcanvas(location,scale)
+   var locationx=tolocation.x;
+   var locationy=tolocation.y;
+   canvas.setZoom(scale)
+   canvas.viewportTransform[4]=locationx
+   canvas.viewportTransform[5]=locationy
+   canvas.requestRenderAll(); 
+   loadlocationimage(location,level,true)
    
-   canvas.viewportTransform[4]=0
-   canvas.viewportTransform[5]=0
-   canvas.requestRenderAll();
 }
 
 var zoom=canvas.getZoom();
-function sendDataToLoad(img_location,img_imgurl,img_scale,img_scaleX,img_scaleY,img_level){
-   
+function sendDataToLoad(img_location,img_imgurl,img_scale,img_scaleX,img_scaleY,img_level,toblob=false){
+   if(img_level==3){
+      img_location = img_location.filter( function( item ) {
+      return alreadyloaded_level3.indexOf( item ) < 0;
+    } );
+   }
+   addtoalreadyloaded(img_location,img_level)//so that the same image don't load again
    for(var i=0;i<img_location.length;i++){
-      
       var tolocation=locationforcanvas(img_location[i],img_scale)
       var locationx=tolocation.x;
       var locationy=tolocation.y;
@@ -92,10 +103,10 @@ function sendDataToLoad(img_location,img_imgurl,img_scale,img_scaleX,img_scaleY,
       }else{
          imageurl= img_imgurl[0]
       }
-   loadimage(scale,scaleamountX,scaleamountY,locationx,locationy,level,imageurl);
+   loadimage(scale,scaleamountX,scaleamountY,locationx,locationy,level,imageurl,toblob);
    }
 }
-function loadimage(scale,scaleamountX,scaleamountY,locationx,locationy,level,img_imgurl){
+function loadimage(scale,scaleamountX,scaleamountY,locationx,locationy,level,img_imgurl,toblob=false){
    
    fabric.Image.fromURL(img_imgurl, function(img){
       var elWidth = img.naturalWidth || img.width;
@@ -114,7 +125,12 @@ function loadimage(scale,scaleamountX,scaleamountY,locationx,locationy,level,img
       img.selectable=false;
       addtoarray(img,level);
       canvas.add(img);
-      canvas.requestRenderAll();
+      canvas.requestRenderAll()
+      if(toblob){
+         if(locationx%15==0&&locationy%15==0){
+         setTimeout('canvastoblob()', 100)
+      }
+     }
    });
 }
 function locationforcanvas(location,scaleamountX){
@@ -411,7 +427,7 @@ if(zoom.between(128,180)){
    
    nearbylocations(getCurrentCordinates(CenterCoord().x,CenterCoord().y,3),3)
 }
-changelayers();
+// changelayers();
 });
 
 
@@ -637,17 +653,23 @@ function removeLS(){
       localStorage.clear();
    }
 }
-
-function loadlocationimage(location,layer){//give it a location and a layer and it will load everything in it
+loadlocationimage(1,1)
+loadlocationimage(2,1)
+loadlocationimage(17,1)
+loadlocationimage(18,1)
+function loadlocationimage(location,layer,toblob){//give it a location and a layer and it will load everything in it
 if(layer==2){
 var scale=15;
 var scaleamount=1200
+var scaletemp=80
 }else{
 var scale=5
 var scaleamount=80
+var scaletemp=16
 }
-
-   var locationstart=(location-1)*scale+1
+   var y=Math.floor(location/scaletemp)
+   console.log('y',y)
+   var locationstart=(location-1)*scale+(y*(scale-1)*scaleamount)+1
    var locationlist=getlocationarray(locationstart,layer);
    arraytosend={
       'arraytosend':JSON.stringify(locationlist) ,
@@ -660,10 +682,9 @@ var scaleamount=80
       type: "GET",
      success: function(result) {   
         result=JSON.parse(result)
-      sendDataToLoad(result['img_location'],result['img_imgurl'],scaleamount,result['img_scaleX'],result['img_scaleY'],result['img_level']);  
+      sendDataToLoad(result['img_location'],result['img_imgurl'],scaleamount,result['img_scaleX'],result['img_scaleY'],result['img_level'],toblob);  
          }
   });
-   
 
 }
 

@@ -23,9 +23,9 @@ if((topcorner-(height-1)*1200)<bottomcorner){
     bottomleft= bottomcorner
    bottomright=topcorner-(height-1)*1200
    }
-   console.log(bottomright,bottomleft)
+  
 width= bottomright-bottomleft+1;
-console.log('width',width)
+
 
     if(width*height>10000){
         alert('the area you chose is absolutely massive, please wait while the computer processes it, you might want to reset your browser if the website begin to lag')
@@ -36,17 +36,12 @@ console.log('width',width)
         locationlist.push(j+i*1200)
         }
     }
-    console.log('locationlistlength:',locationlist.length)
+   
     uploading=false
-    temp=getlayersoflocation(locationlist)
-  var layer1=temp['layer1']
-    var layer2=temp['layer2']
-   console.log('layer1',layer1)
-    console.log('layer2',layer2)
+   
     arraytosend={
         'arraytosend':JSON.stringify(locationlist) ,
         'level':3,
-        
     }
     
     $.ajax({
@@ -87,12 +82,8 @@ function modeUPLOAD_2(){
     $('#dropzone').hide()
     $('#cancelbtn').hide()
     $('#confirmbtn').hide()
-    if($('#confirm').css('display')=='none'){
-        $('#confirm').css({'display':'block'})
-      }else{
-        $('#confirm').css({'display':'none'})
-      }
-    
+    $('#confirm').toggle()
+
   }
     
 function confirmupload(){
@@ -100,15 +91,21 @@ function confirmupload(){
         var temp=getlayersoflocation(locationlist)
         var layer1=temp['layer1']
     var layer2=temp['layer2']
-    console.log('layer1',layer1)
-    console.log('layer2',layer2)
-        getlayersoflocation(locationlist)
-        localStorage.setItem('image', image);
-        localStorage.setItem('location',JSON.stringify(locationlist))
-        localStorage.setItem('pointerlocation',bottomleft)
-        localStorage.setItem('width',width)
-        localStorage.setItem('height',height)
-     window.location.href = "./addImage";   
+    console.log(layer2)
+    for(var i=0;i<layer2.length;i++){
+        loadlocationimage(layer2[i],2)
+    }
+    // for(var i=0;i<layer1.length;i++){
+    //     loadlocationimage(layer1[i],1)
+    // }
+
+        
+        // localStorage.setItem('image', image);
+        // localStorage.setItem('location',JSON.stringify(locationlist))
+        // localStorage.setItem('pointerlocation',bottomleft)
+        // localStorage.setItem('width',width)
+        // localStorage.setItem('height',height)
+    //  window.location.href = "./addImage";   
     }
     else{
         alert("You didn't select where you want to put your image!")
@@ -141,8 +138,6 @@ return{
     'layer2':layer2,
     'layer1':layer1
 }
-
-
 }
 
 $('#cancelbtn').click(function(){
