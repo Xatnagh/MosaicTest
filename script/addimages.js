@@ -51,14 +51,14 @@ width= bottomright-bottomleft+1;
        success: function(layer3image) {   
           layer3image=JSON.parse(layer3image)       
           imageexist=layer3image['bool']
-        var addimgscale=1200
-        sendDataToLoad(layer3image['img_location'],layer3image['img_imgurl'],addimgscale,layer3image['img_scaleX'],layer3image['img_scaleY'],layer3image['img_level']);    
+       
+        sendDataToLoad(layer3image['img_location'],layer3image['img_imgurl'],1200,layer3image['img_scaleX'],layer3image['img_scaleY'],layer3image['img_level']);    
           if(imageexist){
               alert('Image already exist for another user in your chosen area!')
               uploading=true;
               locationlist=[]
           }else{
-            alreadyloaded_level3=alreadyloaded_level3.concat(layer3image['img_location'])
+            addtoalreadyloaded(layer3image['img_location'],layer3image['img_level'][0])
             sendDataToLoad([bottomleft],[image],1200,[width],[height],[4])
           }
            }
@@ -86,26 +86,21 @@ function modeUPLOAD_2(){
 
   }
     
-function confirmupload(){
+function confirmupload(){//confirm after user had uploaded
     if(locationlist.length!=0){
         var temp=getlayersoflocation(locationlist)
         var layer1=temp['layer1']
     var layer2=temp['layer2']
-    console.log(layer2)
-    for(var i=0;i<layer2.length;i++){
-        loadlocationimage(layer2[i],2)
-    }
-    // for(var i=0;i<layer1.length;i++){
-    //     loadlocationimage(layer1[i],1)
-    // }
 
-        
-        // localStorage.setItem('image', image);
-        // localStorage.setItem('location',JSON.stringify(locationlist))
-        // localStorage.setItem('pointerlocation',bottomleft)
-        // localStorage.setItem('width',width)
-        // localStorage.setItem('height',height)
-    //  window.location.href = "./addImage";   
+        localStorage.setItem('layer1',JSON.stringify(layer1))
+        localStorage.setItem('layer2',JSON.stringify(layer2))
+        localStorage.setItem('image', image);
+        localStorage.setItem('location',JSON.stringify(locationlist))
+        localStorage.setItem('pointerlocation',bottomleft)
+        localStorage.setItem('width',width)
+        localStorage.setItem('height',height)
+     window.location.href = "./addImage";   
+
     }
     else{
         alert("You didn't select where you want to put your image!")
@@ -124,8 +119,6 @@ location=x+y*80
 layer2.push(location)
 }
 layer2=[...new Set(layer2)]
-   
-
 for( var i=0;i<locationlist.length;i++){//100%works
     x=Math.floor(layer2[i]/5.000001)%16+1
     y=Math.floor(layer2[i]/5.000001/80)

@@ -6,14 +6,15 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Add Image</title>
     <script src="/script/jquery-3.4.1.min.js"></script>
-    
+    <script src="/script/fabric_with_touch.js"></script>
     <link rel="stylesheet" href="/css/addImage.css">
     <link rel="stylesheet" href="/css/headers.css">
+    <script src="/script/mosaicfunctions.js"></script>
 </head>
 <body>
         <nav id="topbar">
         </nav>
-<section id="overlay">
+ <section id="overlay">
         <div id='pop'>
         
        <img id ='pop_image' src="" alt="">
@@ -24,7 +25,8 @@
        <button class='pop_close'>Close</button>
        </div>
      </section>
-<div id="addimage-area">
+     
+<!-- <div id="addimage-area">
            <span id="highlight"><h2>Add Image Here: </h2></span>
             <br>
             <h3>Description:</h3>
@@ -38,13 +40,55 @@
         <br>
         <button id=previewbtn style="background-color:aqua"><h1 style="color:black; font-weight: bold; "> Show Preview</h1></button>
         <br><button id=sendimagetoserver onclick="senddatatoserver()">SUBMIT</button>
-</div>
-<canvas id=c></canvas>
+</div>  -->
+<canvas id='canvas'></canvas>
 
 
 
 <script>
+  var canvas = new fabric.Canvas('canvas');
+  canvas.setHeight(900);
+canvas.setWidth(1450);
+canvas.renderAll();
+var pointerlocation=localStorage.getItem('pointerlocation')
+    var height=localStorage.getItem('height');
+    var width=localStorage.getItem('width');
+ var image = localStorage.getItem('image');
+ get_layer_blobs_step1()
+
+ 
+  
+  function get_layer_blobs_step1(){
+    
+  // layer1=localStorage.getItem('layer1')
+  // layer1=JSON.parse(layer1)
+  // layer2=localStorage.getItem('layer2')
+  // layer2=JSON.parse(layer2)
+  layer1=[1]
+  layer2=[1]
+  console.log('layer1:',layer1)  
+  console.log('layer2:',layer2)  
+  loadlocationimage(1,2)
+  loadlocationimage(1,1,layer2 )
+  // setTimeout('loadlocationimage(1,1,layer2 )', 1000); 
+ sendDataToLoad([pointerlocation],[image],1200,[width],[height],[4])
+  
+setTimeout('blobfromlocation(layer2[0],2)', 1000); 
+  
+
+setTimeout('loadlocationimage(1,1,layer2 )', 1000); 
+
+setTimeout('blobfromlocation(layer1[0],1)', 2000); 
+}
+
+
+
+
     var image = localStorage.getItem('image');
+    if(image==undefined){
+      alert("you don't have an image!")
+      window.location.href = "./";   
+    }
     document.getElementById('pop_image').src=`${image}`
     const contentType = 'image/png';
 const b64toBlob = (b64Data, contentType='', sliceSize=512) => {
@@ -121,17 +165,17 @@ function senddatatoserver(){
     data.append('url',url );
     data.append('height',height );
     data.append('width',width );
-    $.ajax({
-    url: "/update",
-    data: data,
-    processData: false,
-contentType: false,
-    type: "POST",
-   success: function(result) {   
-    alert('success!')
-    window.location.href = "./";
-}
-});
+//     $.ajax({
+//     url: "/update",
+//     data: data,
+//     processData: false,
+// contentType: false,
+//     type: "POST",
+//    success: function(result) {   
+//     alert('success!')
+//     window.location.href = "./";
+// }
+// });
 
 }
 function auto_grow() {
@@ -139,8 +183,12 @@ function auto_grow() {
     element.style.height = "5px";
     element.style.height =$('#description')[0].scrollHeight+"px";
 }
-
+var layeronearray=[];
+ var layertwoarray=[];
+ var layerthreearray=[];
+ var layerfourarray=[]
 </script>
+
 <script src="/script/flexibleview.js"></script>
 
 </body>

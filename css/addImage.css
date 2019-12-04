@@ -16,13 +16,15 @@
   width: auto;
   height: auto;
 }
-#c{
+#canvas{
   position: absolute;
-  height: 1450px;
-  width: 900px;
+  height: 900px;
+  width: 1450px;
   border:solid 3px black;
 }
-
+img{
+  margin-top: 10px;
+}
 
 #headers{
  margin-left: 2%;

@@ -35,9 +35,7 @@ def getImages(locationlist,level):
                         if ImageExist[0].pointerlist:
                             alreadyloaded.extend(ImageExist[0].pointerlist)
                         
-                else:
-                    placeholderImage=[ImageInfo( description=u'Null', image_url=u'/images/whitesquare.jpg', level=3, location=i, url=u'https://www.reddit.com/r/dankmemes/',scalewidth=1,scaleheight=1)]
-                    imagelist.append (placeholderImage) 
+                
     return imagelist
 def getimagesbylocation(list,level):
     from database import alreadyexist

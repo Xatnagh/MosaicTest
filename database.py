@@ -11,7 +11,7 @@ def defaultdatas():
                 ImageInfo(parent=ANCESTORY_KEY,location=i,level=1,image_url='images/placeholder.jpg').put()
             for i in range(1,20):
                 ImageInfo(parent=ANCESTORY_KEY,location=i,level=2,image_url='images/placeholder.jpg').put()
-                print('done for 1')   
+        print('done for 1')           
         b=ImageInfo.query(ImageInfo.level==3).fetch(1) 
         if not b:
             ImageInfo(parent=ANCESTORY_KEY,location=1,level=3,pointer=False,pointerlist=[1,2,1201,1202],image_url='/images/test.jpg',scalewidth=2,scaleheight=2,description='this is a test image',url='https://www.reddit.com/r/dankmemes/').put()
