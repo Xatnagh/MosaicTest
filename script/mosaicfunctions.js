@@ -1,6 +1,6 @@
 
 function canvastoblob(){
-    var canvas = document.getElementById('canvas');
+    var canvas = document.getElementById('c');
  
     canvas.toBlob(function(blob) {
       var newImg = document.createElement('img'),
@@ -41,21 +41,30 @@ function canvastoblob(){
 
 function blobfromlocation(location,level){
     var scale
+    console.log('sadhaso',location)
     if(level==2){
        scale=80
     }else{scale=16}
     var tolocation=locationforcanvas(location,scale)
     var locationx=tolocation.x;
     var locationy=tolocation.y;
-    var pointx=(canvas.width/scale)*(locationx-1);
-    var pointy=(canvas.height/scale)*locationy;
-    var point = new fabric.Point(pointx, pointy);
-    canvas.zoomToPoint(point, scale);
-    canvas.requestRenderAll(); 
-    setTimeout('canvastoblob()', 100); 
-
+    var pointx=(1450/scale)*(locationx-1);
+    var pointy=(900/scale)*locationy;
+    var point=new fabric.Point(pointx,pointy)
+    canvas.absolutePan(point)
+    canvas.setZoom(scale)
+    console.log(point)
+    
+    setTimeout('canvastoblob()', 100);
+   
+    setTimeout(`resetCanvas()`, 200);
  }
-
+function resetCanvas(){
+    canvas.setZoom(1);
+    canvas.viewportTransform[4]=0;
+   canvas.viewportTransform[5]=0;
+canvas.requestRenderAll() 
+}
  function loadimage(scale,scaleamountX,scaleamountY,locationx,locationy,level,img_imgurl){
  
     fabric.Image.fromURL(img_imgurl, function(img){

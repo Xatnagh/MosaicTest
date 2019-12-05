@@ -41,15 +41,19 @@
         <button id=previewbtn style="background-color:aqua"><h1 style="color:black; font-weight: bold; "> Show Preview</h1></button>
         <br><button id=sendimagetoserver onclick="senddatatoserver()">SUBMIT</button>
 </div>  -->
-<canvas id='canvas'></canvas>
+<canvas id='c'></canvas>
 
 
 
 <script>
-  var canvas = new fabric.Canvas('canvas');
+  var canvas = new fabric.Canvas('c');
   canvas.setHeight(900);
 canvas.setWidth(1450);
 canvas.renderAll();
+layer1=localStorage.getItem('layer1')
+  layer1=JSON.parse(layer1)
+  layer2=localStorage.getItem('layer2')
+  layer2=JSON.parse(layer2)
 var pointerlocation=localStorage.getItem('pointerlocation')
     var height=localStorage.getItem('height');
     var width=localStorage.getItem('width');
@@ -59,26 +63,35 @@ var pointerlocation=localStorage.getItem('pointerlocation')
  
   
   function get_layer_blobs_step1(){
-    
-  // layer1=localStorage.getItem('layer1')
-  // layer1=JSON.parse(layer1)
-  // layer2=localStorage.getItem('layer2')
-  // layer2=JSON.parse(layer2)
-  layer1=[1]
-  layer2=[1]
+ 
+ 
   console.log('layer1:',layer1)  
   console.log('layer2:',layer2)  
-  loadlocationimage(1,2)
-  loadlocationimage(1,1,layer2 )
-  // setTimeout('loadlocationimage(1,1,layer2 )', 1000); 
- sendDataToLoad([pointerlocation],[image],1200,[width],[height],[4])
-  
-setTimeout('blobfromlocation(layer2[0],2)', 1000); 
-  
+  // loads layer2
+  for(var i=0;i<layer2.length;i++){
+    loadlocationimage(layer2[i],2)
+  }
+  //loads layer1
+  for(var i=0;i<layer1.length;i++){
+    loadlocationimage(layer1[i],1,layer2)
+  }
 
-setTimeout('loadlocationimage(1,1,layer2 )', 1000); 
+sendDataToLoad([pointerlocation],[image],1200,[width],[height],[4])
+step2(layer2)
+}
+function step2(layer2){
+for(let i=0;i<layer2.length;i++){
+  setTimeout(`blobfromlocation(layer2[${i}],2)`, 3000+i*500); 
 
-setTimeout('blobfromlocation(layer1[0],1)', 2000); 
+}
+step3(layer2.length)
+}
+
+function step3(timeout){
+  for(let i=0;i<layer1.length;i++){
+    setTimeout(`blobfromlocation(layer1[${i}],1)`, 3000+timeout*500+i*500); 
+  
+  }
 }
 
 
