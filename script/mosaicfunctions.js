@@ -1,5 +1,7 @@
 
-function canvastoblob(){
+var lastlocationx,lastlocationy
+function canvastoblob(location,layer){
+    
     var canvas = document.getElementById('c');
  
     canvas.toBlob(function(blob) {
@@ -13,35 +15,29 @@ function canvastoblob(){
     
       newImg.src = url;
       document.body.appendChild(newImg);
-      console.log(blob.size/1000000,'mb')
+
+      var data= new FormData();
+    data.append('image',blob );
+    data.append('location',location );
+    data.append('layer',layer );
+    $.ajax({
+        url: "/update_layers",
+        data: data,
+        processData: false,
+    contentType: false,
+        type: "POST",
+       success: function(result) {   
+        console.log('success for',location)
+        
+    }
+    });
     }); 
  }
- function loadlayer(location,layer){
-   
-    lastloadx=CenterCoord().x;
-          lastloady=CenterCoord().y;
-    var data= {
-       arraytosend:JSON.stringify(location),
-       level:layer
-       }
-       $.ajax({
-        url: "/update",
-        data: data,
-        type: "GET",
-       success: function(integer) {
-          var received=JSON.parse(integer)
-          scale=getscale(received['img_level'][0])
-          addtoalreadyloaded(received['img_location'],layer)//so that the same image don't load again
-          sendDataToLoad(received['img_location'],received['img_imgurl'],scale,received['img_scaleX'],received['img_scaleY'],received['img_level']);
-          // console.log('data: sent',location,data['level'])
-           },
-           
-    });
-       }
+ 
 
 function blobfromlocation(location,level){
+    console.log('location',location)
     var scale
-    console.log('sadhaso',location)
     if(level==2){
        scale=80
     }else{scale=16}
@@ -53,9 +49,8 @@ function blobfromlocation(location,level){
     var point=new fabric.Point(pointx,pointy)
     canvas.absolutePan(point)
     canvas.setZoom(scale)
-    console.log(point)
     
-    setTimeout('canvastoblob()', 100);
+    setTimeout(`canvastoblob(${location},${level})`, 100);
    
     setTimeout(`resetCanvas()`, 200);
  }
@@ -86,7 +81,9 @@ canvas.requestRenderAll()
        canvas.add(img);
        canvas.requestRenderAll()
     });
-
+    if(lastlocationx==locationx&&lastlocationy==locationy){
+        step2()
+    }
  }
 
 function locationforcanvas(location,scaleamountX){
@@ -146,7 +143,12 @@ function loadlocationimage(location,layer,alreadyloaded=[]){//give it a location
           'arraytosend':JSON.stringify(locationlist) ,
           'level':layer+1
       }
+      var tolocation=locationforcanvas(location,scaletemp)
+        var locationx=tolocation.x;
+        var locationy=tolocation.y;
       
+      lastlocationx=locationx
+      lastlocationy=locationy
       $.ajax({
           url: "/update",
           data: arraytosend,
@@ -226,3 +228,25 @@ function loadlocationimage(location,layer,alreadyloaded=[]){//give it a location
           layerfourarray.push(image)
        }
      }
+     function loadlayer(location,layer){
+   
+        lastloadx=CenterCoord().x;
+              lastloady=CenterCoord().y;
+        var data= {
+           arraytosend:JSON.stringify(location),
+           level:layer
+           }
+           $.ajax({
+            url: "/update",
+            data: data,
+            type: "GET",
+           success: function(integer) {
+              var received=JSON.parse(integer)
+              scale=getscale(received['img_level'][0])
+              addtoalreadyloaded(received['img_location'],layer)//so that the same image don't load again
+              sendDataToLoad(received['img_location'],received['img_imgurl'],scale,received['img_scaleX'],received['img_scaleY'],received['img_level']);
+              // console.log('data: sent',location,data['level'])
+               },
+               
+        });
+           }

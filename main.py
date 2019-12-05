@@ -5,7 +5,7 @@ import urllib2
 import random
 import jinja2
 import re
-from database import defaultdatas, alreadyexist, loadtest,clearlevel2,putDataintodatabase,upload_file
+from database import defaultdatas, alreadyexist, loadtest,clearlevel2,putDataintodatabase,upload_file,update_layer1,update_layer2
 from Images import ImageInfo,ANCESTORY_KEY,getImageInfo,getimagesbylocation
 from test import  blob_to_image_converter
 
@@ -41,7 +41,7 @@ class update(webapp2.RequestHandler):
         pointerlocation=self.request.POST.get('pointerlocation')
         locationlist=self.request.POST.get('locationlist')
         locationlist=json.loads(locationlist)
-        image=str((self.request.get('image')))
+        image=str(self.request.get('image'))
         description=self.request.POST.get('description')
         url=self.request.POST.get('url')
         height=int(self.request.POST.get('height'))
@@ -53,7 +53,24 @@ class update(webapp2.RequestHandler):
         print image[0:5]
         putDataintodatabase(pointerlocation,locationlist,imageurl,description,url,width,height)
         self.response.write("success")
+class updatelayers(webapp2.RequestHandler):
+    def post(self):
+        image=str(self.request.get('image'))
+        location=int(self.request.get('location'))
+        layer=int(self.request.get('layer'))
+        if(layer==2):
+            imageurl=update_layer2(image,location)
+        else:
+            imageurl=update_layer1(image,location)
+        imageexist=ImageInfo.query(ImageInfo.location==location,ImageInfo.level==layer).fetch()
+        if imageexist:
+            imageexist[0].image_url=imageurl
+            imageexist[0].put()
+        else:
+            ImageInfo(parent=ANCESTORY_KEY,image_url=imageurl,location=pointerlocation1,level=3,pointer=False,pointerlist=locationlist,scalewidth=width,scaleheight=height).put()
         
+        
+
 class contact(webapp2.RequestHandler):
     def get(self):
         t = the_jinja_env.get_template('/template/contact.html')
@@ -91,6 +108,7 @@ app = webapp2.WSGIApplication([
 ('/addImage',AddImage),
  ('/load', loadImages),
  ('/update', update),
+('/update_layers',updatelayers),
 ('/contact',contact),
 ('/clear',cleardatabase),
 ('/login',LoginPage),

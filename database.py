@@ -62,6 +62,7 @@ def upload_file(image,pointerlocation):
     return 'https://storage.googleapis.com/fortest098.appspot.com/{}'.format(pointerlocation)
 
 def update_layer2(image,location):
+    location=str(location)
     bucket_name = 'mosaictestlayer2'
     bucket = '/' + bucket_name
     filename = bucket + '/'+location
@@ -70,9 +71,10 @@ def update_layer2(image,location):
             filename, 'w', content_type='image/png',
             retry_params=write_retry_params) as cloudstorage_file:
                 cloudstorage_file.write(image)
-    return 'https://storage.googleapis.com/mosaictestlayer2/{}'.format(pointerlocation)
+    return 'https://storage.googleapis.com/mosaictestlayer2/{}'.format(location)
 def update_layer1(image,location):
-    bucket_name = 'mosaictestlayer2'
+    location=str(location)
+    bucket_name = 'mosaictestlayer1'
     bucket = '/' + bucket_name
     filename = bucket + '/'+location
     write_retry_params = cloudstorage.RetryParams(backoff_factor=1.1)

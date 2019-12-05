@@ -26,7 +26,7 @@
        </div>
      </section>
      
-<!-- <div id="addimage-area">
+<div id="addimage-area">
            <span id="highlight"><h2>Add Image Here: </h2></span>
             <br>
             <h3>Description:</h3>
@@ -40,8 +40,11 @@
         <br>
         <button id=previewbtn style="background-color:aqua"><h1 style="color:black; font-weight: bold; "> Show Preview</h1></button>
         <br><button id=sendimagetoserver onclick="senddatatoserver()">SUBMIT</button>
-</div>  -->
-<canvas id='c'></canvas>
+</div> 
+<section style="display: none;">
+  <canvas id='c' style="display: none;"></canvas>
+</section>
+
 
 
 
@@ -58,30 +61,27 @@ var pointerlocation=localStorage.getItem('pointerlocation')
     var height=localStorage.getItem('height');
     var width=localStorage.getItem('width');
  var image = localStorage.getItem('image');
- get_layer_blobs_step1()
 
- 
-  
+ var readstate=false;
   function get_layer_blobs_step1(){
- 
- 
+    readstate=true
   console.log('layer1:',layer1)  
   console.log('layer2:',layer2)  
   // loads layer2
   for(var i=0;i<layer2.length;i++){
-    loadlocationimage(layer2[i],2)
+    loadlocationimage(layer2[i],2,[])
   }
   //loads layer1
   for(var i=0;i<layer1.length;i++){
     loadlocationimage(layer1[i],1,layer2)
   }
-
+image=localStorage.getItem('image');
 sendDataToLoad([pointerlocation],[image],1200,[width],[height],[4])
-step2(layer2)
+
 }
-function step2(layer2){
+function step2(){
 for(let i=0;i<layer2.length;i++){
-  setTimeout(`blobfromlocation(layer2[${i}],2)`, 3000+i*500); 
+  setTimeout(`blobfromlocation(layer2[${i}],2)`, 500+i*500); 
 
 }
 step3(layer2.length)
@@ -93,11 +93,6 @@ function step3(timeout){
   
   }
 }
-
-
-
-
-    var image = localStorage.getItem('image');
     if(image==undefined){
       alert("you don't have an image!")
       window.location.href = "./";   
@@ -161,6 +156,7 @@ $('#overlay').css({'display':'none'});
 
 
 function senddatatoserver(){
+  get_layer_blobs_step1()
     var locationlist=localStorage.getItem('location')
     var pointerlocation=localStorage.getItem('pointerlocation')
     var height=localStorage.getItem('height');
@@ -178,17 +174,17 @@ function senddatatoserver(){
     data.append('url',url );
     data.append('height',height );
     data.append('width',width );
-//     $.ajax({
-//     url: "/update",
-//     data: data,
-//     processData: false,
-// contentType: false,
-//     type: "POST",
-//    success: function(result) {   
-//     alert('success!')
-//     window.location.href = "./";
-// }
-// });
+    $.ajax({
+    url: "/update",
+    data: data,
+    processData: false,
+contentType: false,
+    type: "POST",
+   success: function(result) {   
+    alert('success!')
+    // window.location.href = "./";
+}
+});
 
 }
 function auto_grow() {
