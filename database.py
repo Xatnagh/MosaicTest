@@ -50,7 +50,7 @@ cloudstorage.set_default_retry_params(
         initial_delay=0.2, max_delay=5.0, backoff_factor=2, max_retry_period=15
         ))
 def upload_file(image,pointerlocation):
-    bucket_name ='mosaictest'
+    bucket_name ='fortest098.appspot.com'
             
     bucket = '/' + bucket_name
     filename = bucket + '/'+pointerlocation

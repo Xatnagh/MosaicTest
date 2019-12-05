@@ -66,7 +66,7 @@ canvas.requestRenderAll()
        img.hasControls= false,
        img.hasRotatingPoint= false; 
        img.selectable=false;
-       img.crossOrigin= "anonymous";
+       img.crossOrigin='anonymous';
        addtoarray(img,level);
        canvas.add(img);
        canvas.requestRenderAll()
