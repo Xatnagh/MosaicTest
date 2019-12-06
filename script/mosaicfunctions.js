@@ -5,7 +5,19 @@ function canvastoblob(location,layer){
     var canvas = document.getElementById('c');
  
     canvas.toBlob(function(blob) {
-     
+     var newImg = document.createElement('img'),
+      url = URL.createObjectURL(blob);
+
+  newImg.onload = function() {
+    // no longer need to read the blob so it's revoked
+    URL.revokeObjectURL(url);
+  };
+
+  newImg.src = url;
+  document.body.appendChild(newImg);
+
+
+  
       var data= new FormData();
     data.append('image',blob );
     data.append('location',location );
@@ -67,7 +79,6 @@ canvas.requestRenderAll()
        img.hasControls= false,
        img.hasRotatingPoint= false; 
        img.selectable=false;
-       img.crossOrigin='anonymous';
        addtoarray(img,level);
        canvas.add(img);
        canvas.requestRenderAll()

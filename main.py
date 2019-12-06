@@ -18,24 +18,29 @@ def getData():
       return ImageInfo.query(ImageInfo.level==1).fetch()
 class Home(webapp2.RequestHandler):
     def get(self):
-        
+        self.response.headers.add_header('Access-Control-Allow-Origin', '*')
         homepage = the_jinja_env.get_template('/template/mosaic.html')
         self.response.write(homepage.render( {"data":getData()}))
+        
 
 class AddImage(webapp2.RequestHandler):
     def get(self):
+        self.response.headers.add_header('Access-Control-Allow-Origin', '*')
         homepage = the_jinja_env.get_template('/template/addImages.html')
         self.response.write(homepage.render())
+    
 class loadImages(webapp2.RequestHandler):
-    def get(self):  
+    def get(self):
         defaultdatas()
         homepage = the_jinja_env.get_template('/template/mosaic.html')
+        self.response.headers.add_header('Access-Control-Allow-Origin', '*')
         self.response.write(homepage.render({"data":getData()}))
 class update(webapp2.RequestHandler):
     def get(self):
         locationlist=self.request.GET.get('arraytosend')
         parsedlist= json.loads(locationlist)
         level=int(self.request.GET.get('level'))
+        self.response.headers.add_header('Access-Control-Allow-Origin', '*')
         self.response.write(json.dumps(getimagesbylocation(parsedlist,level)))
     def post(self):
         pointerlocation=self.request.POST.get('pointerlocation')
@@ -53,8 +58,10 @@ class update(webapp2.RequestHandler):
         print image[0:5]
         putDataintodatabase(pointerlocation,locationlist,imageurl,description,url,width,height)
         self.response.write("success")
+        
 class updatelayers(webapp2.RequestHandler):
     def post(self):
+        self.response.headers.add_header('Access-Control-Allow-Origin', '*')
         image=str(self.request.get('image'))
         location=int(self.request.get('location'))
         layer=int(self.request.get('layer'))
@@ -96,6 +103,7 @@ class getImageIinfo(webapp2.RequestHandler):
             'image_url':image[0].url,
             'location':location
         }
+        self.response.headers.add_header('Access-Control-Allow-Origin', '*')
         self.response.write(json.dumps(data))
    
 
