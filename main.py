@@ -67,7 +67,7 @@ class updatelayers(webapp2.RequestHandler):
             imageexist[0].image_url=imageurl
             imageexist[0].put()
         else:
-            ImageInfo(parent=ANCESTORY_KEY,image_url=imageurl,location=pointerlocation1,level=3,pointer=False,pointerlist=locationlist,scalewidth=width,scaleheight=height).put()
+            ImageInfo(parent=ANCESTORY_KEY,image_url=imageurl,location=location,level=layer).put()
         
         
 

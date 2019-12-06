@@ -5,6 +5,7 @@ function canvastoblob(location,layer){
     var canvas = document.getElementById('c');
  
     canvas.toBlob(function(blob) {
+     
       var data= new FormData();
     data.append('image',blob );
     data.append('location',location );
