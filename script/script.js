@@ -19,8 +19,6 @@ var alreadyloaded_level3=[]
 var one=[1]
 var done
 var canvas = new fabric.Canvas('c');
-// loadlocationimage(1,1)
-// setTimeout('blobfromlocation(80,2)', 1000); 
 
 
 

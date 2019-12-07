@@ -23,8 +23,12 @@ def getImages(locationlist,level):
     alreadyloaded=[]
     if level==2:
         for i in locationlist:
-            placeholderImage=[ImageInfo( description=u'Null', image_url=u'images/placeholder2.jpeg', level=2, location=i,scalewidth=1,scaleheight=1)]
-            imagelist.append (placeholderImage)
+            ImageExist=ImageInfo.query(ImageInfo.level==2,ImageInfo.location==i).fetch()
+            if ImageExist:
+                imagelist.append(ImageExist)
+            else:
+                placeholderImage=[ImageInfo( description=u'Null', image_url=u'images/placeholder2.jpeg', level=2, location=i,scalewidth=1,scaleheight=1)]
+                imagelist.append(placeholderImage)
     if level==3:
         for i in locationlist:
             if i not in alreadyloaded:

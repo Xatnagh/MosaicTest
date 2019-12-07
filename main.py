@@ -7,7 +7,7 @@ import jinja2
 import re
 from database import defaultdatas, alreadyexist, loadtest,clearlevel2,putDataintodatabase,upload_file,update_layer1,update_layer2
 from Images import ImageInfo,ANCESTORY_KEY,getImageInfo,getimagesbylocation
-from test import  blob_to_image_converter
+
 
 
 the_jinja_env = jinja2.Environment(loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
@@ -16,16 +16,20 @@ extensions=['jinja2.ext.autoescape'],autoescape=True)
 
 def getData():
       return ImageInfo.query(ImageInfo.level==1).fetch()
+
+
+
 class Home(webapp2.RequestHandler):
-    def get(self):
-        self.response.headers.add_header('Access-Control-Allow-Origin', '*')
-        homepage = the_jinja_env.get_template('/template/mosaic.html')
-        self.response.write(homepage.render( {"data":getData()}))
+    def get(self): 
+        self.response.headers['Access-Control-Allow-Origin'] = '*'
+        # self.response.headers.add_header('Access-Control-Allow-Headers', 'Content-Type')
+        homepage = the_jinja_env.get_template('/template/mosaic.html')  
+        self.response.write(homepage.render({"data":getData()}))
         
 
 class AddImage(webapp2.RequestHandler):
     def get(self):
-        self.response.headers.add_header('Access-Control-Allow-Origin', '*')
+        self.response.headers['Access-Control-Allow-Origin'] = '*'
         homepage = the_jinja_env.get_template('/template/addImages.html')
         self.response.write(homepage.render())
     
@@ -33,14 +37,14 @@ class loadImages(webapp2.RequestHandler):
     def get(self):
         defaultdatas()
         homepage = the_jinja_env.get_template('/template/mosaic.html')
-        self.response.headers.add_header('Access-Control-Allow-Origin', '*')
+        self.response.headers['Access-Control-Allow-Origin'] = '*'
         self.response.write(homepage.render({"data":getData()}))
 class update(webapp2.RequestHandler):
     def get(self):
         locationlist=self.request.GET.get('arraytosend')
         parsedlist= json.loads(locationlist)
         level=int(self.request.GET.get('level'))
-        self.response.headers.add_header('Access-Control-Allow-Origin', '*')
+        self.response.headers['Access-Control-Allow-Origin'] = '*'
         self.response.write(json.dumps(getimagesbylocation(parsedlist,level)))
     def post(self):
         pointerlocation=self.request.POST.get('pointerlocation')
@@ -103,7 +107,7 @@ class getImageIinfo(webapp2.RequestHandler):
             'image_url':image[0].url,
             'location':location
         }
-        self.response.headers.add_header('Access-Control-Allow-Origin', '*')
+        self.response.headers['Access-Control-Allow-Origin'] = '*'
         self.response.write(json.dumps(data))
    
 

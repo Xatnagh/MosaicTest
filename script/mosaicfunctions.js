@@ -1,4 +1,6 @@
 
+//I cannot thank this post enough
+//https://medium.com/@selom/how-to-fix-a-no-access-control-allow-origin-error-message-on-google-cloud-storage-90dd9b7e3ddb
 var lastlocationx,lastlocationy
 function canvastoblob(location,layer){
     
@@ -16,8 +18,6 @@ function canvastoblob(location,layer){
   newImg.src = url;
   document.body.appendChild(newImg);
 
-
-  
       var data= new FormData();
     data.append('image',blob );
     data.append('location',location );
@@ -30,7 +30,6 @@ function canvastoblob(location,layer){
         type: "POST",
        success: function(result) {   
         console.log('success for',location,'  layer',layer)
-        
     }
     });
     }); 
@@ -62,7 +61,8 @@ function resetCanvas(){
    canvas.viewportTransform[5]=0;
 canvas.requestRenderAll() 
 }
- function loadimage(scale,scaleamountX,scaleamountY,locationx,locationy,level,img_imgurl){
+
+ function loadimage(scale,scaleamountX,scaleamountY,locationx,locationy,level,img_imgurl,custom=false){
  
     fabric.Image.fromURL(img_imgurl, function(img){
        var elWidth = img.naturalWidth || img.width;
@@ -82,10 +82,21 @@ canvas.requestRenderAll()
        addtoarray(img,level);
        canvas.add(img);
        canvas.requestRenderAll()
-    });
-    if(lastlocationx==locationx&&lastlocationy==locationy){
+    },{crossOrigin: 'anonymous'});
+    if(readystate){
+        if(lastlocationx==locationx&&lastlocationy==locationy){
         step2()
+readystate_layer1=true
     }
+    }
+    if( readystate_layer1){
+        if(lastlocationx==locationx&&lastlocationy==locationy){
+        step3()
+    }
+    }
+    
+    
+    
  }
 
 function locationforcanvas(location,scaleamountX){
@@ -138,7 +149,7 @@ function loadlocationimage(location,layer,alreadyloaded=[]){//give it a location
     var scaletemp=16
     }
        var y=Math.floor(location/scaletemp)
-       console.log('y',y)
+      
        var locationstart=(location-1)*scale+(y*(scale-1)*scaleamount)+1
        var locationlist=getlocationarray(locationstart,layer,alreadyloaded);
        arraytosend={
@@ -148,16 +159,18 @@ function loadlocationimage(location,layer,alreadyloaded=[]){//give it a location
       var tolocation=locationforcanvas(location,scaletemp)
         var locationx=tolocation.x;
         var locationy=tolocation.y;
+      if(readystate||readystate_layer1){
+         lastlocationx=locationx
+      lastlocationy=locationy 
+      }
       
-      lastlocationx=locationx
-      lastlocationy=locationy
       $.ajax({
           url: "/update",
           data: arraytosend,
           type: "GET",
          success: function(result) {   
             result=JSON.parse(result)
-          sendDataToLoad(result['img_location'],result['img_imgurl'],scaleamount,result['img_scaleX'],result['img_scaleY'],result['img_level']);  
+          sendDataToLoad(result['img_location'],result['img_imgurl'],scaleamount,result['img_scaleX'],result['img_scaleY'],result['img_level'],true);  
              }
       });
     }
@@ -169,7 +182,6 @@ function loadlocationimage(location,layer,alreadyloaded=[]){//give it a location
            arrayofcurrentlayer.push(j+1200*i)
         }
      }
-     
      return arrayofcurrentlayer
      }if(layer==1){
         for(var i=0;i<5;i++){
@@ -180,12 +192,12 @@ function loadlocationimage(location,layer,alreadyloaded=[]){//give it a location
         arrayofcurrentlayer=arrayofcurrentlayer.filter(function(item){
            return alreadyloaded.indexOf( item ) < 0;
         });
-        console.log(arrayofcurrentlayer)
+        console.log('arrayfor layer1',arrayofcurrentlayer)
         return arrayofcurrentlayer
      }
      }
 
-     function sendDataToLoad(img_location,img_imgurl,img_scale,img_scaleX,img_scaleY,img_level){
+     function sendDataToLoad(img_location,img_imgurl,img_scale,img_scaleX,img_scaleY,img_level,custom=false){
 
         for(var i=0;i<img_location.length;i++){
            var tolocation=locationforcanvas(img_location[i],img_scale)
@@ -209,7 +221,7 @@ function loadlocationimage(location,layer,alreadyloaded=[]){//give it a location
            }else{
               imageurl= img_imgurl[0]
            }
-        loadimage(scale,scaleamountX,scaleamountY,locationx,locationy,level,imageurl);
+        loadimage(scale,scaleamountX,scaleamountY,locationx,locationy,level,imageurl,custom);
         }
     
 
