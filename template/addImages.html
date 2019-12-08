@@ -41,8 +41,8 @@
         <button id=previewbtn style="background-color:aqua"><h1 style="color:black; font-weight: bold; "> Show Preview</h1></button>
         <br><button id=sendimagetoserver onclick="senddatatoserver()">SUBMIT</button>
 </div> 
-<section style="display: none;">
-  <canvas id='c' style="display: none;"></canvas>
+<section>
+  <canvas id='c' ></canvas>
 </section>
 
 
@@ -62,29 +62,33 @@ var pointerlocation=localStorage.getItem('pointerlocation')
     var width=localStorage.getItem('width');
  var image = localStorage.getItem('image');
 
-
   function get_layer_blobs_step1(){
+
   // loads layer2 at the locations of the image
   for(var i=0;i<layer2.length;i++){
     loadlocationimage(layer2[i],2,[],layer2.length)
   }
   //loads layer1 at the location of the image minus the need to change part
   for(var i=0;i<layer1.length;i++){
-    loadlocationimage(layer1[i],1,layer2,0)
+    loadlocationimage(layer1[i],1,layer2,layer1.length)
   }
+  //loadimage(scale,scaleamountX,scaleamountY,location,level,img_imgurl,finalimg=false)
 var displayimage=localStorage.getItem('image');
-sendDataToLoad([pointerlocation],[displayimage],1200,[width],[height],[4]) 
+loadimage(1200,width,height,pointerlocation,4,displayimage,true);
 }
 
 function step2(){
+  var timeout=0;
     for(let i=0;i<layer2.length;i++){
-  setTimeout(`blobfromlocation(layer2[${i}],2)`, 100+i*500); 
+  setTimeout(`blobfromlocation(layer2[${i}],2)`, 500+i*500); 
+  timeout+=i;
     }
+    step3(timeout)
 }
 
-function step3(){
+function step3(timeout){
   for(let i=0;i<layer1.length;i++){
-    setTimeout(`blobfromlocation(layer1[${i}],1)`, 250+i*500); 
+    setTimeout(`blobfromlocation(layer1[${i}],1)`, timeout*500+i*500); 
   }
 }
 
@@ -93,6 +97,7 @@ function step3(){
       window.location.href = "./";   
     }
     document.getElementById('pop_image').src=`${image}`
+    ///THIS PART CONVERTS THE USER UPLOADED IMAGE INTO BLOBS 
     const contentType = 'image/png';
 const b64toBlob = (b64Data, contentType='', sliceSize=512) => {
   const byteCharacters = atob(b64Data);
@@ -113,7 +118,6 @@ const b64toBlob = (b64Data, contentType='', sliceSize=512) => {
   const blob = new Blob(byteArrays, {type: contentType});
   return blob;
 }
-
     if(image.substring(0,5)=='data:'){
         
       image=image.substr(image.indexOf(',') + 1);//strips off the data:/jpeg:base64 thing,so it is pure base64 data
@@ -121,41 +125,11 @@ const b64toBlob = (b64Data, contentType='', sliceSize=512) => {
     }else{
       imageblob=image
     }
-    
-    
-    $('#previewbtn').click(function(){
-      if($('#description')[0].scrollHeight>450){
-    alert('your description is long, the max lines is 30')
-  }else{
-        description=document.getElementById('description').value
-        url= document.getElementById('url_textbox').value
-        if(url.substring(0,3)!='http'){
-            url=`https://${url}`
-        }
-          document.getElementById('pop_description').innerHTML=description;
-          auto_grow()
-          document.getElementById('pop_url').innerHTML=`${url}`;
-          document.getElementById('pop_url').href=url;
-          $('#overlay').css({'display':'block'}); 
-          
-  } });
-  
-  
-  
- 
-$('.pop_close').click(function(){
-$('#overlay').css({'display':'none'});
-});
-
-
-
-
+  ///
 function senddatatoserver(){
   get_layer_blobs_step1()
     var locationlist=localStorage.getItem('location')
-    var pointerlocation=localStorage.getItem('pointerlocation')
-    var height=localStorage.getItem('height');
-    var width=localStorage.getItem('width');
+   
     var description=document.getElementById('description').value
     var url= document.getElementById('url_textbox').value
     if(url.substring(0,3)!='http'){
@@ -187,6 +161,26 @@ function auto_grow() {
     element.style.height = "5px";
     element.style.height =$('#description')[0].scrollHeight+"px";
 }
+$('.pop_close').click(function(){
+$('#overlay').css({'display':'none'});
+});
+
+$('#previewbtn').click(function(){
+      if($('#description')[0].scrollHeight>450){
+    alert('your description is long, the max lines is 30')
+  }else{
+        description=document.getElementById('description').value
+        url= document.getElementById('url_textbox').value
+        if(url.substring(0,3)!='http'){
+            url=`https://${url}`
+        }
+          document.getElementById('pop_description').innerHTML=description;
+          auto_grow()
+          document.getElementById('pop_url').innerHTML=`${url}`;
+          document.getElementById('pop_url').href=url;
+          $('#overlay').css({'display':'block'}); 
+          
+  } });
 var layeronearray=[];
  var layertwoarray=[];
  var layerthreearray=[];

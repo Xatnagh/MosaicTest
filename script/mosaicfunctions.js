@@ -1,10 +1,19 @@
 
 //I cannot thank this post enough
 //https://medium.com/@selom/how-to-fix-a-no-access-control-allow-origin-error-message-on-google-cloud-storage-90dd9b7e3ddb
-var modeupdatinglayers=false;
 
-function sendDataToLoad(img_location,img_imgurl,img_scale,img_scaleX,img_scaleY,img_level,uploadingstage=false){
-
+var modeUpdatinglayers=false;
+function sendDataToLoad(img_location,img_imgurl,img_scale,img_scaleX,img_scaleY,img_level){
+   if(modeUpdatinglayers){
+      if(img_location.length==0){
+      loadedlayer2_count++
+      console.log('is locationlist=0',loadedlayer2_count)
+      if(loadedlayer2_count==layer2length){
+         checkifallimageisloaded()
+      }
+      }  
+   }
+    
         for(var i=0;i<img_location.length;i++){
            var scale=img_scale;
            if(img_scaleX.length!=1){
@@ -24,19 +33,18 @@ function sendDataToLoad(img_location,img_imgurl,img_scale,img_scaleX,img_scaleY,
            }else{
               imageurl= img_imgurl[0]
            }
-        loadimage(scale,scaleamountX,scaleamountY,img_location[i],level,imageurl);
-        }
-        if(uploadingstage){
-            modeupdatinglayers=true;
-        }
-     }
- function loadimage(scale,scaleamountX,scaleamountY,location,level,img_imgurl){
+            if(i==img_location.length-1&&modeUpdatinglayers){
+               loadimage(scale,scaleamountX,scaleamountY,img_location[i],level,imageurl,true);
+           }else{
+            loadimage(scale,scaleamountX,scaleamountY,img_location[i],level,imageurl);
+        }      
+   }
+}
+ function loadimage(scale,scaleamountX,scaleamountY,location,level,img_imgurl,finalimg=false){
   var tolocation=locationforcanvas(location,scale)
            var locationx=tolocation.x;
            var locationy=tolocation.y;
     fabric.Image.fromURL(img_imgurl, function(img){
-
-
        var elWidth = img.naturalWidth || img.width;
        var elHeight = img.naturalHeight || img.height;
        var scaleX = ((canvas.scaleX || 1) * canvas.width / elWidth);
@@ -54,36 +62,63 @@ function sendDataToLoad(img_location,img_imgurl,img_scale,img_scaleX,img_scaleY,
        addtoarray(img,level);
        canvas.add(img);
        canvas.requestRenderAll()
-       if(finalImageBeforeConverting){
-            console.log('run!')
-           step2()
-          
+       if(finalimg){
+          if(level==3){
+            loadedlayer2_count++
+            console.log('loadedlayer2:',loadedlayer2_count)
+            if(loadedlayer2_count==layer2length){
+               checkifallimageisloaded()
+            }
+          }
+          if(level==2){
+            loadedlayer1_count++
+            console.log('loadedlayer1:',loadedlayer1_count)
+            if(loadedlayer1_count==layer1length){
+               checkifallimageisloaded()
+            }
+          }
+          if(level==4){
+            userimageloaded=true;
+            console.log('USER IMAGE LOADED')
+          }
        }
+       
  },{crossOrigin: 'anonymous'}); 
  }
+ 
 
-var layercount_layer2=0;
-var finalImageBeforeConverting;
-function loadlocationimage(location,layer,alreadyloaded=[],layercount2){//give it a location and a layer and it will load everything in it
-    if(layer==2){
+
+function checkifallimageisloaded(){
+   console.log('goal layer1:',layer1length)
+   console.log('goal layer2:',layer2length)
+   console.log('current layer1:',loadedlayer1_count)
+   console.log('current layer2:',loadedlayer2_count)
+      if(loadedlayer1_count==layer1length&&loadedlayer2_count==layer2length&&userimageloaded){
+         console.log('running step2')
+         step2()
+      }
+}
+ var loadedlayer1_count=0;
+ var loadedlayer2_count=0;
+ var layer1length=0;
+ var layer2length=0;   
+ var userimageloaded=false;
+function loadlocationimage(location,layer,alreadyloaded=[],layerlength){//give it a location and a layer and it will load everything in it
+   modeUpdatinglayers=true
+   if(layer==2){
     var scale=15;
     var scaleamount=1200
     var scaletemp=80
-    layercount_layer2++
+    layer2length=layerlength;
     }else{
     var scale=5
     var scaleamount=80
     var scaletemp=16
+    layer1length=layerlength;
     }
-    console.log(layercount_layer2)
        var y=Math.floor(location/scaletemp)
        var locationstart=(location-1)*scale+(y*(scale-1)*scaleamount)+1
        var locationlist=getlocationarray(locationstart,layer,alreadyloaded);
-       
-       if(layercount2==layercount_layer2){
-        finalImageBeforeConverting=locationlist[locationlist.length-1]
-       }
-       
        
        arraytosend={
           'arraytosend':JSON.stringify(locationlist) ,
@@ -95,11 +130,10 @@ function loadlocationimage(location,layer,alreadyloaded=[],layercount2){//give i
           type: "GET",
          success: function(result) {   
             result=JSON.parse(result)
-          sendDataToLoad(result['img_location'],result['img_imgurl'],scaleamount,result['img_scaleX'],result['img_scaleY'],result['img_level'],true);  
+          sendDataToLoad(result['img_location'],result['img_imgurl'],scaleamount,result['img_scaleX'],result['img_scaleY'],result['img_level']);  
              }
       });
     }
-
 
 
 function locationforcanvas(location,scaleamountX){
@@ -202,6 +236,7 @@ function locationforcanvas(location,scaleamountX){
    canvas.viewportTransform[5]=0;
 canvas.requestRenderAll() 
 }
+
 function canvastoblob(location,layer){
     var canvas = document.getElementById('c');
  
@@ -214,7 +249,11 @@ function canvastoblob(location,layer){
     URL.revokeObjectURL(url);
   };
   newImg.src = url;
+  var p=document.createElement('p')
+  p.innerHTML=location,layer; 
+document.body.appendChild(p)
   document.body.appendChild(newImg);
+
 
       var data= new FormData();
     data.append('image',blob );
@@ -247,8 +286,7 @@ function blobfromlocation(location,level){
     var point=new fabric.Point(pointx,pointy)
     canvas.absolutePan(point)
     canvas.setZoom(scale)
-    
     setTimeout(`canvastoblob(${location},${level})`, 100);
-   
     setTimeout(`resetCanvas()`, 200);
  }
+

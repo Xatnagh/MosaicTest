@@ -45,7 +45,8 @@ class update(webapp2.RequestHandler):
         parsedlist= json.loads(locationlist)
         level=int(self.request.GET.get('level'))
         self.response.headers['Access-Control-Allow-Origin'] = '*'
-        self.response.write(json.dumps(getimagesbylocation(parsedlist,level)))
+        imagebylocation=getimagesbylocation(parsedlist,level)
+        self.response.write(json.dumps(imagebylocation))
     def post(self):
         pointerlocation=self.request.POST.get('pointerlocation')
         locationlist=self.request.POST.get('locationlist')
