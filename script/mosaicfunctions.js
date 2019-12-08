@@ -1,70 +1,42 @@
 
 //I cannot thank this post enough
 //https://medium.com/@selom/how-to-fix-a-no-access-control-allow-origin-error-message-on-google-cloud-storage-90dd9b7e3ddb
-var lastlocationx,lastlocationy
-function canvastoblob(location,layer){
-    
-    var canvas = document.getElementById('c');
- 
-    canvas.toBlob(function(blob) {
-     var newImg = document.createElement('img'),
-      url = URL.createObjectURL(blob);
+var modeupdatinglayers=false;
 
-  newImg.onload = function() {
-    // no longer need to read the blob so it's revoked
-    URL.revokeObjectURL(url);
-  };
+function sendDataToLoad(img_location,img_imgurl,img_scale,img_scaleX,img_scaleY,img_level,uploadingstage=false){
 
-  newImg.src = url;
-  document.body.appendChild(newImg);
-
-      var data= new FormData();
-    data.append('image',blob );
-    data.append('location',location );
-    data.append('layer',layer );
-    $.ajax({
-        url: "/update_layers",
-        data: data,
-        processData: false,
-    contentType: false,
-        type: "POST",
-       success: function(result) {   
-        console.log('success for',location,'  layer',layer)
-    }
-    });
-    }); 
- }
- 
-
-function blobfromlocation(location,level){
-    console.log('location',location)
-    var scale
-    if(level==2){
-       scale=80
-    }else{scale=16}
-    var tolocation=locationforcanvas(location,scale)
-    var locationx=tolocation.x;
-    var locationy=tolocation.y;
-    var pointx=(1450/scale)*(locationx-1);
-    var pointy=(900/scale)*locationy;
-    var point=new fabric.Point(pointx,pointy)
-    canvas.absolutePan(point)
-    canvas.setZoom(scale)
-    
-    setTimeout(`canvastoblob(${location},${level})`, 100);
-   
-    setTimeout(`resetCanvas()`, 200);
- }
-function resetCanvas(){
-    canvas.setZoom(1);
-    canvas.viewportTransform[4]=0;
-   canvas.viewportTransform[5]=0;
-canvas.requestRenderAll() 
-}
-
- function loadimage(scale,scaleamountX,scaleamountY,locationx,locationy,level,img_imgurl,custom=false){
- 
+        for(var i=0;i<img_location.length;i++){
+           var scale=img_scale;
+           if(img_scaleX.length!=1){
+              var scaleamountX=img_scaleX[i];
+           }else{
+              var scaleamountX=img_scaleX[0];
+           }
+           if(img_scaleY.length!=1){
+              var scaleamountY=img_scaleY[i];
+           }else{
+              var scaleamountY=img_scaleY[0];
+           }
+             
+           var level=img_level[i];
+           if(img_imgurl.length!=1){
+              var imageurl= img_imgurl[i];
+           }else{
+              imageurl= img_imgurl[0]
+           }
+        loadimage(scale,scaleamountX,scaleamountY,img_location[i],level,imageurl);
+        }
+        if(uploadingstage){
+            modeupdatinglayers=true;
+        }
+     }
+ function loadimage(scale,scaleamountX,scaleamountY,location,level,img_imgurl){
+  var tolocation=locationforcanvas(location,scale)
+           var locationx=tolocation.x;
+           var locationy=tolocation.y;
     fabric.Image.fromURL(img_imgurl, function(img){
+
+
        var elWidth = img.naturalWidth || img.width;
        var elHeight = img.naturalHeight || img.height;
        var scaleX = ((canvas.scaleX || 1) * canvas.width / elWidth);
@@ -82,22 +54,53 @@ canvas.requestRenderAll()
        addtoarray(img,level);
        canvas.add(img);
        canvas.requestRenderAll()
-    },{crossOrigin: 'anonymous'});
-    if(readystate){
-        if(lastlocationx==locationx&&lastlocationy==locationy){
-        step2()
-readystate_layer1=true
-    }
-    }
-    if( readystate_layer1){
-        if(lastlocationx==locationx&&lastlocationy==locationy){
-        step3()
-    }
-    }
-    
-    
-    
+       if(finalImageBeforeConverting){
+            console.log('run!')
+           step2()
+          
+       }
+ },{crossOrigin: 'anonymous'}); 
  }
+
+var layercount_layer2=0;
+var finalImageBeforeConverting;
+function loadlocationimage(location,layer,alreadyloaded=[],layercount2){//give it a location and a layer and it will load everything in it
+    if(layer==2){
+    var scale=15;
+    var scaleamount=1200
+    var scaletemp=80
+    layercount_layer2++
+    }else{
+    var scale=5
+    var scaleamount=80
+    var scaletemp=16
+    }
+    console.log(layercount_layer2)
+       var y=Math.floor(location/scaletemp)
+       var locationstart=(location-1)*scale+(y*(scale-1)*scaleamount)+1
+       var locationlist=getlocationarray(locationstart,layer,alreadyloaded);
+       
+       if(layercount2==layercount_layer2){
+        finalImageBeforeConverting=locationlist[locationlist.length-1]
+       }
+       
+       
+       arraytosend={
+          'arraytosend':JSON.stringify(locationlist) ,
+          'level':layer+1
+      }
+      $.ajax({
+          url: "/update",
+          data: arraytosend,
+          type: "GET",
+         success: function(result) {   
+            result=JSON.parse(result)
+          sendDataToLoad(result['img_location'],result['img_imgurl'],scaleamount,result['img_scaleX'],result['img_scaleY'],result['img_level'],true);  
+             }
+      });
+    }
+
+
 
 function locationforcanvas(location,scaleamountX){
     var x= location%scaleamountX;
@@ -135,45 +138,6 @@ function locationforcanvas(location,scaleamountX){
     }
     }
 
-
-
-
-function loadlocationimage(location,layer,alreadyloaded=[]){//give it a location and a layer and it will load everything in it
-    if(layer==2){
-    var scale=15;
-    var scaleamount=1200
-    var scaletemp=80
-    }else{
-    var scale=5
-    var scaleamount=80
-    var scaletemp=16
-    }
-       var y=Math.floor(location/scaletemp)
-      
-       var locationstart=(location-1)*scale+(y*(scale-1)*scaleamount)+1
-       var locationlist=getlocationarray(locationstart,layer,alreadyloaded);
-       arraytosend={
-          'arraytosend':JSON.stringify(locationlist) ,
-          'level':layer+1
-      }
-      var tolocation=locationforcanvas(location,scaletemp)
-        var locationx=tolocation.x;
-        var locationy=tolocation.y;
-      if(readystate||readystate_layer1){
-         lastlocationx=locationx
-      lastlocationy=locationy 
-      }
-      
-      $.ajax({
-          url: "/update",
-          data: arraytosend,
-          type: "GET",
-         success: function(result) {   
-            result=JSON.parse(result)
-          sendDataToLoad(result['img_location'],result['img_imgurl'],scaleamount,result['img_scaleX'],result['img_scaleY'],result['img_level'],true);  
-             }
-      });
-    }
     function getlocationarray(locationstart,layer,alreadyloaded=[]){
         var arrayofcurrentlayer=[];
      if(layer==2){
@@ -197,37 +161,6 @@ function loadlocationimage(location,layer,alreadyloaded=[]){//give it a location
      }
      }
 
-     function sendDataToLoad(img_location,img_imgurl,img_scale,img_scaleX,img_scaleY,img_level,custom=false){
-
-        for(var i=0;i<img_location.length;i++){
-           var tolocation=locationforcanvas(img_location[i],img_scale)
-           var locationx=tolocation.x;
-           var locationy=tolocation.y;
-           var scale=img_scale;
-           if(img_scaleX.length!=1){
-              var scaleamountX=img_scaleX[i];
-           }else{
-              var scaleamountX=img_scaleX[0];
-           }
-           if(img_scaleY.length!=1){
-              var scaleamountY=img_scaleY[i];
-           }else{
-              var scaleamountY=img_scaleY[0];
-           }
-             
-           var level=img_level[i];
-           if(img_imgurl.length!=1){
-              var imageurl= img_imgurl[i];
-           }else{
-              imageurl= img_imgurl[0]
-           }
-        loadimage(scale,scaleamountX,scaleamountY,locationx,locationy,level,imageurl,custom);
-        }
-    
-
-     }
-
-
      function addtoarray(image,level){
         if(level==1){
             layeronearray.push(image);
@@ -242,7 +175,7 @@ function loadlocationimage(location,layer,alreadyloaded=[]){//give it a location
           layerfourarray.push(image)
        }
      }
-     function loadlayer(location,layer){
+     function loadlayer(location,layer){ //this is only called once, after nearby locations are calculated
    
         lastloadx=CenterCoord().x;
               lastloady=CenterCoord().y;
@@ -259,8 +192,63 @@ function loadlocationimage(location,layer,alreadyloaded=[]){//give it a location
               scale=getscale(received['img_level'][0])
               addtoalreadyloaded(received['img_location'],layer)//so that the same image don't load again
               sendDataToLoad(received['img_location'],received['img_imgurl'],scale,received['img_scaleX'],received['img_scaleY'],received['img_level']);
-              // console.log('data: sent',location,data['level'])
+                 console.log('data: sent',location,data['level'])
                },
-               
         });
            }
+           function resetCanvas(){
+    canvas.setZoom(1);
+    canvas.viewportTransform[4]=0;
+   canvas.viewportTransform[5]=0;
+canvas.requestRenderAll() 
+}
+function canvastoblob(location,layer){
+    var canvas = document.getElementById('c');
+ 
+    canvas.toBlob(function(blob) {
+     var newImg = document.createElement('img'),
+      url = URL.createObjectURL(blob);
+
+  newImg.onload = function() {
+    // no longer need to read the blob so it's revoked
+    URL.revokeObjectURL(url);
+  };
+  newImg.src = url;
+  document.body.appendChild(newImg);
+
+      var data= new FormData();
+    data.append('image',blob );
+    data.append('location',location );
+    data.append('layer',layer );
+    $.ajax({
+        url: "/update_layers",
+        data: data,
+        processData: false,
+    contentType: false,
+        type: "POST",
+       success: function(result) {   
+        console.log('success for',location,'  layer',layer)
+    }
+    });
+    }); 
+ }
+ 
+function blobfromlocation(location,level){
+    console.log('location',location)
+    var scale
+    if(level==2){
+       scale=80
+    }else{scale=16}
+    var tolocation=locationforcanvas(location,scale)
+    var locationx=tolocation.x;
+    var locationy=tolocation.y;
+    var pointx=(1450/scale)*(locationx-1);
+    var pointy=(900/scale)*locationy;
+    var point=new fabric.Point(pointx,pointy)
+    canvas.absolutePan(point)
+    canvas.setZoom(scale)
+    
+    setTimeout(`canvastoblob(${location},${level})`, 100);
+   
+    setTimeout(`resetCanvas()`, 200);
+ }

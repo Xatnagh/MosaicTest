@@ -62,27 +62,24 @@ var pointerlocation=localStorage.getItem('pointerlocation')
     var width=localStorage.getItem('width');
  var image = localStorage.getItem('image');
 
- var readystate=false;
- var readystate_layer1=false;
+
   function get_layer_blobs_step1(){
-    readystate=true
-  // loads layer2
+  // loads layer2 at the locations of the image
   for(var i=0;i<layer2.length;i++){
-    loadlocationimage(layer2[i],2,[])
+    loadlocationimage(layer2[i],2,[],layer2.length)
   }
-  //loads layer1
+  //loads layer1 at the location of the image minus the need to change part
   for(var i=0;i<layer1.length;i++){
-    loadlocationimage(layer1[i],1,layer2)
+    loadlocationimage(layer1[i],1,layer2,0)
   }
-image=localStorage.getItem('image');
-sendDataToLoad([pointerlocation],[image],1200,[width],[height],[4]) 
-
+var displayimage=localStorage.getItem('image');
+sendDataToLoad([pointerlocation],[displayimage],1200,[width],[height],[4]) 
 }
+
 function step2(){
-for(let i=0;i<layer2.length;i++){
-  setTimeout(`blobfromlocation(layer2[${i}],2)`, 500+i*500); 
-
-}
+    for(let i=0;i<layer2.length;i++){
+  setTimeout(`blobfromlocation(layer2[${i}],2)`, 100+i*500); 
+    }
 }
 
 function step3(){
@@ -90,6 +87,7 @@ function step3(){
     setTimeout(`blobfromlocation(layer1[${i}],1)`, 250+i*500); 
   }
 }
+
     if(image==undefined){
       alert("you don't have an image!")
       window.location.href = "./";   
