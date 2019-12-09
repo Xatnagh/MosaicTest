@@ -24,8 +24,6 @@ function loadlocationimagetest(location,layer){//give it a location and a layer 
          sendDataToLoad(result['img_location'],result['img_imgurl'],scaleamount,result['img_scaleX'],result['img_scaleY'],result['img_level']);  
             }
      });
-      
-   
    }
    
 var onmobile;
@@ -430,15 +428,17 @@ canvas.on('mouse:dblclick',function(e){
    }else{
       if(count==1){ 
          var location2=getCurrentCordinates(posX,posY,3)
-
          console.log('location1',location1,'location2',location2)
          count++
+         
          makelist(location1,location2)
+         
       }
       if(count==0){
       location1=getCurrentCordinates(posX,posY,3)
       console.log('location1',location1)
       count++
+      sendDataToLoad([location1],['/images/location1.jpg'],1200,[1],[1],[4])
       }  
       if(count==2){
          count=0
@@ -506,14 +506,7 @@ function is_touch_device() {
    return mq(query);
  }
 
-function cancelupload(){
-   uploading=true
-   canvas.requestRenderAll()
-   layerfourarray[0].opacity=0
-   location1=' ',location2= ' '
-   layerfourarray=[]
-   locationlist=[]
-}
+
 
 
 function removeLS(){

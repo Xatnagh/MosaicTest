@@ -15,10 +15,12 @@
           </nav>
 <div id='canvasDiv'>
    <canvas id="c"></canvas>
+   <button id='exitupload' onclick='exitupload()'>Exit</button>
    <div id=confirm>
-     <img style="width: 100px; height: 100px;" onclick="cancelupload()" src="/images/cancel.png" alt="">
-<img style="width: 140px;height: 105px;" onclick="confirmupload()"  src="/images/confirm.png" alt="">
-   </div>
+     <img id=removeselected style="width: 100px; height: 100px;" onclick="removeselected()" src="/images/cancel.png" alt="">
+<img id=confirmupload style="width: 140px;height: 105px;" onclick="confirmupload()"  src="/images/confirm.png" alt="">
+
+</div>
 
 
 
@@ -58,8 +60,8 @@
     <img id=pewviewimg src="" alt="">
 </section>
   <img id=confirmbtn src="/images/confirm.png" alt="Confirm">
-  <img id=cancelbtn src="/images/cancel.png" alt="Click me to remove the file." onclick="" /> 
-   </div>
+  <img id=cancelbtn src="/images/cancel.png" onclick='cancelimageselection()'  alt="Click me to remove the file." /> 
+</div>
   <!-- <div>
      <button id="show">Press for debugging info</button>
     <h2 id="cordination" class=hidden>x | y</h2>

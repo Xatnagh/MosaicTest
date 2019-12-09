@@ -43,7 +43,8 @@ width= bottomright-bottomleft+1;
         'arraytosend':JSON.stringify(locationlist) ,
         'level':3,
     }
-    
+    console.log('width',width)
+    console.log('height',height)
     $.ajax({
         url: "/update",
         data: arraytosend,
@@ -71,12 +72,13 @@ width= bottomright-bottomleft+1;
 var uploading=false;
 function modeUPLOAD(){
     update_url()
-    uploading=!uploading
+    uploading=true
     $('.dropdown-content').hide()
     $('#dropzone').toggle()
+    if($('#dropzone').css("display")=='none'){
+        uploading=false;
     }
-
-
+    }
 function modeUPLOAD_2(){
     $('#uploadbtn').hide()
     $('#dropzone').hide()
@@ -85,7 +87,14 @@ function modeUPLOAD_2(){
     $('#confirm').toggle()
 
   }
-    
+  function cancelupload(){
+   uploading=true
+   canvas.requestRenderAll()
+   layerfourarray[0].opacity=0
+   location1=' ',location2= ' '
+   layerfourarray=[]
+   locationlist=[]
+}
 function confirmupload(){//confirm after user had uploaded
     if(locationlist.length!=0){
         var temp=getlayersoflocation(locationlist)
@@ -132,8 +141,15 @@ return{
     'layer1':layer1
 }
 }
+function removeselected(){
+    for(let i=0;i<layerfourarray.length;i++){
+        layerfourarray[i].opacity=0;
+    }
+    canvas.requestRenderAll()
+    uploading=true
+}
+function cancelimageselection(){
 
-$('#cancelbtn').click(function(){
     $('#cancelbtn').hide()
             $('#confirmbtn').hide()
     document.getElementById('pewviewimg').src='';
@@ -143,13 +159,21 @@ $('#cancelbtn').click(function(){
         file.previewElement.remove(); 
       });
       $('.dropzone').removeClass('dz-started');
-});
+
+}
+function exitupload(){
+    cancelimageselection()
+    removeselected()
+    $('#confirm').toggle()
+    $('#exitupload').toggle()
+    $('#uploadbtn').toggle()
+}
 
 $('#confirmbtn').click(function(){
-    
     if(document.getElementById('pewviewimg')!=null){
         image=document.getElementById('pewviewimg').src 
        modeUPLOAD_2();
+       $('#exitupload').toggle()
     }else{
         alert('there is no image!')
     }

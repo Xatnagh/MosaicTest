@@ -3,7 +3,15 @@
     border: black 1px solid;
     position: relative;
   }
-
+ #exitupload{
+right:0;
+top:0;
+width:100px;
+position: absolute;
+height:100px;
+background-color: red;
+display:none
+ }
 #canvasDiv{
     position: relative;
 }
