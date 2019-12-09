@@ -1,4 +1,4 @@
-loadlocationimagetest(1,1)
+
 function loadlocationimagetest(location,layer){//give it a location and a layer and it will load everything in it
    if(layer==2){
    var scale=15;

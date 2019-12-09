@@ -9,8 +9,8 @@ class ImageInfo(ndb.Model):
     image_url= ndb.StringProperty(required=False) #for url
     url= ndb.StringProperty(required=False)#websites users link to
     description=ndb.TextProperty(required=False)
-    scalewidth= ndb.IntegerProperty(required=False)
-    scaleheight= ndb.IntegerProperty(required=False)
+    scalewidth= ndb.IntegerProperty(required=False,default=1)
+    scaleheight= ndb.IntegerProperty(required=False,default=1)
     pointer=ndb.BooleanProperty(required=False,default=False)
     pointerlocation=ndb.IntegerProperty(required=False)
     pointerlist=ndb.IntegerProperty(required=False,repeated=True)
