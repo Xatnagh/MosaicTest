@@ -63,7 +63,7 @@ var pointerlocation=localStorage.getItem('pointerlocation')
  var image = localStorage.getItem('image');
 
   function get_layer_blobs_step1(){
-
+console.log('layer2',layer2)
   // loads layer2 at the locations of the image
   for(var i=0;i<layer2.length;i++){
     loadlocationimage(layer2[i],2,[],layer2.length)

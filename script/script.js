@@ -1,9 +1,33 @@
-
-
-
-
-
-
+loadlocationimagetest(1,1)
+function loadlocationimagetest(location,layer){//give it a location and a layer and it will load everything in it
+   if(layer==2){
+   var scale=15;
+   var scaleamount=1200
+   }else{
+   var scale=5
+   var scaleamount=80
+   }
+   
+      var locationstart=(location-1)*scale+1
+      var locationlist=getlocationarray(locationstart,layer);
+      arraytosend={
+         'arraytosend':JSON.stringify(locationlist) ,
+         'level':layer+1
+     }
+     
+     $.ajax({
+         url: "/update",
+         data: arraytosend,
+         type: "GET",
+        success: function(result) {   
+           result=JSON.parse(result)
+         sendDataToLoad(result['img_location'],result['img_imgurl'],scaleamount,result['img_scaleX'],result['img_scaleY'],result['img_level']);  
+            }
+     });
+      
+   
+   }
+   
 var onmobile;
  function mobilecheck() {
    var check = false;

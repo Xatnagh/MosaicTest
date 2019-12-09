@@ -104,7 +104,7 @@ function checkifallimageisloaded(){
  var layer2length=0;   
  var userimageloaded=false;
 function loadlocationimage(location,layer,alreadyloaded=[],layerlength){//give it a location and a layer and it will load everything in it
-//    modeUpdatinglayers=true
+ modeUpdatinglayers=true
    if(layer==2){
     var scale=15;
     var scaleamount=1200
