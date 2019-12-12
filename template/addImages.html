@@ -73,8 +73,7 @@ console.log('layer2',layer2)
     loadlocationimage(layer1[i],1,layer2,layer1.length)
   }
   //loadimage(scale,scaleamountX,scaleamountY,location,level,img_imgurl,finalimg=false)
-var displayimage=localStorage.getItem('image');
-loadimage(1200,width,height,pointerlocation,4,displayimage,true);
+
 }
 
 function step2(){
@@ -167,7 +166,7 @@ $('#overlay').css({'display':'none'});
 
 $('#previewbtn').click(function(){
       if($('#description')[0].scrollHeight>450){
-    alert('your description is long, the max lines is 30')
+    alert('your description is too long, the max lines is 30')
   }else{
         description=document.getElementById('description').value
         url= document.getElementById('url_textbox').value
@@ -178,8 +177,7 @@ $('#previewbtn').click(function(){
           auto_grow()
           document.getElementById('pop_url').innerHTML=`${url}`;
           document.getElementById('pop_url').href=url;
-          $('#overlay').css({'display':'block'}); 
-          
+          $('#overlay').css({'display':'block'});        
   } });
 var layeronearray=[];
  var layertwoarray=[];

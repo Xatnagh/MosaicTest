@@ -5,26 +5,18 @@ import urllib2
 import random
 import jinja2
 import re
-from database import defaultdatas, alreadyexist, loadtest,clearlevel2,putDataintodatabase,upload_file,update_layer1,update_layer2
+from database import defaultdatas, alreadyexist, loadtest,clearlevel2,putDataintodatabase,upload_file,putImageIntoDatabase_layer1,putImageIntoDatabase_layer2,getupperlayeroflocation
 from Images import ImageInfo,ANCESTORY_KEY,getImageInfo,getimagesbylocation
-
-
 
 the_jinja_env = jinja2.Environment(loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
 extensions=['jinja2.ext.autoescape'],autoescape=True)
-
-
-def getData():
-      return ImageInfo.query(ImageInfo.level==1).fetch()
-
-
 
 class Home(webapp2.RequestHandler):
     def get(self): 
         self.response.headers['Access-Control-Allow-Origin'] = '*'
         # self.response.headers.add_header('Access-Control-Allow-Headers', 'Content-Type')
         homepage = the_jinja_env.get_template('/template/mosaic.html')  
-        self.response.write(homepage.render({"data":getData()}))
+        self.response.write(homepage.render({"data":getLayer1()}))
         
 
 class AddImage(webapp2.RequestHandler):
@@ -37,16 +29,16 @@ class loadImages(webapp2.RequestHandler):
     def get(self):
         defaultdatas()
         homepage = the_jinja_env.get_template('/template/mosaic.html')
-        self.response.headers['Access-Control-Allow-Origin'] = '*'
-        self.response.write(homepage.render({"data":getData()}))
+        self.response.write(homepage.render({"data":getLayer1()}))
+
 class update(webapp2.RequestHandler):
     def get(self):
         locationlist=self.request.GET.get('arraytosend')
         parsedlist= json.loads(locationlist)
         level=int(self.request.GET.get('level'))
-        self.response.headers['Access-Control-Allow-Origin'] = '*'
         imagebylocation=getimagesbylocation(parsedlist,level)
         self.response.write(json.dumps(imagebylocation))
+
     def post(self):
         pointerlocation=self.request.POST.get('pointerlocation')
         locationlist=self.request.POST.get('locationlist')
@@ -60,7 +52,7 @@ class update(webapp2.RequestHandler):
             imageurl= upload_file(image,pointerlocation) 
         else:
            imageurl=image
-        print image[0:5]
+        
         putDataintodatabase(pointerlocation,locationlist,imageurl,description,url,width,height)
         self.response.write("success")
         
@@ -70,16 +62,18 @@ class updatelayers(webapp2.RequestHandler):
         image=str(self.request.get('image'))
         location=int(self.request.get('location'))
         layer=int(self.request.get('layer'))
+        layer1location1=int(self.request.get('upperlayerlocation'))
         if(layer==2):
-            imageurl=update_layer2(image,location)
+            imageurl=putImageIntoDatabase_layer2(image,location)
         else:
-            imageurl=update_layer1(image,location)
+            imageurl=putImageIntoDatabase_layer1(image,location)
         imageexist=ImageInfo.query(ImageInfo.location==location,ImageInfo.level==layer).fetch()
         if imageexist:
             imageexist[0].image_url=imageurl
+            imageexist[0].layer1location=layer1location1
             imageexist[0].put()
         else:
-            ImageInfo(parent=ANCESTORY_KEY,image_url=imageurl,location=location,level=layer).put()
+            ImageInfo(parent=ANCESTORY_KEY,image_url=imageurl,location=location,level=layer,layer1location=layer1location1).put()
         
         
 
@@ -97,7 +91,7 @@ class cleardatabase(webapp2.RequestHandler):
     def get(self):
         clearlevel2()
         homepage = the_jinja_env.get_template('/template/mosaic.html')
-        self.response.write(homepage.render( {"data":getData()}))
+        self.response.write(homepage.render( {"data":getLayer1()}))
 class getImageIinfo(webapp2.RequestHandler):
     def get(self):
         location=int(self.request.GET.get('location'))  
@@ -111,7 +105,8 @@ class getImageIinfo(webapp2.RequestHandler):
         self.response.headers['Access-Control-Allow-Origin'] = '*'
         self.response.write(json.dumps(data))
    
-
+def getLayer1():
+      return ImageInfo.query(ImageInfo.level==1).fetch()
 
         
 

@@ -117,30 +117,6 @@ function confirmupload(){//confirm after user had uploaded
 }
 
 
-function getlayersoflocation(locationlist){
-    var x,y,location;
-    var layer1=[];
-    var layer2=[];
-for( var i=0;i<locationlist.length;i++){//100%works
-  x=Math.floor(locationlist[i]/15.000001)%80+1
-  y=Math.floor(locationlist[i]/15.000001/1200)
-location=x+y*80
-layer2.push(location)
-}
-layer2=[...new Set(layer2)]
-for( var i=0;i<locationlist.length;i++){//100%works
-    x=Math.floor(layer2[i]/5.000001)%16+1
-    y=Math.floor(layer2[i]/5.000001/80)
-  location=x+y*16
-  layer1.push(location)
-  }
-  layer1=[...new Set(layer1)]
-  layer1.pop()
-return{
-    'layer2':layer2,
-    'layer1':layer1
-}
-}
 function removeselected(){
     for(let i=0;i<layerfourarray.length;i++){
         layerfourarray[i].opacity=0;

@@ -7,13 +7,11 @@ function sendDataToLoad(img_location,img_imgurl,img_scale,img_scaleX,img_scaleY,
    if(modeUpdatinglayers){
       if(img_location.length==0){
       loadedlayer2_count++
-      console.log('is locationlist=0',loadedlayer2_count)
       if(loadedlayer2_count==layer2length){
          checkifallimageisloaded()
       }
       }  
-   }
-    
+   }    
         for(var i=0;i<img_location.length;i++){
            var scale=img_scale;
            if(img_scaleX.length!=1){
@@ -79,7 +77,7 @@ function sendDataToLoad(img_location,img_imgurl,img_scale,img_scaleX,img_scaleY,
           }
           if(level==4){
             userimageloaded=true;
-            console.log('USER IMAGE LOADED')
+            step2()
           }
        }
        
@@ -89,13 +87,9 @@ function sendDataToLoad(img_location,img_imgurl,img_scale,img_scaleX,img_scaleY,
 
 
 function checkifallimageisloaded(){
-   console.log('goal layer1:',layer1length)
-   console.log('goal layer2:',layer2length)
-   console.log('current layer1:',loadedlayer1_count)
-   console.log('current layer2:',loadedlayer2_count)
-      if(loadedlayer1_count==layer1length&&loadedlayer2_count==layer2length&&userimageloaded){
-         console.log('running step2')
-         step2()
+      if(loadedlayer1_count==layer1length&&loadedlayer2_count==layer2length){
+         var displayimage=localStorage.getItem('image');
+         loadimage(1200,width,height,pointerlocation,4,displayimage,true);
       }
 }
  var loadedlayer1_count=0;
@@ -137,9 +131,9 @@ function loadlocationimage(location,layer,alreadyloaded=[],layerlength){//give i
                 }
              }
       });
-    }
+    } 
 
-
+//This function is for when loading images, it will determine the x and y of said image    
 function locationforcanvas(location,scaleamountX){
     var x= location%scaleamountX;
     var y = Math.floor((location-x)/scaleamountX);
@@ -175,7 +169,7 @@ function locationforcanvas(location,scaleamountX){
        alreadyloaded_level3.push(location)
     }
     }
-
+//give it a location and layer and it will return the array for that location
     function getlocationarray(locationstart,layer,alreadyloaded=[]){
         var arrayofcurrentlayer=[];
      if(layer==2){
@@ -262,7 +256,9 @@ document.body.appendChild(p)
       var data= new FormData();
     data.append('image',blob );
     data.append('location',location );
-    data.append('layer',layer );
+    data.append('layer',layer);
+    data.append('upperlayerlocation',getupperlayeroflocation(location).layer1)
+    console.log('layer1location sent:',getupperlayeroflocation(location).layer1)  
     $.ajax({
         url: "/update_layers",
         data: data,
@@ -294,3 +290,44 @@ function blobfromlocation(location,level){
     setTimeout(`resetCanvas()`, 200);
  }
 
+//give it a locationlist from layer 3 and it will spit out the upper layers
+function getlayersoflocation(locationlist){
+   var x,y,location;
+   var layer1=[];
+   var layer2=[];
+for( var i=0;i<locationlist.length;i++){//100%works
+ x=Math.floor(locationlist[i]/15.000001)%80+1
+ y=Math.floor(locationlist[i]/15.000001/1200)
+location=x+y*80
+layer2.push(location)
+}
+layer2=[...new Set(layer2)]
+for( var i=0;i<locationlist.length;i++){//100%works
+   x=Math.floor(layer2[i]/5.000001)%16+1
+   y=Math.floor(layer2[i]/5.000001/80)
+ location=x+y*16
+ layer1.push(location)
+ }
+ layer1=[...new Set(layer1)]
+ layer1.pop()
+return{
+   'layer2':layer2,
+   'layer1':layer1
+}
+}
+//give it an image form layer 3 and it will spit back the upper layer
+function getupperlayeroflocation(location){//works 100%
+   var x,y,location;
+   var layer1;
+   var layer2;
+ x=Math.floor(location/15.000001)%80+1
+ y=Math.floor(location/15.000001/1200)
+layer2=x+y*80
+   x=Math.floor(layer2/5.000001)%16+1
+   y=Math.floor(layer2/5.000001/80)
+ layer1=x+y*16
+return{
+   'layer2':layer2,
+   'layer1':layer1
+}
+}

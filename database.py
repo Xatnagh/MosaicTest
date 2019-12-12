@@ -3,6 +3,7 @@ import cloudstorage
 from google.appengine.api import app_identity
 from google.appengine.ext import blobstore
 from google.appengine.ext import ndb
+import math
 def defaultdatas():
         a=0
         a=ImageInfo.query(ImageInfo.level==1).fetch(1)
@@ -24,22 +25,27 @@ def alreadyexist(list):
             load=True
     return load   
 def loadtest():
-    print('test done')
     for i in range(1):
                 ImageInfo(parent=ANCESTORY_KEY,location=1,level=3,pointer=True,pointerlist=[1,2,1201,1202],image_url='/images/test.jpg',scalewidth=2,scaleheight=2).put()
 def clearlevel2():
     img=ImageInfo.query(ImageInfo.level==2).fetch()
     for i in img:
         i.key.delete()
-    result=ImageInfo.query(ImageInfo.level==2).fetch()
-    print('test:',result)
+    img=ImageInfo.query(ImageInfo.level==1).fetch()
+    for i in img:
+        i.key.delete()
+    img=ImageInfo.query(ImageInfo.level==3).fetch()
+    for i in img:
+        i.key.delete()
+    defaultdatas()
     
 def putDataintodatabase(pointerlocation,locationlist,image,descriptionsendin,urlsentin,width,height):
         pointerlocation1=int(pointerlocation)
         if len(locationlist)>1:
             ImageInfo(parent=ANCESTORY_KEY,image_url=image,location=pointerlocation1,level=3,pointer=False,pointerlist=locationlist,scalewidth=width,scaleheight=height).put()
             for i in range(1,len(locationlist)):
-                ImageInfo(parent=ANCESTORY_KEY,location=locationlist[i],level=3,pointer=True,pointerlocation=pointerlocation1).put()
+                layer2spot=int(getupperlayeroflocation(locationlist[i]))
+                ImageInfo(parent=ANCESTORY_KEY,location=locationlist[i],level=3,pointer=True,pointerlocation=pointerlocation1,layer2location=layer2spot).put()
 
 import os
 cloudstorage.set_default_retry_params(
@@ -58,7 +64,7 @@ def upload_file(image,pointerlocation):
                 cloudstorage_file.write(image)
     return 'https://storage.googleapis.com/fortest099.appspot.com/{}'.format(pointerlocation)
 
-def update_layer2(image,location):
+def putImageIntoDatabase_layer2(image,location):
     location=str(location)
     bucket_name = 'mosaictestlayer2'
     bucket = '/' + bucket_name
@@ -69,7 +75,7 @@ def update_layer2(image,location):
             retry_params=write_retry_params) as cloudstorage_file:
                 cloudstorage_file.write(image)
     return 'https://storage.googleapis.com/mosaictestlayer2/{}'.format(location)
-def update_layer1(image,location):
+def putImageIntoDatabase_layer1(image,location):
     location=str(location)
     bucket_name = 'mosaictestlayer1'
     bucket = '/' + bucket_name
@@ -80,3 +86,12 @@ def update_layer1(image,location):
             retry_params=write_retry_params) as cloudstorage_file:
                 cloudstorage_file.write(image)
     return 'https://storage.googleapis.com/mosaictestlayer1/{}'.format(location)
+
+#only used for getting the layer2 location of the image, for faster image load
+def getupperlayeroflocation(location):
+    x=math.floor(location/15.000001)%80+1
+    y=math.floor(location/15.000001/1200)
+    layer2=x+y*80
+    return layer2
+   
+
