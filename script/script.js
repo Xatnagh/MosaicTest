@@ -35,72 +35,76 @@ onmobile=check
 removeLS();//cleans local storage
  mobilecheck()
 setCanvasSize(); 
+var alreadyloaded_level1=[]
 var alreadyloaded_level2=[]
-var alreadyloaded_level3=[]
 
 var one=[1]
-var done
+
 var canvas = new fabric.Canvas('c');
 
 
 
 var zoom=canvas.getZoom();
 function nearbylocations(location,level){
+   
+   level-=1;
+   console.log(level)
    var unitsinY,maxindex;
    var list=[]
 if(level==2){
    unitsinY=80
-   maxindex=6401 
+   maxindex=6401
    }
-if(level==3){
-   unitsinY=1200
-   maxindex=1440001
+if(level==1){
+   unitsinY=16
+   maxindex=257
 }
-
-for( var i=location-unitsinY*5-6;i<location-unitsinY*5+7;i++){
-   for(var j=0;j<9;j++){
+for(var i=location-unitsinY-1;i<location-unitsinY+2;i++){
+   for(var j=0;j<3;j++){
       list.push(i+unitsinY*j)
    }
 }
+//filters out less than and maxindex
 list= list.filter(function(list) {
    return list >0;
  });
  list= list.filter(function(list) {
    return list <maxindex;
  });
+ ///
+
  if(level==2){
    list = list.filter( function( item ) {
-      return alreadyloaded_level2.indexOf( item ) < 0;
+      return alreadyloaded_level2.indexOf(item) < 0;
     } );
     alreadyloaded_level2=alreadyloaded_level2.concat(list)
 
 }
-if(level==3){
+if(level==1){
    list = list.filter( function( item ) {
-      return alreadyloaded_level3.indexOf( item ) < 0;
+      return alreadyloaded_level1.indexOf( item ) < 0;
     } );
-    alreadyloaded_level3=alreadyloaded_level3.concat(list)
+    alreadyloaded_level1=alreadyloaded_level1.concat(list)
 }
-
- loadlayer(list,level)
+loadlayer(list,level)
 }
 function changelayers(){
 // layer one turn visible
 if(zoom<20){
    if(layeronearray[0].opcaity!=1){
       for(var i=0;i<layeronearray.length;i++){
-      layeronearray[i].opacity=1;
+         layeronearray[i].opacity=1;
       }
-      if(layertwoarray.length!=0){
-      for(var i=0;i<layertwoarray.length;i++){
-         layertwoarray[i].opacity=0;
-         }
-      }
-      if(layerthreearray.length!=0){
+   if(layertwoarray.length!=0){
+         for(var i=0;i<layertwoarray.length;i++){
+            layertwoarray[i].opacity=0;
+            }
+   }
+   if(layerthreearray.length!=0){
          for(var i=0;i<layerthreearray.length;i++){
             layerthreearray[i].opacity=0;
-            }
-         } 
+         }
+   } 
    }
   
 }
@@ -215,7 +219,7 @@ canvas.on({
             if (delta > 1000){ 
                delta = 1000;}
                if (delta < .7){
-                  console.log('run')
+                  
                delta = 0.7;}
                //
             canvas.zoomToPoint(point, delta);
@@ -225,17 +229,17 @@ canvas.on({
             if (zoom > 1000){ 
                zoom = 1000;}
                if (zoom < .7){
-                  console.log('run')
+                  
                zoom = 0.7;}
                //
 
             if(zoom.between(10,16)){
                
-            nearbylocations(getCurrentCordinates(CenterCoord().x,CenterCoord().y,2),2);
+            nearbylocations(getCurrentCordinates(CenterCoord().x,CenterCoord().y,1),2);
          }
          if(zoom.between(100,129)){
             
-            nearbylocations(getCurrentCordinates(CenterCoord().x,CenterCoord().y,3),3)
+            nearbylocations(getCurrentCordinates(CenterCoord().x,CenterCoord().y,2),3)
          }
          changelayers();
          }
@@ -307,11 +311,11 @@ canvas.zoomToPoint({ x: centerX, y: centerY}, zoom);
 // document.getElementById('zoomlevel').innerHTML="zoom "+ zoom;
 if(zoom.between(15,23)){
    
-   nearbylocations(getCurrentCordinates(CenterCoord().x,CenterCoord().y,2),2);
+   nearbylocations(getCurrentCordinates(CenterCoord().x,CenterCoord().y,1),2);
 }
 if(zoom.between(128,180)){
    
-   nearbylocations(getCurrentCordinates(CenterCoord().x,CenterCoord().y,3),3)
+   nearbylocations(getCurrentCordinates(CenterCoord().x,CenterCoord().y,2),3)
 }
 changelayers();
 }
@@ -339,11 +343,11 @@ opt.e.stopPropagation();
 // document.getElementById('zoomlevel').innerHTML="zoom "+ zoom;
 if(zoom.between(15,23)){
    
-   nearbylocations(getCurrentCordinates(CenterCoord().x,CenterCoord().y,2),2);
+   nearbylocations(getCurrentCordinates(CenterCoord().x,CenterCoord().y,1),2);
 }
 if(zoom.between(128,180)){
    
-   nearbylocations(getCurrentCordinates(CenterCoord().x,CenterCoord().y,3),3)
+   nearbylocations(getCurrentCordinates(CenterCoord().x,CenterCoord().y,2),3)
 }
 changelayers();
 });
@@ -357,7 +361,7 @@ if(zoom>20&&zoom<90){
  
    if(differenceinX>10||differenceinY>10){
      
-      nearbylocations(getCurrentCordinates(CenterCoord().x,CenterCoord().y,2),2);
+      nearbylocations(getCurrentCordinates(CenterCoord().x,CenterCoord().y,1),2);
       if(zoom>70){
          if(layertwoarray.length!=0){
              for(var i=0;i<layertwoarray.length;i++){
@@ -381,17 +385,11 @@ difference=2
 
 if(differenceinX>difference||differenceinY>difference){//after they move the mouse, this will ask server for images
   
-   nearbylocations(getCurrentCordinates(CenterCoord().x,CenterCoord().y,2),2);
-   nearbylocations(getCurrentCordinates(CenterCoord().x,CenterCoord().y,3),3);
+   nearbylocations(getCurrentCordinates(CenterCoord().x,CenterCoord().y,1),2);
+   nearbylocations(getCurrentCordinates(CenterCoord().x,CenterCoord().y,2),3);
    }
 }
-///
-// document.getElementById('cordination').innerHTML=posX+ "|" +posY;
-// document.getElementById('location').innerHTML= 'location for layer 1: '+getCurrentCordinates(posX,posY,1)+ '  |  '+'location for layer2: '+getCurrentCordinates(posX,posY,2)+'  |  '+'location for layer3:'+getCurrentCordinates(posX,posY,3);
-///
 };
-
-
 
 canvas.on('mouse:up', function() {
 this.isDragging = false;
@@ -442,7 +440,7 @@ canvas.on('mouse:dblclick',function(e){
       }  
       if(count==2){
          count=0
-         location1=null
+         location1=''
          
       }
    }

@@ -12,7 +12,7 @@ def defaultdatas():
                 ImageInfo(parent=ANCESTORY_KEY,location=i,level=1,image_url='images/placeholder.jpg').put()          
         b=ImageInfo.query(ImageInfo.level==3).fetch(1) 
         if not b:
-            ImageInfo(parent=ANCESTORY_KEY,location=1,level=3,pointer=False,pointerlist=[1,2,1201,1202],image_url='/images/test.jpg',scalewidth=2,scaleheight=2,description='this is a test image',url='https://www.reddit.com/r/dankmemes/').put()
+            ImageInfo(parent=ANCESTORY_KEY,location=1,level=3,pointer=False,pointerlist=[1,2,1201,1202],image_url='/images/test.jpg',scalewidth=2,scaleheight=2,description='this is a test image',url='https://www.reddit.com/r/dankmemes/',layer2location=1).put()
             ImageInfo(parent=ANCESTORY_KEY,location=2,level=3,pointer=True,pointerlocation=1).put()
             ImageInfo(parent=ANCESTORY_KEY,location=1201,level=3,pointer=True,pointerlocation=1).put()
             ImageInfo(parent=ANCESTORY_KEY,location=1202,level=3,pointer=True,pointerlocation=1).put()
@@ -42,7 +42,8 @@ def clearlevel2():
 def putDataintodatabase(pointerlocation,locationlist,image,descriptionsendin,urlsentin,width,height):
         pointerlocation1=int(pointerlocation)
         if len(locationlist)>1:
-            ImageInfo(parent=ANCESTORY_KEY,image_url=image,location=pointerlocation1,level=3,pointer=False,pointerlist=locationlist,scalewidth=width,scaleheight=height).put()
+            layer2spot=int(getupperlayeroflocation(pointerlocation1))
+            ImageInfo(parent=ANCESTORY_KEY,image_url=image,location=pointerlocation1,level=3,pointer=False,pointerlist=locationlist,scalewidth=width,scaleheight=height,layer2location=layer2spot).put()
             for i in range(1,len(locationlist)):
                 layer2spot=int(getupperlayeroflocation(locationlist[i]))
                 ImageInfo(parent=ANCESTORY_KEY,location=locationlist[i],level=3,pointer=True,pointerlocation=pointerlocation1,layer2location=layer2spot).put()

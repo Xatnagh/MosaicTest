@@ -20,29 +20,30 @@ class ImageInfo(ndb.Model):
 
 
 ANCESTORY_KEY = ndb.Key("ImageInfo","ImageInfo_root")
+
 def getImages(locationlist,level):
     imagelist=[]
     alreadyloaded=[]
+    alreadyloaded_layer1=[]
+    if level==1:
+        for i in locationlist:
+            if i not in alreadyloaded_layer1:
+                alreadyloaded_layer1.append(i)
+                ImageExist=ImageInfo.query(ImageInfo.layer1location==i).fetch()
+                if ImageExist:
+                    for j in ImageExist:
+                        imagelist.append(j)
     if level==2:
         for i in locationlist:
-            ImageExist=ImageInfo.query(ImageInfo.level==2,ImageInfo.location==i).fetch()
-            if ImageExist:
-                imagelist.append(ImageExist)
-            else:
-                placeholderImage=[ImageInfo( description=u'Null', image_url=u'images/placeholder2.jpeg', level=2, location=i,scalewidth=1,scaleheight=1)]
-                imagelist.append(placeholderImage)
-    if level==3:
-        for i in locationlist:
             if i not in alreadyloaded:
-                ImageExist=ImageInfo.query(ImageInfo.level==level,ImageInfo.location==i).fetch()
+                ImageExist=ImageInfo.query(ImageInfo.layer2location==i).fetch()
                 if ImageExist: 
                     if(ImageExist[0].pointer==False):
                         imagelist.append(ImageExist) 
                         if ImageExist[0].pointerlist:
-                            alreadyloaded.extend(ImageExist[0].pointerlist)
-                        
-                
+                            alreadyloaded.extend(ImageExist[0].pointerlist)       
     return imagelist
+
 def getimagesbylocation(list,level):
     from database import alreadyexist
     img_location=[]
@@ -51,9 +52,6 @@ def getimagesbylocation(list,level):
     img_scalewidth=[]
     img_scaleheight=[]
     imagelist=[]
-    list=[x for x in list if x >= 1]   #filters out out of bround locations
-    list=[x for x in list if x <= 1440000] #filters out out of bround locations
-        # print(list)
           
     imagelist=getImages(list,level)
     

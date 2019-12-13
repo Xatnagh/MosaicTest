@@ -121,6 +121,8 @@ function removeselected(){
     for(let i=0;i<layerfourarray.length;i++){
         layerfourarray[i].opacity=0;
     }
+    location1=''
+    location2=''
     canvas.requestRenderAll()
     uploading=true
 }

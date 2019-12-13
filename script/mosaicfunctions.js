@@ -77,6 +77,7 @@ function sendDataToLoad(img_location,img_imgurl,img_scale,img_scaleX,img_scaleY,
           }
           if(level==4){
             userimageloaded=true;
+            console.log('user Image loaded!')
             step2()
           }
        }
@@ -224,7 +225,7 @@ function locationforcanvas(location,scaleamountX){
               scale=getscale(received['img_level'][0])
               addtoalreadyloaded(received['img_location'],layer)//so that the same image don't load again
               sendDataToLoad(received['img_location'],received['img_imgurl'],scale,received['img_scaleX'],received['img_scaleY'],received['img_level']);
-                 console.log('data: sent',location,data['level'])
+                 console.log('data: sent',location,layer)
                },
         });
            }

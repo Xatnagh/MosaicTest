@@ -37,6 +37,7 @@ class update(webapp2.RequestHandler):
         parsedlist= json.loads(locationlist)
         level=int(self.request.GET.get('level'))
         imagebylocation=getimagesbylocation(parsedlist,level)
+        
         self.response.write(json.dumps(imagebylocation))
 
     def post(self):
