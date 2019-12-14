@@ -4,16 +4,20 @@
 
 var modeUpdatinglayers=false;
 function sendDataToLoad(img_location,img_imgurl,img_scale,img_scaleX,img_scaleY,img_level){
-   if(img_location.length==0){
-      return;
-   }
    if(modeUpdatinglayers){
-      if(img_location.length==0){
-      loadedlayer2_count++
+      console.log(img_level)
+      if(img_location.length==0&&img_level==1){
+      loadedlayer1_count++
+      console.log('loadedlayer1count:',loadedlayer1_count)
+      }
+      if(img_location.length==0&&img_level==2){
+         loadedlayer2_count++
+         console.log('loadedlayer2count:',loadedlayer2_count)
+      }
       if(loadedlayer2_count==layer2length){
          checkifallimageisloaded()
       }
-      }  
+      
    }    
         for(var i=0;i<img_location.length;i++){
            var scale=img_scale;
@@ -28,7 +32,7 @@ function sendDataToLoad(img_location,img_imgurl,img_scale,img_scaleX,img_scaleY,
               var scaleamountY=img_scaleY[0];
            }
              
-           var level=img_level[i];
+           var level=img_level;
            if(img_imgurl.length!=1){
               var imageurl= img_imgurl[i];
            }else{
@@ -64,14 +68,14 @@ function sendDataToLoad(img_location,img_imgurl,img_scale,img_scaleX,img_scaleY,
        canvas.add(img);
        canvas.requestRenderAll()
        if(finalimg){
-          if(level==3){
+          if(level==2){
             loadedlayer2_count++
             console.log('loadedlayer2:',loadedlayer2_count)
             if(loadedlayer2_count==layer2length){
                checkifallimageisloaded()
             }
           }
-          if(level==2){
+          if(level==1){
             loadedlayer1_count++
             console.log('loadedlayer1:',loadedlayer1_count)
             if(loadedlayer1_count==layer1length){
@@ -91,6 +95,7 @@ function sendDataToLoad(img_location,img_imgurl,img_scale,img_scaleX,img_scaleY,
 
 
 function checkifallimageisloaded(){
+   console.log('checkifallimageisloaded')
       if(loadedlayer1_count==layer1length&&loadedlayer2_count==layer2length){
          var displayimage=localStorage.getItem('image');
          loadimage(1200,width,height,pointerlocation,4,displayimage,true);
@@ -98,41 +103,15 @@ function checkifallimageisloaded(){
 }
  var loadedlayer1_count=0;
  var loadedlayer2_count=0;
- var layer1length=0;
- var layer2length=0;   
+ var layer1length=1;
+ var layer2length=1;   
  var userimageloaded=false;
-function loadlocationimage(location,layer,alreadyloaded=[],layerlength){//give it a location and a layer and it will load everything in it
+function loadlocationimage(locationlist,layer,alreadyloaded=[]){//give it a location and a layer and it will load everything in it
    modeUpdatinglayers=true
-   if(layer==2){
-    var scale=15;
-    var scaleamount=1200
-    var scaletemp=80
-    layer2length=layerlength;
-    }else{
-    var scale=5
-    var scaleamount=80
-    var scaletemp=16
-    layer1length=layerlength;
-    }
-      //  var y=Math.floor(location/scaletemp)
-      //  var locationstart=(location-1)*scale+(y*(scale-1)*scaleamount)+1
-      //  var locationlist=getlocationarray(locationstart,layer,alreadyloaded);
-       loadlayer(location,layer)
-       
-      //  arraytosend={
-      //     'arraytosend':JSON.stringify(locationlist),
-      //     'level':layer
-      // }
-      // $.ajax({
-      //     url: "/update",
-      //     data: arraytosend,
-      //     type: "GET",
-      //    success: function(result) {   
-      //       result=JSON.parse(result)
-      //     sendDataToLoad(result['img_location'],result['img_imgurl'],scaleamount,result['img_scaleX'],result['img_scaleY'],result['img_level']);  
-      //           console.log(arraytosend)
-      //        }
-      // });
+   locationlist=locationlist.filter(function(item){
+      return alreadyloaded.indexOf( item ) < 0;
+   });
+       loadlayer(locationlist,layer,true)
     } 
 
 //This function is for when loading images, it will determine the x and y of said image    
@@ -210,7 +189,7 @@ function locationforcanvas(location,scaleamountX){
           layerfourarray.push(image)
        }
      }
-     function loadlayer(location,layer){ //give a upper location array, loads everything in it
+     function loadlayer(location,layer,uploading=false){ //give a upper location array, loads everything in it
    
         lastloadx=CenterCoord().x;
               lastloady=CenterCoord().y;
@@ -226,7 +205,7 @@ function locationforcanvas(location,scaleamountX){
            success: function(integer) {
               var received=JSON.parse(integer)
               scale=getscale(received['img_level'][0])
-              sendDataToLoad(received['img_location'],received['img_imgurl'],scale,received['img_scaleX'],received['img_scaleY'],received['img_level']);
+              sendDataToLoad(received['img_location'],received['img_imgurl'],scale,received['img_scaleX'],received['img_scaleY'],received['img_level'],uploading);
                  console.log('data: sent',location,layer)
                },
         });

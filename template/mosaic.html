@@ -78,7 +78,7 @@
 var jdata_location=[];
 var jdata_url=[];
 var jdata_imageurl=[];
-var jdata_level=[];
+var jdata_level;
 </script>
 
             {% for entry in data %}
@@ -86,7 +86,7 @@ var jdata_level=[];
             jdata_location.push("{{entry.location}}");
             jdata_url.push("{{entry.url}}");
             jdata_imageurl.push("{{entry.image_url}}");
-            jdata_level.push('{{entry.level}}')  
+            jdata_level='{{entry.level}}' 
          </script>              
             {% endfor %}
         

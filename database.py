@@ -24,7 +24,6 @@ def alreadyexist(locationlist,upperlayerlist):
         image=ImageInfo.query(ImageInfo.layer2location==i).fetch()
         for j in image:
             location=j.location
-            print(location)
             if location in locationlist:
                 load=True
     return load   

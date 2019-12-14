@@ -54,7 +54,6 @@ width= bottomright-bottomleft+1;
        success: function(layer3image) {   
           layer3image=JSON.parse(layer3image)       
           imageexist=layer3image['bool']
-          console.log(imageexist)
             sendDataToLoad(layer3image['img_location'],layer3image['img_imgurl'],1200,layer3image['img_scaleX'],layer3image['img_scaleY'],layer3image['img_level']);    
           if(imageexist){
               alert('Image already exist for another user in your chosen area!')

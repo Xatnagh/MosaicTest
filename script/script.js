@@ -91,7 +91,7 @@ loadlayer(list,level)
 function changelayers(){
 // layer one turn visible
 if(zoom<20){
-   if(layeronearray[0].opcaity!=1){
+   if(layeronearray[0].opacity!=1){
       for(var i=0;i<layeronearray.length;i++){
          layeronearray[i].opacity=1;
       }
