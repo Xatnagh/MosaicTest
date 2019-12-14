@@ -6,13 +6,16 @@ import random
 import jinja2
 import re
 from database import defaultdatas, alreadyexist, loadtest,clearlevel2,putDataintodatabase,upload_file,putImageIntoDatabase_layer1,putImageIntoDatabase_layer2,getupperlayeroflocation
-from Images import ImageInfo,ANCESTORY_KEY,getImageInfo,getimagesbylocation
+from Images import ImageInfo,ANCESTORY_KEY,getImageInfo,getimagesbylocation,getImages
 
 the_jinja_env = jinja2.Environment(loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
 extensions=['jinja2.ext.autoescape'],autoescape=True)
 
 class Home(webapp2.RequestHandler):
     def get(self): 
+        # lol=[81,82,1,2]
+        # level=2
+        # a=getImages(lol,level)
         self.response.headers['Access-Control-Allow-Origin'] = '*'
         # self.response.headers.add_header('Access-Control-Allow-Headers', 'Content-Type')
         homepage = the_jinja_env.get_template('/template/mosaic.html')  
@@ -36,8 +39,7 @@ class update(webapp2.RequestHandler):
         locationlist=self.request.GET.get('arraytosend')
         parsedlist= json.loads(locationlist)
         level=int(self.request.GET.get('level'))
-        imagebylocation=getimagesbylocation(parsedlist,level)
-        
+        imagebylocation=getimagesbylocation(parsedlist,level,[])
         self.response.write(json.dumps(imagebylocation))
 
     def post(self):
@@ -58,6 +60,16 @@ class update(webapp2.RequestHandler):
         self.response.write("success")
         
 class updatelayers(webapp2.RequestHandler):
+    def get(self):
+        locationlist=self.request.GET.get('locationlist')
+        parsedlist= json.loads(locationlist)
+        upperlayerlist=self.request.GET.get('upperlocationarray')
+        upperlayerlist= json.loads(upperlayerlist)
+        imagebylocation=getimagesbylocation(parsedlist,2,upperlayerlist)
+        print(parsedlist)
+        print(upperlayerlist)
+        self.response.write(json.dumps(imagebylocation))
+
     def post(self):
         self.response.headers.add_header('Access-Control-Allow-Origin', '*')
         image=str(self.request.get('image'))

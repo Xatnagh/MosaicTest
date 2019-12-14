@@ -24,52 +24,51 @@ ANCESTORY_KEY = ndb.Key("ImageInfo","ImageInfo_root")
 def getImages(locationlist,level):
     imagelist=[]
     alreadyloaded=[]
-    alreadyloaded_layer1=[]
-    if level==1:
-        for i in locationlist:
-            if i not in alreadyloaded_layer1:
-                alreadyloaded_layer1.append(i)
-                ImageExist=ImageInfo.query(ImageInfo.layer1location==i).fetch()
-                if ImageExist:
-                    for j in ImageExist:
-                        imagelist.append(j)
     if level==2:
         for i in locationlist:
-            if i not in alreadyloaded:
-                ImageExist=ImageInfo.query(ImageInfo.layer2location==i).fetch()
-                if ImageExist: 
-                    if(ImageExist[0].pointer==False):
-                        imagelist.append(ImageExist) 
-                        if ImageExist[0].pointerlist:
-                            alreadyloaded.extend(ImageExist[0].pointerlist)       
-    return imagelist
+            image=ImageInfo.query(ImageInfo.layer2location==i).fetch()
+            for i in image: 
+                if i.location not in alreadyloaded:
+                    if(i.pointer==False):
+                        imagelist.append(i)
+                        alreadyloaded.extend(i.pointerlist)
+                    else:
+                        pointerimage=ImageInfo.query(ImageInfo.location==i.pointerlocation,ImageInfo.level==3).fetch()
+                        imagelist.extend(pointerimage)
+                        alreadyloaded.extend(pointerimage[0].pointerlist)
+    if level==1:
+        for i in locationlist:
+            image=ImageInfo.query(ImageInfo.layer1location==i).fetch()
+            imagelist.extend(image)
+    return imagelist;  
 
-def getimagesbylocation(list,level):
+def getimagesbylocation(list,level,upperlayerlist):
     from database import alreadyexist
+    exist=False
     img_location=[]
     img_imgurl=[]
     img_level=[]
     img_scalewidth=[]
     img_scaleheight=[]
     imagelist=[]
-          
     imagelist=getImages(list,level)
-    
+    print('length of imagelist',len(imagelist))
     if len(imagelist)!=0:
         for i in imagelist:
-            img_location.append(i[0].location)
-            img_imgurl.append(i[0].image_url)
-            img_level.append(i[0].level)
-            img_scalewidth.append(i[0].scalewidth)
-            img_scaleheight.append(i[0].scaleheight)
+            img_location.append(i.location)
+            img_imgurl.append(i.image_url)
+            img_level.append(i.level)
+            img_scalewidth.append(i.scalewidth)
+            img_scaleheight.append(i.scaleheight)
+    if len(upperlayerlist)!=0:
+        exist=alreadyexist(list,upperlayerlist)
     return{
         'img_location':img_location,
         'img_imgurl':img_imgurl,
         'img_level':img_level,
         'img_scaleX': img_scalewidth,
         'img_scaleY': img_scaleheight,
-
-        'bool':alreadyexist(list)
+        'bool':exist
     }
 
 

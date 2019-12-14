@@ -4,6 +4,9 @@
 
 var modeUpdatinglayers=false;
 function sendDataToLoad(img_location,img_imgurl,img_scale,img_scaleX,img_scaleY,img_level){
+   if(img_location.length==0){
+      return;
+   }
    if(modeUpdatinglayers){
       if(img_location.length==0){
       loadedlayer2_count++
@@ -99,7 +102,7 @@ function checkifallimageisloaded(){
  var layer2length=0;   
  var userimageloaded=false;
 function loadlocationimage(location,layer,alreadyloaded=[],layerlength){//give it a location and a layer and it will load everything in it
- modeUpdatinglayers=true
+   modeUpdatinglayers=true
    if(layer==2){
     var scale=15;
     var scaleamount=1200
@@ -111,27 +114,25 @@ function loadlocationimage(location,layer,alreadyloaded=[],layerlength){//give i
     var scaletemp=16
     layer1length=layerlength;
     }
-       var y=Math.floor(location/scaletemp)
-       var locationstart=(location-1)*scale+(y*(scale-1)*scaleamount)+1
-       var locationlist=getlocationarray(locationstart,layer,alreadyloaded);
+      //  var y=Math.floor(location/scaletemp)
+      //  var locationstart=(location-1)*scale+(y*(scale-1)*scaleamount)+1
+      //  var locationlist=getlocationarray(locationstart,layer,alreadyloaded);
+       loadlayer(location,layer)
        
-       arraytosend={
-          'arraytosend':JSON.stringify(locationlist) ,
-          'level':layer+1
-      }
-      $.ajax({
-          url: "/update",
-          data: arraytosend,
-          type: "GET",
-         success: function(result) {   
-            result=JSON.parse(result)
-          sendDataToLoad(result['img_location'],result['img_imgurl'],scaleamount,result['img_scaleX'],result['img_scaleY'],result['img_level']);  
-                if(layer==1){
-                    console.log(result['img_location'])
-                    console.log(result['img_imgurl'])
-                }
-             }
-      });
+      //  arraytosend={
+      //     'arraytosend':JSON.stringify(locationlist),
+      //     'level':layer
+      // }
+      // $.ajax({
+      //     url: "/update",
+      //     data: arraytosend,
+      //     type: "GET",
+      //    success: function(result) {   
+      //       result=JSON.parse(result)
+      //     sendDataToLoad(result['img_location'],result['img_imgurl'],scaleamount,result['img_scaleX'],result['img_scaleY'],result['img_level']);  
+      //           console.log(arraytosend)
+      //        }
+      // });
     } 
 
 //This function is for when loading images, it will determine the x and y of said image    
@@ -178,6 +179,7 @@ function locationforcanvas(location,scaleamountX){
         for(var j=locationstart;j<locationstart+15;j++){
            arrayofcurrentlayer.push(j+1200*i)
         }
+
      }
      return arrayofcurrentlayer
      }if(layer==1){
@@ -189,7 +191,7 @@ function locationforcanvas(location,scaleamountX){
         arrayofcurrentlayer=arrayofcurrentlayer.filter(function(item){
            return alreadyloaded.indexOf( item ) < 0;
         });
-        console.log('arrayfor layer1',arrayofcurrentlayer)
+        console.log('location array for layer1',arrayofcurrentlayer)
         return arrayofcurrentlayer
      }
      }
@@ -208,7 +210,7 @@ function locationforcanvas(location,scaleamountX){
           layerfourarray.push(image)
        }
      }
-     function loadlayer(location,layer){ //this is only called once, after nearby locations are calculated
+     function loadlayer(location,layer){ //give a upper location array, loads everything in it
    
         lastloadx=CenterCoord().x;
               lastloady=CenterCoord().y;
@@ -216,6 +218,7 @@ function locationforcanvas(location,scaleamountX){
            arraytosend:JSON.stringify(location),
            level:layer
            }
+           console.log(data)
            $.ajax({
             url: "/update",
             data: data,
@@ -223,7 +226,6 @@ function locationforcanvas(location,scaleamountX){
            success: function(integer) {
               var received=JSON.parse(integer)
               scale=getscale(received['img_level'][0])
-              addtoalreadyloaded(received['img_location'],layer)//so that the same image don't load again
               sendDataToLoad(received['img_location'],received['img_imgurl'],scale,received['img_scaleX'],received['img_scaleY'],received['img_level']);
                  console.log('data: sent',location,layer)
                },
@@ -332,3 +334,10 @@ return{
    'layer1':layer1
 }
 }
+function CenterCoord(){
+   return{
+      x:fabric.util.invertTransform(canvas.viewportTransform)[4]+(canvas.width/zoom)/2,
+      y:fabric.util.invertTransform(canvas.viewportTransform)[5]+(canvas.height/zoom)/2
+   }
+}
+var zoom=1;

@@ -38,28 +38,28 @@ width= bottomright-bottomleft+1;
     }
    
     uploading=false
-   
+  upperlocationlist=getlayersoflocation(locationlist).layer2
+   console.log('sadsajkhdgsajkihdgsaij',upperlocationlist)
     arraytosend={
-        'arraytosend':JSON.stringify(locationlist) ,
+        'locationlist':JSON.stringify(locationlist),
+        'upperlocationarray':JSON.stringify(upperlocationlist),
         'level':3,
     }
     console.log('width',width)
     console.log('height',height)
     $.ajax({
-        url: "/update",
+        url: "/update_layers",
         data: arraytosend,
         type: "GET",
        success: function(layer3image) {   
           layer3image=JSON.parse(layer3image)       
           imageexist=layer3image['bool']
-       
-        sendDataToLoad(layer3image['img_location'],layer3image['img_imgurl'],1200,layer3image['img_scaleX'],layer3image['img_scaleY'],layer3image['img_level']);    
+          console.log(imageexist)
+            sendDataToLoad(layer3image['img_location'],layer3image['img_imgurl'],1200,layer3image['img_scaleX'],layer3image['img_scaleY'],layer3image['img_level']);    
           if(imageexist){
               alert('Image already exist for another user in your chosen area!')
-              uploading=true;
-              locationlist=[]
+              removeselected()
           }else{
-            addtoalreadyloaded(layer3image['img_location'],layer3image['img_level'][0])
             sendDataToLoad([bottomleft],[image],1200,[width],[height],[4])
           }
            }
@@ -123,6 +123,7 @@ function removeselected(){
     }
     location1=''
     location2=''
+    locationlist=[]
     canvas.requestRenderAll()
     uploading=true
 }

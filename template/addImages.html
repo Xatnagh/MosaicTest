@@ -63,15 +63,17 @@ var pointerlocation=localStorage.getItem('pointerlocation')
  var image = localStorage.getItem('image');
 
   function get_layer_blobs_step1(){
+    console.log('layer1',layer1)
 console.log('layer2',layer2)
   // loads layer2 at the locations of the image
-  for(var i=0;i<layer2.length;i++){
-    loadlocationimage(layer2[i],2,[],layer2.length)
-  }
+    loadlocationimage(layer2,2,[],layer2.length)
+  
   //loads layer1 at the location of the image minus the need to change part
-  for(var i=0;i<layer1.length;i++){
-    loadlocationimage(layer1[i],1,layer2,layer1.length)
-  }
+
+  
+    loadlocationimage(layer1,1,layer2,layer1.length)
+  
+
   //loadimage(scale,scaleamountX,scaleamountY,location,level,img_imgurl,finalimg=false)
 
 }
@@ -128,7 +130,6 @@ const b64toBlob = (b64Data, contentType='', sliceSize=512) => {
 function senddatatoserver(){
   get_layer_blobs_step1()
     var locationlist=localStorage.getItem('location')
-   
     var description=document.getElementById('description').value
     var url= document.getElementById('url_textbox').value
     if(url.substring(0,3)!='http'){

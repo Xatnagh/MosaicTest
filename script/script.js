@@ -482,12 +482,7 @@ document.getElementById('c').height=myHeight*0.9;
 $('.pop_close').click(function(){
 $('#overlay').css({'display':'none'});
 });
-function CenterCoord(){
-   return{
-      x:fabric.util.invertTransform(canvas.viewportTransform)[4]+(canvas.width/zoom)/2,
-      y:fabric.util.invertTransform(canvas.viewportTransform)[5]+(canvas.height/zoom)/2
-   }
-}
+
 function is_touch_device() {
    var prefixes = ' -webkit- -moz- -o- -ms- '.split(' ');
    var mq = function(query) {

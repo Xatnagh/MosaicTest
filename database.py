@@ -13,16 +13,20 @@ def defaultdatas():
         b=ImageInfo.query(ImageInfo.level==3).fetch(1) 
         if not b:
             ImageInfo(parent=ANCESTORY_KEY,location=1,level=3,pointer=False,pointerlist=[1,2,1201,1202],image_url='/images/test.jpg',scalewidth=2,scaleheight=2,description='this is a test image',url='https://www.reddit.com/r/dankmemes/',layer2location=1).put()
-            ImageInfo(parent=ANCESTORY_KEY,location=2,level=3,pointer=True,pointerlocation=1).put()
-            ImageInfo(parent=ANCESTORY_KEY,location=1201,level=3,pointer=True,pointerlocation=1).put()
-            ImageInfo(parent=ANCESTORY_KEY,location=1202,level=3,pointer=True,pointerlocation=1).put()
+            ImageInfo(parent=ANCESTORY_KEY,location=2,level=3,pointer=True,pointerlocation=1,layer2location=1).put()
+            ImageInfo(parent=ANCESTORY_KEY,location=1201,level=3,pointer=True,pointerlocation=1,layer2location=1).put()
+            ImageInfo(parent=ANCESTORY_KEY,location=1202,level=3,pointer=True,pointerlocation=1,layer2location=1).put()
 
-def alreadyexist(list):  
+def alreadyexist(locationlist,upperlayerlist):  
     load=False 
-    for i in list:
-        imageexist= ImageInfo.query(ImageInfo.location==i, ImageInfo.level==3).fetch()
-        if imageexist:
-            load=True
+    print('tewsajidhfo',upperlayerlist)
+    for i in upperlayerlist:
+        image=ImageInfo.query(ImageInfo.layer2location==i).fetch()
+        for j in image:
+            location=j.location
+            print(location)
+            if location in locationlist:
+                load=True
     return load   
 def loadtest():
     for i in range(1):
