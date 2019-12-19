@@ -60,14 +60,12 @@ class update(webapp2.RequestHandler):
         self.response.write("success")
         
 class updatelayers(webapp2.RequestHandler):
-    def get(self):
+    def get(self): #this is used only for when user selects the two boxes on image upload
         locationlist=self.request.GET.get('locationlist')
-        parsedlist= json.loads(locationlist)
+        locationlist= json.loads(locationlist)
         upperlayerlist=self.request.GET.get('upperlocationarray')
         upperlayerlist= json.loads(upperlayerlist)
-        imagebylocation=getimagesbylocation(parsedlist,2,upperlayerlist)
-        print(parsedlist)
-        print(upperlayerlist)
+        imagebylocation=getimagesbylocation(locationlist,2,upperlayerlist)
         self.response.write(json.dumps(imagebylocation))
 
     def post(self):

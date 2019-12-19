@@ -1,16 +1,14 @@
 
 //I cannot thank this post enough
 //https://medium.com/@selom/how-to-fix-a-no-access-control-allow-origin-error-message-on-google-cloud-storage-90dd9b7e3ddb
-
 var modeUpdatinglayers=false;
 function sendDataToLoad(img_location,img_imgurl,img_scale,img_scaleX,img_scaleY,img_level){
-   if(modeUpdatinglayers){
-      console.log(img_level)
-      if(img_location.length==0&&img_level==1){
+   if(modeUpdatinglayers&&img_level){
+      if(img_location.length==0&&img_level==2){
       loadedlayer1_count++
       console.log('loadedlayer1count:',loadedlayer1_count)
       }
-      if(img_location.length==0&&img_level==2){
+      if(img_location.length==0&&img_level==3){
          loadedlayer2_count++
          console.log('loadedlayer2count:',loadedlayer2_count)
       }
@@ -68,14 +66,14 @@ function sendDataToLoad(img_location,img_imgurl,img_scale,img_scaleX,img_scaleY,
        canvas.add(img);
        canvas.requestRenderAll()
        if(finalimg){
-          if(level==2){
+          if(level==3){
             loadedlayer2_count++
             console.log('loadedlayer2:',loadedlayer2_count)
             if(loadedlayer2_count==layer2length){
                checkifallimageisloaded()
             }
           }
-          if(level==1){
+          if(level==2){
             loadedlayer1_count++
             console.log('loadedlayer1:',loadedlayer1_count)
             if(loadedlayer1_count==layer1length){
@@ -103,14 +101,16 @@ function checkifallimageisloaded(){
 }
  var loadedlayer1_count=0;
  var loadedlayer2_count=0;
- var layer1length=1;
- var layer2length=1;   
+ var layer1length;
+ var layer2length;   
  var userimageloaded=false;
-function loadlocationimage(locationlist,layer,alreadyloaded=[]){//give it a location and a layer and it will load everything in it
+function loadlocationimage(locationlist,layer,layercount,alreadyloaded=[],){//give it a location and a layer and it will load everything in it
    modeUpdatinglayers=true
-   locationlist=locationlist.filter(function(item){
-      return alreadyloaded.indexOf( item ) < 0;
-   });
+   if(layer==1){
+      layer1length=layercount
+   }else{layer2length=layercount
+   }
+   locationlist = locationlist.filter( ( el ) => !alreadyloaded.includes( el ) );
        loadlayer(locationlist,layer,true)
     } 
 
@@ -205,8 +205,8 @@ function locationforcanvas(location,scaleamountX){
            success: function(integer) {
               var received=JSON.parse(integer)
               scale=getscale(received['img_level'][0])
-              sendDataToLoad(received['img_location'],received['img_imgurl'],scale,received['img_scaleX'],received['img_scaleY'],received['img_level'],uploading);
-                 console.log('data: sent',location,layer)
+              sendDataToLoad(received['img_location'],received['img_imgurl'],scale,received['img_scaleX'],received['img_scaleY'],received['img_level'][0],uploading);
+                 console.log(received)
                },
         });
            }

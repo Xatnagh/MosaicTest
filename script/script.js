@@ -21,7 +21,7 @@ function loadlocationimagetest(location,layer){//give it a location and a layer 
          type: "GET",
         success: function(result) {   
            result=JSON.parse(result)
-         sendDataToLoad(result['img_location'],result['img_imgurl'],scaleamount,result['img_scaleX'],result['img_scaleY'],result['img_level']);  
+         sendDataToLoad(result['img_location'],result['img_imgurl'],scaleamount,result['img_scaleX'],result['img_scaleY'],result['img_level'][0]);  
             }
      });
    }
@@ -112,7 +112,7 @@ if(zoom<20){
 if(layertwoarray.length!=0&&zoom>20&&zoom<130){
    if(layertwoarray[0].opacity!=1){
          for(var i=0;i<layeronearray.length;i++){
-      layeronearray[i].opacity=0.9;
+      layeronearray[i].opacity=0.7;
       }
          for(var i=0;i<layertwoarray.length;i++){
          layertwoarray[i].opacity=1; 
@@ -144,7 +144,7 @@ if(zoom>130&&layerthreearray.length!=0){
          }    
 }
 }
-
+canvas.requestRenderAll()
 
 }
 

@@ -66,12 +66,12 @@ var pointerlocation=localStorage.getItem('pointerlocation')
     console.log('layer1',layer1)
 console.log('layer2',layer2)
   // loads layer2 at the locations of the image
-    loadlocationimage(layer2,2)
+    loadlocationimage(layer2,2,layer2.length)
   
   //loads layer1 at the location of the image minus the need to change part
 
   
-    loadlocationimage(layer1,1,layer2)
+    loadlocationimage(layer1,1,layer1.length)
   
 
   //loadimage(scale,scaleamountX,scaleamountY,location,level,img_imgurl,finalimg=false)
@@ -143,17 +143,17 @@ function senddatatoserver(){
     data.append('url',url );
     data.append('height',height );
     data.append('width',width );
-    $.ajax({
-    url: "/update",
-    data: data,
-    processData: false,
-contentType: false,
-    type: "POST",
-   success: function(result) {   
-   console.log('successfully uploaded the image to server!')
-    // window.location.href = "./";
-}
-});
+//     $.ajax({
+//     url: "/update",
+//     data: data,
+//     processData: false,
+// contentType: false,
+//     type: "POST",
+//    success: function(result) {   
+//    console.log('successfully uploaded the image to server!')
+//     // window.location.href = "./";
+// }
+// });
 
 }
 function auto_grow() {
