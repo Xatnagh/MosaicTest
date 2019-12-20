@@ -143,17 +143,17 @@ function senddatatoserver(){
     data.append('url',url );
     data.append('height',height );
     data.append('width',width );
-//     $.ajax({
-//     url: "/update",
-//     data: data,
-//     processData: false,
-// contentType: false,
-//     type: "POST",
-//    success: function(result) {   
-//    console.log('successfully uploaded the image to server!')
-//     // window.location.href = "./";
-// }
-// });
+    $.ajax({
+    url: "/update",
+    data: data,
+    processData: false,
+contentType: false,
+    type: "POST",
+   success: function(result) {   
+   console.log('successfully uploaded the image to server!')
+    // window.location.href = "./";
+}
+});
 
 }
 function auto_grow() {

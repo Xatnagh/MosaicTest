@@ -242,16 +242,16 @@ document.body.appendChild(p)
     data.append('upperlayerlocation',getupperlayeroflocation(location).layer1)
     console.log('layer1location sent:',getupperlayeroflocation(location).layer1)  
     console.log('SUCCESS!')
-   //  $.ajax({
-   //      url: "/update_layers",
-   //      data: data,
-   //      processData: false,
-   //  contentType: false,
-   //      type: "POST",
-   //     success: function(result) {   
-   //      console.log('success for',location,'  layer',layer)
-   //  }
-   //  });
+    $.ajax({
+        url: "/update_layers",
+        data: data,
+        processData: false,
+    contentType: false,
+        type: "POST",
+       success: function(result) {   
+        console.log('success for',location,'  layer',layer)
+    }
+    });
     }); 
  }
  
