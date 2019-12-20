@@ -35,7 +35,7 @@ function sendDataToLoad(img_location,img_imgurl,img_scale,img_scaleX,img_scaleY,
               imageurl= img_imgurl[0]
            }
             if(i==img_location.length-1&&modeUpdatinglayers){
-               loadimage(scale,scaleamountX,scaleamountY,img_location[i],level,imageurl,true);
+               loadimage(scale,scaleamountX,scaleamountY,img_location[i],img_level,imageurl,true);
            }else{
             loadimage(scale,scaleamountX,scaleamountY,img_location[i],img_level,imageurl);
         }      
