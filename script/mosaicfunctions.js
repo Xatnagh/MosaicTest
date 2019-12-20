@@ -42,6 +42,10 @@ function sendDataToLoad(img_location,img_imgurl,img_scale,img_scaleX,img_scaleY,
    }
 }
  function loadimage(scale,scaleamountX,scaleamountY,location,level,img_imgurl,finalimg=false){
+    if(scale>1200){
+       console.log(scale)
+    }
+    
   var tolocation=locationforcanvas(location,scale)
            var locationx=tolocation.x;
            var locationy=tolocation.y;
