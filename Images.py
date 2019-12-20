@@ -50,7 +50,6 @@ def getimagesbylocation(list,level,upperlayerlist):
     img_level=[]
     img_scalewidth=[]
     img_scaleheight=[]
-    imagelist=[]
     imagelist=getImages(list,level)
     print('length of imagelist',len(imagelist), 'for level',level)
     if len(imagelist)!=0:
@@ -66,7 +65,7 @@ def getimagesbylocation(list,level,upperlayerlist):
     return{
         'img_location':img_location,
         'img_imgurl':img_imgurl,
-        'img_level':img_level or [3],
+        'img_level':img_level or [level+1],
         'img_scaleX': img_scalewidth,
         'img_scaleY': img_scaleheight,
         'bool':exist

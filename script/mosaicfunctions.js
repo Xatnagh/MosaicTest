@@ -12,7 +12,7 @@ function sendDataToLoad(img_location,img_imgurl,img_scale,img_scaleX,img_scaleY,
          loadedlayer2_count++
          console.log('loadedlayer2count:',loadedlayer2_count)
       }
-      if(loadedlayer2_count==layer2length){
+      if(loadedlayer2_count==layer2length ||loadedlayer1_count==layer1length){
          checkifallimageisloaded()
       }
       
@@ -101,15 +101,15 @@ function checkifallimageisloaded(){
 }
  var loadedlayer1_count=0;
  var loadedlayer2_count=0;
- var layer1length;
- var layer2length;   
+ var layer1length=1;
+ var layer2length=1;   
  var userimageloaded=false;
 function loadlocationimage(locationlist,layer,layercount,alreadyloaded=[],){//give it a location and a layer and it will load everything in it
    modeUpdatinglayers=true
-   if(layer==1){
-      layer1length=layercount
-   }else{layer2length=layercount
-   }
+   // if(layer==1){
+   //    layer1length=1
+   // }else{layer2length=1
+   // }
    locationlist = locationlist.filter( ( el ) => !alreadyloaded.includes( el ) );
        loadlayer(locationlist,layer,true)
     } 
@@ -241,16 +241,17 @@ document.body.appendChild(p)
     data.append('layer',layer);
     data.append('upperlayerlocation',getupperlayeroflocation(location).layer1)
     console.log('layer1location sent:',getupperlayeroflocation(location).layer1)  
-    $.ajax({
-        url: "/update_layers",
-        data: data,
-        processData: false,
-    contentType: false,
-        type: "POST",
-       success: function(result) {   
-        console.log('success for',location,'  layer',layer)
-    }
-    });
+    console.log('SUCCESS!')
+   //  $.ajax({
+   //      url: "/update_layers",
+   //      data: data,
+   //      processData: false,
+   //  contentType: false,
+   //      type: "POST",
+   //     success: function(result) {   
+   //      console.log('success for',location,'  layer',layer)
+   //  }
+   //  });
     }); 
  }
  
