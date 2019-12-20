@@ -1,5 +1,5 @@
 git add .
 git commit -m "too lazy to type one up"
 git push
-sleep 1
+sleep 2
 echo "xatnagh"
