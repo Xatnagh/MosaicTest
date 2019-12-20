@@ -1,3 +1,4 @@
 git add .
 git commit -m "too lazy to type one up"
 git push
+echo "xatnagh"
