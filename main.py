@@ -77,11 +77,12 @@ class updatelayers(webapp2.RequestHandler):
         imageexist=ImageInfo.query(ImageInfo.location==location,ImageInfo.level==layer).fetch()
         if(layer==2):
             imageurl=putImageIntoDatabase_layer2(image,location)
-            imageexist[0].layer1location=layer1location1
         else:
             imageurl=putImageIntoDatabase_layer1(image,location)
         if imageexist:
             imageexist[0].image_url=imageurl
+            if(layer==1):
+                imageexist[0].layer1location=layer1location1
             imageexist[0].put()
         else:
             ImageInfo(parent=ANCESTORY_KEY,image_url=imageurl,location=location,level=layer,layer1location=layer1location1).put()
