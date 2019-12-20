@@ -29,8 +29,6 @@ function sendDataToLoad(img_location,img_imgurl,img_scale,img_scaleX,img_scaleY,
            }else{
               var scaleamountY=img_scaleY[0];
            }
-             
-           var level=img_level;
            if(img_imgurl.length!=1){
               var imageurl= img_imgurl[i];
            }else{
@@ -39,7 +37,7 @@ function sendDataToLoad(img_location,img_imgurl,img_scale,img_scaleX,img_scaleY,
             if(i==img_location.length-1&&modeUpdatinglayers){
                loadimage(scale,scaleamountX,scaleamountY,img_location[i],level,imageurl,true);
            }else{
-            loadimage(scale,scaleamountX,scaleamountY,img_location[i],level,imageurl);
+            loadimage(scale,scaleamountX,scaleamountY,img_location[i],img_level,imageurl);
         }      
    }
 }

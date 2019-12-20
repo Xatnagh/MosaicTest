@@ -86,6 +86,9 @@ if(level==1){
     } );
     alreadyloaded_level1=alreadyloaded_level1.concat(list)
 }
+if(list.length!=0){
+   loadlayer(list,level)
+}
 loadlayer(list,level)
 }
 function changelayers(){
