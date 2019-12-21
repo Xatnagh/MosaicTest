@@ -39,7 +39,6 @@ width= bottomright-bottomleft+1;
    
     uploading=false
   upperlocationlist=getlayersoflocation(locationlist).layer2
-   console.log('sadsajkhdgsajkihdgsaij',upperlocationlist)
     arraytosend={
         'locationlist':JSON.stringify(locationlist),
         'upperlocationarray':JSON.stringify(upperlocationlist),
