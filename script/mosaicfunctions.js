@@ -243,16 +243,16 @@ document.body.appendChild(p)
     console.log('location for layer2', location)
     data.append('upperlayerlocation',getlayer1fromlayer2(location))
     console.log('layer1location sent:',getlayer1fromlayer2(location))  
-//     $.ajax({
-//         url: "/update_layers",
-//         data: data,
-//         processData: false,
-//     contentType: false,
-//         type: "POST",
-//        success: function(result) {   
-//         console.log('success for',location,'  layer',layer)
-//     }
-//     });
+    $.ajax({
+        url: "/update_layers",
+        data: data,
+        processData: false,
+    contentType: false,
+        type: "POST",
+       success: function(result) {   
+        console.log('success for',location,'  layer',layer)
+    }
+    });
     }); 
  }
  
