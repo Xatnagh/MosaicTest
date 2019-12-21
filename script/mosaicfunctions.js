@@ -5,14 +5,14 @@ var modeUpdatinglayers=false;
 function sendDataToLoad(img_location,img_imgurl,img_scale,img_scaleX,img_scaleY,img_level){
    if(modeUpdatinglayers&&img_level){
       if(img_location.length==0&&img_level==2){
-      loadedlayer1_count++
-      console.log('loadedlayer1count:',loadedlayer1_count)
+      loadedll1_count++
+      console.log('loadedll1count:',loadedll1_count)
       }
       if(img_location.length==0&&img_level==3){
          loadedlayer2_count++
          console.log('loadedlayer2count:',loadedlayer2_count)
       }
-      if(loadedlayer2_count==layer2length ||loadedlayer1_count==layer1length){
+      if(loadedlayer2_count==layer2length ||loadedll1_count==ll1length){
          checkifallimageisloaded()
       }
       
@@ -76,9 +76,9 @@ function sendDataToLoad(img_location,img_imgurl,img_scale,img_scaleX,img_scaleY,
             }
           }
           if(level==2){
-            loadedlayer1_count++
-            console.log('loadedlayer1:',loadedlayer1_count)
-            if(loadedlayer1_count==layer1length){
+            loadedll1_count++
+            console.log('loadedll1:',loadedll1_count)
+            if(loadedll1_count==ll1length){
                checkifallimageisloaded()
             }
           }
@@ -96,20 +96,20 @@ function sendDataToLoad(img_location,img_imgurl,img_scale,img_scaleX,img_scaleY,
 
 function checkifallimageisloaded(){
    console.log('checkifallimageisloaded')
-      if(loadedlayer1_count==layer1length&&loadedlayer2_count==layer2length){
+      if(loadedll1_count==ll1length&&loadedlayer2_count==layer2length){
          var displayimage=localStorage.getItem('image');
          loadimage(1200,width,height,pointerlocation,4,displayimage,true);
       }
 }
- var loadedlayer1_count=0;
+ var loadedll1_count=0;
  var loadedlayer2_count=0;
- var layer1length=1;
+ var ll1length=1;
  var layer2length=1;   
  var userimageloaded=false;
 function loadlocationimage(locationlist,layer,layercount,alreadyloaded=[],){//give it a location and a layer and it will load everything in it
    modeUpdatinglayers=true
    // if(layer==1){
-   //    layer1length=1
+   //    ll1length=1
    // }else{layer2length=1
    // }
    locationlist = locationlist.filter( ( el ) => !alreadyloaded.includes( el ) );
@@ -172,7 +172,7 @@ function locationforcanvas(location,scaleamountX){
         arrayofcurrentlayer=arrayofcurrentlayer.filter(function(item){
            return alreadyloaded.indexOf( item ) < 0;
         });
-        console.log('location array for layer1',arrayofcurrentlayer)
+        console.log('location array for ll1',arrayofcurrentlayer)
         return arrayofcurrentlayer
      }
      }
@@ -219,15 +219,14 @@ function locationforcanvas(location,scaleamountX){
 canvas.requestRenderAll() 
 }
 
-function canvastoblob(location,layer){
+function canvastoblob(location,layer){//this location is from layer 2 or 1
     var canvas = document.getElementById('c');
  
     canvas.toBlob(function(blob) {
-     var newImg = document.createElement('img'),
-      url = URL.createObjectURL(blob);
-
+       ///makes image appear below the page
+   var newImg = document.createElement('img'),
+   url = URL.createObjectURL(blob);
   newImg.onload = function() {
-    // no longer need to read the blob so it's revoked
     URL.revokeObjectURL(url);
   };
   newImg.src = url;
@@ -235,31 +234,30 @@ function canvastoblob(location,layer){
   p.innerHTML=location,layer; 
 document.body.appendChild(p)
   document.body.appendChild(newImg);
-
+///
 
       var data= new FormData();
     data.append('image',blob );
     data.append('location',location );
     data.append('layer',layer);
-    data.append('upperlayerlocation',getupperlayeroflocation(location).layer1)
-    console.log('layer1location sent:',getupperlayeroflocation(location).layer1)  
-    console.log('SUCCESS!')
-    $.ajax({
-        url: "/update_layers",
-        data: data,
-        processData: false,
-    contentType: false,
-        type: "POST",
-       success: function(result) {   
-        console.log('success for',location,'  layer',layer)
-    }
-    });
+    console.log('location for ll2', location)
+    data.append('upperlayerlocation',getll1fromlayer2(location))
+    console.log('ll1location sent:',getll1fromlayer2(location))  
+//     $.ajax({
+//         url: "/update_layers",
+//         data: data,
+//         processData: false,
+//     contentType: false,
+//         type: "POST",
+//        success: function(result) {   
+//         console.log('success for',location,'  layer',layer)
+//     }
+//     });
     }); 
  }
  
 function blobfromlocation(location,level){
-    console.log('location',location)
-    var scale
+    var scale;
     if(level==2){
        scale=80
     }else{scale=16}
@@ -278,43 +276,50 @@ function blobfromlocation(location,level){
 //give it a locationlist from layer 3 and it will spit out the upper layers
 function getlayersoflocation(locationlist){
    var x,y,location;
-   var layer1=[];
-   var layer2=[];
+   var ll1=[];
+   var ll2=[];
 for( var i=0;i<locationlist.length;i++){//100%works
  x=Math.floor(locationlist[i]/15.000001)%80+1
  y=Math.floor(locationlist[i]/15.000001/1200)
 location=x+y*80
-layer2.push(location)
+ll2.push(location)
 }
-layer2=[...new Set(layer2)]
+ll2=[...new Set(ll2)]
 for( var i=0;i<locationlist.length;i++){//100%works
-   x=Math.floor(layer2[i]/5.000001)%16+1
-   y=Math.floor(layer2[i]/5.000001/80)
+   x=Math.floor(ll2[i]/5.000001)%16+1
+   y=Math.floor(ll2[i]/5.000001/80)
  location=x+y*16
- layer1.push(location)
+ ll1.push(location)
  }
- layer1=[...new Set(layer1)]
- layer1.pop()
+ ll1=[...new Set(ll1)]
+ ll1.pop()
 return{
-   'layer2':layer2,
-   'layer1':layer1
+   'll2':ll2,
+   'll1':ll1
 }
 }
 //give it an image form layer 3 and it will spit back the upper layer
+console.log(getupperlayeroflocation(92452))
 function getupperlayeroflocation(location){//works 100%
    var x,y,location;
-   var layer1;
-   var layer2;
+   var ll1;
+   var ll2;
  x=Math.floor(location/15.000001)%80+1
  y=Math.floor(location/15.000001/1200)
-layer2=x+y*80
-   x=Math.floor(layer2/5.000001)%16+1
-   y=Math.floor(layer2/5.000001/80)
- layer1=x+y*16
+ll2=x+y*80
+   x=Math.floor(ll2/5.000001)%16+1
+   y=Math.floor(ll2/5.0/80)
+ ll1=x+y*16
 return{
-   'layer2':layer2,
-   'layer1':layer1
+   'll2':ll2,
+   'll1':ll1
 }
+}
+function getll1fromlayer2(layer2location){
+   x=Math.floor(layer2location/5.000001)%16+1
+   y=Math.floor(layer2location/5.0/80)
+ ll1=x+y*16
+ return ll1
 }
 function CenterCoord(){
    return{

@@ -81,7 +81,7 @@ class updatelayers(webapp2.RequestHandler):
             imageurl=putImageIntoDatabase_layer1(image,location)
         if imageexist:
             imageexist[0].image_url=imageurl
-            if(layer==1):
+            if(layer==2):
                 imageexist[0].layer1location=layer1location1
             imageexist[0].put()
         else:
