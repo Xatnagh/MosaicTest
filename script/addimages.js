@@ -144,7 +144,7 @@ function exitupload(){
     removeselected()
     $('#confirm').toggle()
     $('#exitupload').toggle()
-    $('#uploadbtn').toggle()
+    $('#uploadbtn').show()
 }
 
 $('#confirmbtn').click(function(){

@@ -27,6 +27,7 @@ def alreadyexist(locationlist,upperlayerlist):
             location=j.location
             if location in locationlist:
                 load=True
+                return load
     return load   
 def loadtest():
     for i in range(1):
@@ -104,11 +105,5 @@ def getlocationlist(bottomleft,height,width):
     for i in range(0,height):
         for j in range(bottomleft,bottomleft+width):
             locationlist.append(j+i*1200)
-    print(locationlist)
     return locationlist
     
-    # for(var i=0;i<height;i++){
-    #     for(var j=bottomleft;j<=bottomright;j++){
-    #     locationlist.push(j+i*1200)
-    #     }
-    # }

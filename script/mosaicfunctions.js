@@ -42,10 +42,6 @@ function sendDataToLoad(img_location,img_imgurl,img_scale,img_scaleX,img_scaleY,
    }
 }
  function loadimage(scale,scaleamountX,scaleamountY,location,level,img_imgurl,finalimg=false){
-    if(scale>1200){
-       console.log(scale)
-    }
-    
   var tolocation=locationforcanvas(location,scale)
            var locationx=tolocation.x;
            var locationy=tolocation.y;
@@ -172,7 +168,6 @@ function locationforcanvas(location,scaleamountX){
         arrayofcurrentlayer=arrayofcurrentlayer.filter(function(item){
            return alreadyloaded.indexOf( item ) < 0;
         });
-        console.log('location array for layer1',arrayofcurrentlayer)
         return arrayofcurrentlayer
      }
      }
@@ -238,9 +233,9 @@ document.body.appendChild(p)
     data.append('image',blob );
     data.append('location',location );
     data.append('layer',layer);
-    console.log('location for layer2', location)
+
     data.append('upperlayerlocation',getlayer1fromlayer2(location))
-    console.log('layer1location sent:',getlayer1fromlayer2(location))  
+ 
     $.ajax({
         url: "/update_layers",
         data: data,
