@@ -199,7 +199,6 @@ function locationforcanvas(location,scaleamountX){
            arraytosend:JSON.stringify(location),
            level:layer
            }
-           console.log(data)
            $.ajax({
             url: "/update",
             data: data,
@@ -208,7 +207,6 @@ function locationforcanvas(location,scaleamountX){
               var received=JSON.parse(integer)
               scale=getscale(received['img_level'][0])
               sendDataToLoad(received['img_location'],received['img_imgurl'],scale,received['img_scaleX'],received['img_scaleY'],received['img_level'][0],uploading);
-                 console.log(received)
                },
         });
            }
@@ -299,7 +297,6 @@ return{
 }
 }
 //give it an image form layer 3 and it will spit back the upper layer
-console.log(getupperlayeroflocation(92452))
 function getupperlayeroflocation(location){//works 100%
    var x,y,location;
    var layer1;

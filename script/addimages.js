@@ -40,7 +40,9 @@ width= bottomright-bottomleft+1;
     uploading=false
   upperlocationlist=getlayersoflocation(locationlist).layer2
     arraytosend={
-        'locationlist':JSON.stringify(locationlist),
+        'bottomleft':bottomleft,
+        'width':width,
+        'height':height,
         'upperlocationarray':JSON.stringify(upperlocationlist),
         'level':3,
     }
@@ -102,7 +104,6 @@ function confirmupload(){//confirm after user had uploaded
         localStorage.setItem('layer1',JSON.stringify(layer1))
         localStorage.setItem('layer2',JSON.stringify(layer2))
         localStorage.setItem('image', image);
-        localStorage.setItem('location',JSON.stringify(locationlist))
         localStorage.setItem('pointerlocation',bottomleft)
         localStorage.setItem('width',width)
         localStorage.setItem('height',height)

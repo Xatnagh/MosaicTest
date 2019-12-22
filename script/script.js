@@ -48,7 +48,6 @@ var zoom=canvas.getZoom();
 function nearbylocations(location,level){
    
    level-=1;
-   console.log(level)
    var unitsinY,maxindex;
    var list=[]
 if(level==2){

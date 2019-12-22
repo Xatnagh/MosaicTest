@@ -43,8 +43,8 @@ def clearlevel2():
         i.key.delete()
     defaultdatas()
     
-def putDataintodatabase(pointerlocation,locationlist,image,descriptionsendin,urlsentin,width,height):
-        pointerlocation1=int(pointerlocation)
+def putDataintodatabase(pointerlocation1,locationlist,image,descriptionsendin,urlsentin,width,height):
+
         if len(locationlist)>1:
             layer2spot=int(getupperlayeroflocation(pointerlocation1))
             ImageInfo(parent=ANCESTORY_KEY,image_url=image,location=pointerlocation1,level=3,pointer=False,pointerlist=locationlist,scalewidth=width,scaleheight=height,layer2location=layer2spot).put()
@@ -59,7 +59,7 @@ cloudstorage.set_default_retry_params(
         ))
 def upload_file(image,pointerlocation):
     bucket_name ='fortest099.appspot.com'
-            
+    pointerlocation=str(pointerlocation)        
     bucket = '/' + bucket_name
     filename = bucket + '/'+pointerlocation
     write_retry_params = cloudstorage.RetryParams(backoff_factor=1.1)
@@ -99,4 +99,16 @@ def getupperlayeroflocation(location):
     layer2=x+y*80
     return layer2
    
-
+def getlocationlist(bottomleft,height,width):
+    locationlist=[]
+    for i in range(0,height):
+        for j in range(bottomleft,bottomleft+width):
+            locationlist.append(j+i*1200)
+    print(locationlist)
+    return locationlist
+    
+    # for(var i=0;i<height;i++){
+    #     for(var j=bottomleft;j<=bottomright;j++){
+    #     locationlist.push(j+i*1200)
+    #     }
+    # }

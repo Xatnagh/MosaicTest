@@ -128,7 +128,6 @@ const b64toBlob = (b64Data, contentType='', sliceSize=512) => {
   ///
 function senddatatoserver(){
   get_layer_blobs_step1()
-    var locationlist=localStorage.getItem('location')
     var description=document.getElementById('description').value
     var url= document.getElementById('url_textbox').value
     if(url.substring(0,3)!='http'){
@@ -137,7 +136,6 @@ function senddatatoserver(){
     var data= new FormData();
     data.append('image',imageblob );
     data.append('pointerlocation',pointerlocation);
-    data.append('locationlist',locationlist );
     data.append('description',description);
     data.append('url',url );
     data.append('height',height );

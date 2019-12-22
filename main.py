@@ -5,7 +5,7 @@ import urllib2
 import random
 import jinja2
 import re
-from database import defaultdatas, alreadyexist, loadtest,clearlevel2,putDataintodatabase,upload_file,putImageIntoDatabase_layer1,putImageIntoDatabase_layer2,getupperlayeroflocation
+from database import defaultdatas, alreadyexist, loadtest,clearlevel2,putDataintodatabase,upload_file,putImageIntoDatabase_layer1,putImageIntoDatabase_layer2,getupperlayeroflocation,getlocationlist
 from Images import ImageInfo,ANCESTORY_KEY,getImageInfo,getimagesbylocation,getImages
 
 the_jinja_env = jinja2.Environment(loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
@@ -13,11 +13,7 @@ extensions=['jinja2.ext.autoescape'],autoescape=True)
 
 class Home(webapp2.RequestHandler):
     def get(self): 
-        # lol=[81,82,1,2]
-        # level=2
-        # a=getImages(lol,level)
         self.response.headers['Access-Control-Allow-Origin'] = '*'
-        # self.response.headers.add_header('Access-Control-Allow-Headers', 'Content-Type')
         homepage = the_jinja_env.get_template('/template/mosaic.html')  
         self.response.write(homepage.render({"data":getLayer1()}))
         
@@ -35,34 +31,35 @@ class loadImages(webapp2.RequestHandler):
         self.response.write(homepage.render({"data":getLayer1()}))
 
 class update(webapp2.RequestHandler):
-    def get(self):
+    def get(self):#this is for loading nearby images
         locationlist=self.request.GET.get('arraytosend')
         parsedlist= json.loads(locationlist)
         level=int(self.request.GET.get('level'))
         imagebylocation=getimagesbylocation(parsedlist,level,[])
         self.response.write(json.dumps(imagebylocation))
 
+    #this is for the layer 3 images
     def post(self):
-        pointerlocation=self.request.POST.get('pointerlocation')
-        locationlist=self.request.POST.get('locationlist')
-        locationlist=json.loads(locationlist)
+        pointerlocation=int(self.request.POST.get('pointerlocation'))
         image=str(self.request.get('image'))
         description=self.request.POST.get('description')
         url=self.request.POST.get('url')
         height=int(self.request.POST.get('height'))
         width=int(self.request.POST.get('width'))
+        locationlist=getlocationlist(pointerlocation,height,width)
         if len(image)>500:
             imageurl= upload_file(image,pointerlocation) 
         else:
            imageurl=image
-        
         putDataintodatabase(pointerlocation,locationlist,imageurl,description,url,width,height)
         self.response.write("success")
         
 class updatelayers(webapp2.RequestHandler):
     def get(self): #this is used only for when user selects the two boxes on image upload
-        locationlist=self.request.GET.get('locationlist')
-        locationlist= json.loads(locationlist)
+        bottomleft=int(self.request.get('bottomleft'))
+        height=int(self.request.get('height'))
+        width=int(self.request.get('width'))
+        locationlist=getlocationlist(bottomleft,height,width)
         upperlayerlist=self.request.GET.get('upperlocationarray')
         upperlayerlist= json.loads(upperlayerlist)
         imagebylocation=getimagesbylocation(locationlist,2,upperlayerlist)
