@@ -7,6 +7,9 @@
     <title>Add Image</title>
     <script src="/script/jquery-3.4.1.min.js"></script>
     <script src="/script/fabric_with_touch.js"></script>
+    <script src="/script/linkify.min.js"></script>
+    <script src="/script/linkify-jquery.min.js"></script>
+      <script src="/script/dropzone.js"></script>
     <link rel="stylesheet" href="/css/addImage.css">
     <link rel="stylesheet" href="/css/headers.css">
     
@@ -20,7 +23,7 @@
        <img id ='pop_image' src="" alt="">
        <button class='pop_close'>Close </button>
        <p id='headers'>Description: </p> 
-       <textarea id='pop_description'  placeholder="(looks like you didn't enter a description!)" readonly></textarea>
+       <text id='pop_description'  placeholder="(looks like you didn't enter a description!)" style="white-space: pre-wrap;"></text>
        <br><p id='headers'>Link:   </p> <a id= 'pop_url'href="google.com">Url goes here</a> <br>
        <button class='pop_close'>Close</button>
        </div>
@@ -153,11 +156,6 @@ contentType: false,
 });
 
 }
-function auto_grow() {
-    element=document.getElementById('pop_description')
-    element.style.height = "5px";
-    element.style.height =$('#description')[0].scrollHeight+"px";
-}
 $('.pop_close').click(function(){
 $('#overlay').css({'display':'none'});
 });
@@ -172,7 +170,7 @@ $('#previewbtn').click(function(){
             url=`https://${url}`
         }
           document.getElementById('pop_description').innerHTML=description;
-          auto_grow()
+          $("#pop_description").linkify();
           document.getElementById('pop_url').innerHTML=`${url}`;
           document.getElementById('pop_url').href=url;
           $('#overlay').css({'display':'block'});        

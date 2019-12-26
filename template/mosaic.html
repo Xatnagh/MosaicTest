@@ -4,6 +4,9 @@
         <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1">
     <script src="/script/jquery-3.4.1.min.js"></script>
     <script src="/script/fabric_with_touch.js"></script>
+    <script src="/script/linkify.min.js"></script>
+    <script src="/script/linkify-jquery.min.js"></script>
+    
       <script src="/script/dropzone.js"></script>
       <link rel="stylesheet" href="/css/home.css">
       <link rel="stylesheet" href="/css/headers.css">
@@ -38,7 +41,7 @@
    <img id ='pop_image' src="" alt="">
    <button class='pop_close'>Close </button>
    <p id='headers'>Description: </p> 
-   <textarea id='pop_description'  placeholder="This user didn't include a description" readonly></textarea>
+   <text id='pop_description'  placeholder="This user didn't include a description" style="white-space: pre-wrap;" ></text>
    <br><p id='headers'>Link:   </p> <a id= 'pop_url'href="google.com">Url goes here</a> <br>
    <button class='pop_close'>Close</button>
    </div>

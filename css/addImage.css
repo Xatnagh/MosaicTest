@@ -93,6 +93,7 @@ h3{
       height: 250px;
       margin-left:5px;
       max-width: 90%;
+      font: 16px;
   }
   #url_textbox{
     cursor: auto;
