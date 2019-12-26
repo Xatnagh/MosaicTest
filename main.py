@@ -43,7 +43,6 @@ class update(webapp2.RequestHandler):
         pointerlocation=int(self.request.POST.get('pointerlocation'))
         image=str(self.request.get('image'))
         description=self.request.POST.get('description')
-        url=self.request.POST.get('url')
         height=int(self.request.POST.get('height'))
         width=int(self.request.POST.get('width'))
         locationlist=getlocationlist(pointerlocation,height,width)
@@ -51,7 +50,7 @@ class update(webapp2.RequestHandler):
             imageurl= upload_file(image,pointerlocation) 
         else:
            imageurl=image
-        putDataintodatabase(pointerlocation,locationlist,imageurl,description,url,width,height)
+        putDataintodatabase(pointerlocation,locationlist,imageurl,description,width,height)
         self.response.write("success")
         
 class updatelayers(webapp2.RequestHandler):
@@ -110,7 +109,6 @@ class getImageIinfo(webapp2.RequestHandler):
         data={
             'image_imgUrl':image[0].image_url,
             'image_description':image[0].description,
-            'image_url':image[0].url,
             'location':location
         }
         self.response.headers['Access-Control-Allow-Origin'] = '*'

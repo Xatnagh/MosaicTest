@@ -12,7 +12,7 @@ def defaultdatas():
                 ImageInfo(parent=ANCESTORY_KEY,location=i,level=1,image_url='images/placeholder.jpg').put()          
         b=ImageInfo.query(ImageInfo.level==3).fetch(1) 
         if not b:
-            ImageInfo(parent=ANCESTORY_KEY,location=1,level=3,pointer=False,pointerlist=[1,2,1201,1202],image_url='/images/test.jpg',scalewidth=2,scaleheight=2,description='this is a test image',url='https://www.reddit.com/r/dankmemes/',layer2location=1).put()
+            ImageInfo(parent=ANCESTORY_KEY,location=1,level=3,pointer=False,pointerlist=[1,2,1201,1202],image_url='/images/test.jpg',scalewidth=2,scaleheight=2,description='this is a test image',layer2location=1).put()
             ImageInfo(parent=ANCESTORY_KEY,location=2,level=3,pointer=True,pointerlocation=1,layer2location=1).put()
             ImageInfo(parent=ANCESTORY_KEY,location=1201,level=3,pointer=True,pointerlocation=1,layer2location=1).put()
             ImageInfo(parent=ANCESTORY_KEY,location=1202,level=3,pointer=True,pointerlocation=1,layer2location=1).put()
@@ -44,7 +44,7 @@ def clearlevel2():
         i.key.delete()
     defaultdatas()
     
-def putDataintodatabase(pointerlocation1,locationlist,image,descriptionsendin,urlsentin,width,height):
+def putDataintodatabase(pointerlocation1,locationlist,image,descriptionsendin,width,height):
 
         if len(locationlist)>1:
             layer2spot=int(getupperlayeroflocation(pointerlocation1))

@@ -393,9 +393,8 @@ canvas.on('mouse:dblclick',function(e){
                recieved=JSON.parse(recieved);
                location=recieved['location'];
                imgUrl=recieved['image_imgUrl'];
-               url=recieved['image_url'];
                description=recieved['image_description'];
-               imageInfoPage(imgUrl,url,description)
+               imageInfoPage(imgUrl,description)
             }
          })
    }else{
@@ -420,12 +419,11 @@ canvas.on('mouse:dblclick',function(e){
       }
    }
 });
-function imageInfoPage(imgUrl,url,description){
+function imageInfoPage(imgUrl,description){
   document.getElementById('pop_image').src=`${imgUrl}`;
   document.getElementById('pop_description').innerHTML=`${description}`;
   $("#pop_description").linkify();
-  document.getElementById('pop_url').innerHTML=`${url}`;
-  document.getElementById('pop_url').href=`${url}`;
+
   $('#overlay').css({'display':'block'});
 }
 

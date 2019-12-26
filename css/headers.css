@@ -104,10 +104,6 @@ body{
       height:50px;
       cursor: pointer;
     }
-  #pop_url{
-    color: white;
-      font-size: 16;
-  }
     .pop_close:hover{
       background-color: blanchedalmond;
     }
@@ -125,7 +121,7 @@ body{
     }
     text a:visited { text-decoration: none; color:lightblue;  }
 
-    
+
   .dropdown-content a:hover {background-color: #ddd;}
   .dropdown:hover .dropbtn {background-color: #3e8e41;}
   

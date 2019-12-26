@@ -7,7 +7,6 @@ class ImageInfo(ndb.Model):
     location=ndb.IntegerProperty(required=True)
     level=ndb.IntegerProperty(required=True)
     image_url= ndb.StringProperty(required=False) #for url
-    url= ndb.StringProperty(required=False)#websites users link to
     description=ndb.TextProperty(required=False)
     scalewidth= ndb.IntegerProperty(required=False,default=1)
     scaleheight= ndb.IntegerProperty(required=False,default=1)
@@ -84,7 +83,7 @@ def getImageInfo(location):
             image=ImageInfo.query(ImageInfo.location==imageExist[0].pointerlocation,ImageInfo.level==3).fetch()
             return image
     else:
-        placeholderImage=[ImageInfo( description=u'Upload your own today!', image_url=u'/images/uploadYourOwn.jpg', location=location, url=u'https://www.reddit.com/r/dankmemes/')]
+        placeholderImage=[ImageInfo( description=u'Upload your own today!', image_url=u'/images/uploadYourOwn.jpg', location=location)]
         return placeholderImage
     
   

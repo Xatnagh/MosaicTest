@@ -95,14 +95,6 @@ h3{
       max-width: 90%;
       font: 16px;
   }
-  #url_textbox{
-    cursor: auto;
-    width: 400px;
-    height: 30px;
-    background-color: white;
-    margin-left:5px;
-    max-width: 90%;
-  }
   #submit{
       width: 90px;
       height: 20px;

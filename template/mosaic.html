@@ -42,7 +42,6 @@
    <button class='pop_close'>Close </button>
    <p id='headers'>Description: </p> 
    <text id='pop_description'  placeholder="This user didn't include a description" style="white-space: pre-wrap;" ></text>
-   <br><p id='headers'>Link:   </p> <a id= 'pop_url'href="google.com">Url goes here</a> <br>
    <button class='pop_close'>Close</button>
    </div>
  </section>
@@ -79,7 +78,6 @@
     var readystate=false;
      var readystate_layer1=false;
 var jdata_location=[];
-var jdata_url=[];
 var jdata_imageurl=[];
 var jdata_level;
 </script>
@@ -87,7 +85,6 @@ var jdata_level;
             {% for entry in data %}
             <script>    
             jdata_location.push("{{entry.location}}");
-            jdata_url.push("{{entry.url}}");
             jdata_imageurl.push("{{entry.image_url}}");
             jdata_level='{{entry.level}}' 
          </script>              
