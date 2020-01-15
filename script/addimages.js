@@ -4,9 +4,7 @@ var height,width;
 function makelist(l1,l2){
 if(l1<1||l2<1||l1>1440000||l2>1440000){
     alert("one of the squares you selected is outside of the mosaic, please choose your locations again")
-    location1=null
-    location2=null
-    uploading=true;
+    removeselected();
     return;
 }
 var topcorner= Math.max(l1,l2);
@@ -140,6 +138,7 @@ function cancelimageselection(){
 
 }
 function exitupload(){
+    uploading=false;
     cancelimageselection()
     removeselected()
     $('#confirm').toggle()

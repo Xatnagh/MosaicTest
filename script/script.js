@@ -14,7 +14,52 @@ var alreadyloaded_level2=[]
 var one=[1]
 
 var canvas = new fabric.Canvas('c');
+addbordertocanvas()
+function addbordertocanvas(){
+   canvas.add(new fabric.Line([0, 0, canvas.width+2, 0], {
+   left: -1,
+   top: -1,
+   stroke: 'black',
+   selection:false,
+   hasBorders: false,
+   hasControls: false,
+   hasRotatingPoint: false,
+   selectable:false
+}));
+canvas.add(new fabric.Line([0, 0, canvas.width+2, 0], {
+   left: -1,
+   top: canvas.height,
+   stroke: 'black',
+   selection:false,
+   hasBorders: false,
+   hasControls: false,
+   hasRotatingPoint: false,
+   selectable:false
+}));
+canvas.add(new fabric.Line([0, canvas.height+2, 0, 0], {
+   left: -1,
+   top: -1,
+   stroke: 'black',
+   selection:false,
+   hasBorders: false,
+   hasControls: false,
+   hasRotatingPoint: false,
+   selectable:false
+}));
 
+canvas.add(new fabric.Line([0, canvas.height+2, 0, 0], {
+   left: canvas.width,
+   top: -1,
+   stroke: 'black',
+   selection:false,
+   hasBorders: false,
+   hasControls: false,
+   hasRotatingPoint: false,
+   selectable:false
+}));
+
+
+}
 
 
 var zoom=canvas.getZoom();
@@ -126,28 +171,35 @@ canvas.requestRenderAll()
 
 
 function getCurrentCordinates(posX,posY,level){
+   var location;
+   if(posY<0){return -1;}//this is here so that location won't become positive if both posX is positive and pos Y is negative
  if(level==1){
     widthPerImage=75*perpixelX
     heightPerImage=75*perpixelY
    x=Math.floor((posX/widthPerImage)%16)+1;//x is fine
    y=Math.floor(posY/heightPerImage);
    
-   return y*16+x;
+   location= y*16+x;
  }
  if(level==2){
    widthPerImage=15*perpixelX
    heightPerImage=15*perpixelY
   x=Math.floor((posX/widthPerImage)%80)+1;//x is fine
   y=Math.floor(posY/heightPerImage);
-  return y*80+x;
+  location= y*80+x;
 }
    if(level==3){
    widthPerImage=perpixelX
    heightPerImage=perpixelY
   x=Math.floor((posX/widthPerImage)%1200)+1;//x is fine
   y=Math.floor(posY/heightPerImage);
-  return y*1200+x;
+  location= y*1200+x;
    }
+   if(posX<0||posX>canvas.width){
+      location=-location;
+   }
+
+   return location
 }
 
 
@@ -219,8 +271,7 @@ canvas.on({
          changelayers();
          }
    } });
-        
-    
+      
 
 var panning = false;
 canvas.on('mouse:down', function() {
@@ -258,40 +309,41 @@ posX = pointer.x;
 posY = pointer.y;
 
 }
-///gets mouse cordinates
 
 });
 }
+var isfirefox=(navigator.userAgent.indexOf("Firefox") > 0)
 function zoomcanvasbutton(zommingin){
 var centerX=CenterCoord().x
 var centerY= CenterCoord().y
 var delta=53;
-if(navigator.userAgent.indexOf("Firefox") > 0) {
-}
-if(zommingin=='false'){
- delta=-1*delta
-}
+   if(firefox) {
+      delta=delta/4
+   }
+   if(zommingin=='false'){
+   delta=-1*delta
+   }
 
-zoom = canvas.getZoom();
-zoom = zoom + (delta/200)*(2+(1.025*zoom));
+   zoom = canvas.getZoom();
+   zoom = zoom + (delta/200)*(2+(1.025*zoom));
 
-//this limits zoom
-if (zoom > 1000){ 
-zoom = 1000;}
-if (zoom < .7){
-zoom = 0.9;}
-//
-canvas.zoomToPoint({ x: centerX, y: centerY}, zoom);
+   //this limits zoom
+   if (zoom > 1000){ 
+   zoom = 1000;}
+   if (zoom < .7){
+   zoom = 0.9;}
+   //
+   canvas.zoomToPoint({ x: centerX, y: centerY}, zoom);
 
-// document.getElementById('zoomlevel').innerHTML="zoom "+ zoom;
-if(zoom.between(15,23)){
-   
-   nearbylocations(getCurrentCordinates(CenterCoord().x,CenterCoord().y,1),2);
-}
-if(zoom.between(128,180)){
-   
-   nearbylocations(getCurrentCordinates(CenterCoord().x,CenterCoord().y,2),3)
-}
+   // document.getElementById('zoomlevel').innerHTML="zoom "+ zoom;
+   if(zoom.between(15,23)){
+      
+      nearbylocations(getCurrentCordinates(CenterCoord().x,CenterCoord().y,1),2);
+   }
+   if(zoom.between(128,180)){
+      
+      nearbylocations(getCurrentCordinates(CenterCoord().x,CenterCoord().y,2),3)
+   }
 changelayers();
 }
 
@@ -379,8 +431,10 @@ canvas.on('mouse:dblclick',function(e){
    let touch = e.e.touches ? e.e.touches[0] : e.e;
    posX=canvas.getPointer(touch).x
    posY=canvas.getPointer(touch).y
+   var location=getCurrentCordinates(posX,posY,3)
   if(uploading==false){ 
-         var location=getCurrentCordinates(posX,posY,3)
+      if(location>0&&location<1440001){
+      
          console.log('show info for',location)
          data={
             location:location
@@ -397,6 +451,7 @@ canvas.on('mouse:dblclick',function(e){
                imageInfoPage(imgUrl,description)
             }
          })
+      }    
    }else{
       if(count==1){ 
          var location2=getCurrentCordinates(posX,posY,3)
