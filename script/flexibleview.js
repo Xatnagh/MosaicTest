@@ -6,7 +6,7 @@ loadheader()
 
 function homebtn(){
   if (window.location.href.split('/').pop() === ""||Number(window.location.href.split('#').pop())>0) { 
-    sendDataToLoad(jdata_location,jdata_imageurl,16,one,one,jdata_level);
+    
       return '<a onclick="modeUPLOAD();"id= uploadbtn>Upload</a>'
 }
   else{

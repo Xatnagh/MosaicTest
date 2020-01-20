@@ -13,50 +13,67 @@ var alreadyloaded_level2=[]
 
 var one=[1]
 
-var canvas = new fabric.Canvas('c');
+var canvas = new fabric.Canvas('c',{backgroundColor: '#BEFEE2'});
+   sendDataToLoad(jdata_location,jdata_imageurl,16,one,one,jdata_level);
+var canvasheight=canvas.height;
+var canvaswidth=canvas.width;
 addbordertocanvas()
 function addbordertocanvas(){
-   canvas.add(new fabric.Line([0, 0, canvas.width+2, 0], {
-   left: -1,
-   top: -1,
-   stroke: 'black',
-   selection:false,
+   canvas.add(new fabric.Rect({ 
+      width: canvaswidth, 
+      height: canvasheight, 
+      left: 0, 
+      top: 0, 
+      fill: '#FFFF',
+      selection:false,
    hasBorders: false,
    hasControls: false,
    hasRotatingPoint: false,
    selectable:false
-}));
-canvas.add(new fabric.Line([0, 0, canvas.width+2, 0], {
-   left: -1,
-   top: canvas.height,
-   stroke: 'black',
-   selection:false,
-   hasBorders: false,
-   hasControls: false,
-   hasRotatingPoint: false,
-   selectable:false
-}));
-canvas.add(new fabric.Line([0, canvas.height+2, 0, 0], {
-   left: -1,
-   top: -1,
-   stroke: 'black',
-   selection:false,
-   hasBorders: false,
-   hasControls: false,
-   hasRotatingPoint: false,
-   selectable:false
-}));
+  }));
 
-canvas.add(new fabric.Line([0, canvas.height+2, 0, 0], {
-   left: canvas.width,
-   top: -1,
-   stroke: 'black',
-   selection:false,
-   hasBorders: false,
-   hasControls: false,
-   hasRotatingPoint: false,
-   selectable:false
-}));
+
+//    canvas.add(new fabric.Line([0, 0, canvaswidth+2, 0], {
+//    left: -1,
+//    top: -1,
+//    stroke: 'black',
+//    selection:false,
+//    hasBorders: false,
+//    hasControls: false,
+//    hasRotatingPoint: false,
+//    selectable:false
+// }));
+// canvas.add(new fabric.Line([0, 0, canvaswidth+2, 0], {
+//    left: -1,
+//    top: canvasheight,
+//    stroke: 'black',
+//    selection:false,
+//    hasBorders: false,
+//    hasControls: false,
+//    hasRotatingPoint: false,
+//    selectable:false
+// }));
+// canvas.add(new fabric.Line([0, canvasheight+2, 0, 0], {
+//    left: -1,
+//    top: -1,
+//    stroke: 'black',
+//    selection:false,
+//    hasBorders: false,
+//    hasControls: false,
+//    hasRotatingPoint: false,
+//    selectable:false
+// }));
+
+// canvas.add(new fabric.Line([0, canvasheight+2, 0, 0], {
+//    left: canvaswidth,
+//    top: -1,
+//    stroke: 'black',
+//    selection:false,
+//    hasBorders: false,
+//    hasControls: false,
+//    hasRotatingPoint: false,
+//    selectable:false
+// }));
 
 
 }
@@ -195,7 +212,7 @@ function getCurrentCordinates(posX,posY,level){
   y=Math.floor(posY/heightPerImage);
   location= y*1200+x;
    }
-   if(posX<0||posX>canvas.width){
+   if(posX<0||posX>canvaswidth){
       location=-location;
    }
 
@@ -282,6 +299,7 @@ this.isDragging=true;
 canvas.on('mouse:up', function() {
 panning = false;
 });
+
 if(is_touch_device()){
    canvas.on('touch:drag', function(e) {
       canvas.selection=false;
@@ -301,8 +319,34 @@ if(is_touch_device()){
     canvas.on('mouse:move', function(e) {
    canvas.selection = false;
    if (panning && e && e.e) {
-   var delta = new fabric.Point(e.e.movementX, e.e.movementY);
+      
+      var movementx=e.e.movementX;
+      var movementy=e.e.movementY;
+    
+   var delta = new fabric.Point(movementx, movementy);
+// console.log('x',movementx)
+// console.log('y',movementy)
+   ///This part sets the bound for the canvas, if the viewport is over half of teh canvas size
    canvas.relativePan(delta);
+   // console.log('zoom',zoom)
+   // if(zoom<1.5){
+   //     if(fabric.util.invertTransform(canvas.viewportTransform)[5]<-canvasheight/2/zoom &&movementy>0){//top
+   //    canvas.viewportTransform[5]=canvasheight/2
+   // }
+   // if(fabric.util.invertTransform(canvas.viewportTransform)[4]<-canvasheight/2/zoom&&movementx>0){//left
+   //    canvas.viewportTransform[4]=canvaswidth/2
+   // }
+   // if(fabric.util.invertTransform(canvas.viewportTransform)[5]>canvasheight/2&&movementy<0){//bottom
+   //  console.log('run')
+   //  canvas.viewportTransform[5]=-canvasheight/2
+   // }
+   // if(fabric.util.invertTransform(canvas.viewportTransform)[4]>canvasheight/2&&movementx<0){//right
+   //    // console.log('here')
+   //    canvas.viewportTransform[4]=-canvaswidth/2
+   // }
+   //}
+  
+   ///
    loadImagesBasedOnPanning();
    var pointer = canvas.getPointer(event.e);
 posX = pointer.x;
@@ -312,6 +356,8 @@ posY = pointer.y;
 
 });
 }
+console.log(canvasheight)
+
 var isfirefox=(navigator.userAgent.indexOf("Firefox") > 0)
 function zoomcanvasbutton(zommingin){
 var centerX=CenterCoord().x
@@ -546,8 +592,8 @@ Number.prototype.between = function(a, b) {
  var layertwoarray=[];
  var layerthreearray=[];
  var layerfourarray=[]
- var perpixelX=canvas.width/1200;
- var perpixelY=canvas.height/1200;
+ var perpixelX=canvaswidth/1200;
+ var perpixelY=canvasheight/1200;
  var posX;
  var posY;
  var lastdragpointx;
