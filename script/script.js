@@ -33,48 +33,6 @@ function addbordertocanvas(){
   }));
 
 
-//    canvas.add(new fabric.Line([0, 0, canvaswidth+2, 0], {
-//    left: -1,
-//    top: -1,
-//    stroke: 'black',
-//    selection:false,
-//    hasBorders: false,
-//    hasControls: false,
-//    hasRotatingPoint: false,
-//    selectable:false
-// }));
-// canvas.add(new fabric.Line([0, 0, canvaswidth+2, 0], {
-//    left: -1,
-//    top: canvasheight,
-//    stroke: 'black',
-//    selection:false,
-//    hasBorders: false,
-//    hasControls: false,
-//    hasRotatingPoint: false,
-//    selectable:false
-// }));
-// canvas.add(new fabric.Line([0, canvasheight+2, 0, 0], {
-//    left: -1,
-//    top: -1,
-//    stroke: 'black',
-//    selection:false,
-//    hasBorders: false,
-//    hasControls: false,
-//    hasRotatingPoint: false,
-//    selectable:false
-// }));
-
-// canvas.add(new fabric.Line([0, canvasheight+2, 0, 0], {
-//    left: canvaswidth,
-//    top: -1,
-//    stroke: 'black',
-//    selection:false,
-//    hasBorders: false,
-//    hasControls: false,
-//    hasRotatingPoint: false,
-//    selectable:false
-// }));
-
 
 }
 
@@ -356,7 +314,6 @@ posY = pointer.y;
 
 });
 }
-console.log(canvasheight)
 
 var isfirefox=(navigator.userAgent.indexOf("Firefox") > 0)
 function zoomcanvasbutton(zommingin){

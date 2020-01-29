@@ -266,30 +266,45 @@ function blobfromlocation(location,level){
     setTimeout(`resetCanvas()`, 200);
  }
 
-//give it a locationlist from layer 3 and it will spit out the upper layers
-function getlayersoflocation(locationlist){
-   var x,y,location;
-   var ll1=[];
-   var ll2=[];
-for( var i=0;i<locationlist.length;i++){//100%works
- x=Math.floor(locationlist[i]/15.000001)%80+1
- y=Math.floor(locationlist[i]/15.000001/1200)
-location=x+y*80
-ll2.push(location)
+//give it the corners from layer 3 and it will spit back locationlist for layer 2 and 1
+function getlayersoflocation(bottomleft,topright){
+   
+var layer2=[];
+var layer1=[];
+//for layer2
+var x=Math.floor(bottomleft/15.000001)%80+1
+var y=Math.floor(bottomleft/15.000001/1200)
+var location=x+y*80
+ var secondx=Math.floor(topright/15.000001)%80+1
+ var secondy=Math.floor(topright/15.000001/1200)
+var width=secondx-x+1;
+var height=secondy-y+1;
+for(var i=0;i<width;i++){
+   for(var j=0;j<height;j++){
+      layer2.push(location+i+j*80)
+   }
 }
-ll2=[...new Set(ll2)]
-for( var i=0;i<locationlist.length;i++){//100%works
-   x=Math.floor(ll2[i]/5.000001)%16+1
-   y=Math.floor(ll2[i]/5.000001/80)
+//for layer1
+ x=Math.floor(layer2[0]/5.000001)%16+1
+ y=Math.floor(layer2[0]/5.000001/80)
  location=x+y*16
- ll1.push(location)
- }
- ll1=[...new Set(ll1)]
- ll1.pop()
-return{
-   'layer2':ll2,
-   'layer1':ll1
+  secondx=Math.floor(layer2[layer2.length-1]/5.000001)%16+1
+  secondy=Math.floor(layer2[layer2.length-1]/5.000001/80)
+ width=secondx-x+1;
+ height=secondy-y+1;
+for(var i=0;i<width;i++){
+   for(var j=0;j<height;j++){
+      layer1.push(location+i+j*16)
+   }
 }
+console.log('layer2',layer2)
+console.log('layer1',layer1)
+
+
+   return {
+      'layer2':layer2,
+      'layer1':layer1
+   }
 }
 //give it an image form layer 3 and it will spit back the upper layer
 function getupperlayeroflocation(location){//works 100%

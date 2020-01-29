@@ -1,4 +1,5 @@
 var locationlist=[]
+var upperlocation=[]
 var bottomleft
 var height,width;
 function makelist(l1,l2){
@@ -22,13 +23,12 @@ if((topcorner-(height-1)*1200)<bottomcorner){
    bottomright=topcorner-(height-1)*1200
    }
   
-width= bottomright-bottomleft+1;
-
+    width= bottomright-bottomleft+1;
 
     if(width*height>10000){
         alert('the area you chose is absolutely massive, please wait while the computer processes it, you might want to reset your browser if the website begin to lag')
     }
-    
+    //this makes the locationlist
     for(var i=0;i<height;i++){
         for(var j=bottomleft;j<=bottomright;j++){
         locationlist.push(j+i*1200)
@@ -36,12 +36,13 @@ width= bottomright-bottomleft+1;
     }
    
     uploading=false
-  upperlocationlist=getlayersoflocation(locationlist).layer2
+    upperlocation=getlayersoflocation(bottomleft,locationlist[locationlist.length-1])
+    layer2locationlist=upperlocation.layer2
     arraytosend={
         'bottomleft':bottomleft,
         'width':width,
         'height':height,
-        'upperlocationarray':JSON.stringify(upperlocationlist),
+        'upperlocationarray':JSON.stringify(layer2locationlist),
         'level':3,
     }
     console.log('width',width)
@@ -95,9 +96,8 @@ function modeUPLOAD_2(){
 }
 function confirmupload(){//confirm after user had uploaded
     if(locationlist.length!=0){
-        var temp=getlayersoflocation(locationlist)
-        var layer1=temp['layer1']
-    var layer2=temp['layer2']
+        var layer1=upperlocation['layer1']
+        var layer2=upperlocation['layer2']
 
         localStorage.setItem('layer1',JSON.stringify(layer1))
         localStorage.setItem('layer2',JSON.stringify(layer2))
