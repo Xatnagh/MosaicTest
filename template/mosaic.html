@@ -2,20 +2,20 @@
 <html>
     <head>
         <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1">
-    <script src="/script/jquery-3.4.1.min.js"></script>
-    <script src="/script/fabric_with_touch.js"></script>
-    <script src="/script/linkify.min.js"></script>
-    <script src="/script/linkify-jquery.min.js"></script>
-    
-      <script src="/script/dropzone.js"></script>
+    <script src="/script/libraries/jquery-3.4.1.min.js"></script>
+    <script src="/script/libraries/fabric_with_touch.js"></script>
+    <script src="/script/libraries/linkify.min.js"></script>
+    <script src="/script/libraries/linkify-jquery.min.js"></script>
+      <script src="/script/libraries/dropzone.js"></script>
       <link rel="stylesheet" href="/css/home.css">
       <link rel="stylesheet" href="/css/headers.css">
       <link rel="stylesheet" href="/css/canvasbuttons.css">
       <title>Mosaic Tokyo 2.0!</title>
     </head>
     <body>
-        <nav id="topbar">
-          </nav>
+        
+      <nav id="topbar"></nav>
+          
 <div id='canvasDiv'>
    <canvas id="c"></canvas>
    <button id='exitupload' onclick='exitupload()'>Exit</button>
@@ -64,14 +64,6 @@
   <img id=confirmbtn src="/images/confirm.png" alt="Confirm">
   <img id=cancelbtn src="/images/cancel.png" onclick='cancelimageselection()'  alt="Click me to remove the file." /> 
 </div>
-  <!-- <div>
-     <button id="show">Press for debugging info</button>
-    <h2 id="cordination" class=hidden>x | y</h2>
-    <h2 id=location class=hidden style ="display: inline-block; left: 20%;">location for layer 1:  | location for layer2: |location for layer3: </h2>
-    <h2 id="zoomlevel" class=hidden>0</h2>
-  <button id="reset" class=hidden>RESET</button>
-
-  </div> -->
 
 
 <script>

@@ -37,7 +37,6 @@ if((topcorner-(height-1)*1200)<bottomcorner){
    
     uploading=false
     upperlocation=getlayersoflocation(bottomleft,locationlist[locationlist.length-1])
-    layer2locationlist=upperlocation.layer2
     arraytosend={
         'bottomleft':bottomleft,
         'width':width,
@@ -124,7 +123,6 @@ function removeselected(){
     uploading=true
 }
 function cancelimageselection(){
-
     $('#cancelbtn').hide()
             $('#confirmbtn').hide()
     document.getElementById('pewviewimg').src='';
