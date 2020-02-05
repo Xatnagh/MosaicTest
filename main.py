@@ -5,7 +5,7 @@ import urllib2
 import random
 import jinja2
 import re
-from database import defaultdatas, alreadyexist, loadtest,clearlevel2,putDataintodatabase,upload_file,putImageIntoDatabase_layer1,putImageIntoDatabase_layer2,getupperlayeroflocation,getlocationlist
+from database import defaultdatas, alreadyexist, loadtest,clearlevel2,putDataintodatabase,upload_file,putImageIntoDatabase_layer1,putImageIntoDatabase_layer2,getupperlayeroflocation,getlocationlist,getupperlayeroflocation_fromlist_layer2
 from Images import ImageInfo,ANCESTORY_KEY,getImageInfo,getimagesbylocation,getImages
 
 the_jinja_env = jinja2.Environment(loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
@@ -13,7 +13,6 @@ extensions=['jinja2.ext.autoescape'],autoescape=True)
 
 class Home(webapp2.RequestHandler):
     def get(self): 
-        self.response.headers['Access-Control-Allow-Origin'] = '*'
         homepage = the_jinja_env.get_template('/template/mosaic.html')  
         self.response.write(homepage.render({"data":getLayer1()}))
         
@@ -59,8 +58,7 @@ class updatelayers(webapp2.RequestHandler):
         height=int(self.request.get('height'))
         width=int(self.request.get('width'))
         locationlist=getlocationlist(bottomleft,height,width)
-        upperlayerlist=self.request.GET.get('upperlocationarray')
-        upperlayerlist= json.loads(upperlayerlist)
+        upperlayerlist=getupperlayeroflocation_fromlist_layer2(locationlist[0],locationlist[len(locationlist)-1])
         imagebylocation=getimagesbylocation(locationlist,2,upperlayerlist)
         self.response.write(json.dumps(imagebylocation))
 

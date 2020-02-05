@@ -42,7 +42,6 @@ if((topcorner-(height-1)*1200)<bottomcorner){
         'bottomleft':bottomleft,
         'width':width,
         'height':height,
-        'upperlocationarray':JSON.stringify(layer2locationlist),
         'level':3,
     }
     console.log('width',width)

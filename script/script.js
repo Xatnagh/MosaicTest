@@ -338,7 +338,7 @@ var delta=53;
    //
    canvas.zoomToPoint({ x: centerX, y: centerY}, zoom);
 
-   // document.getElementById('zoomlevel').innerHTML="zoom "+ zoom;
+
    if(zoom.between(15,23)){
       
       nearbylocations(getCurrentCordinates(CenterCoord().x,CenterCoord().y,1),2);
