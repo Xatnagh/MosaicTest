@@ -31,7 +31,7 @@ function loadheader(){
 }else{
     document.getElementById('topbar').innerHTML=`<p> <a href="/">MosaicTokyo</a> </p>             
     <div class="dropdown">
-    <button class="dropbtn"><img src="/images/three-bars-icon-5.jpg" alt=""></button>
+    <button id="dropbtn" onclick=toggledropdowncontent();><img src="/images/three-bars-icon-5.jpg" alt=""></button>
        <div class="dropdown-content">
           <a href="./contact">Contact</a>
           <a href="./login">LogIn</a>                     
@@ -41,9 +41,12 @@ function loadheader(){
 }
 
 }
-$('.dropbtn').click(function(){
-$('.dropdown-content').toggle()
-});
+function toggledropdowncontent(){
+  $('.dropdown-content').toggle()
+}
+
+
+
 var times = 0;
 function update_url() {
    times++;
