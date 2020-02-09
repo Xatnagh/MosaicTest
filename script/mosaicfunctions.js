@@ -272,11 +272,11 @@ function getlayersoflocation(bottomleft,topright){
 var layer2=[];
 var layer1=[];
 //for layer2
-var x=Math.floor(bottomleft/15.000001)%80+1
-var y=Math.floor(bottomleft/15.000001/1200)
+var x=Math.floor((bottomleft-1)/15)%80+1
+var y=Math.floor((bottomleft-1)/15/1200)
 var location=x+y*80
- var secondx=Math.floor(topright/15.000001)%80+1
- var secondy=Math.floor(topright/15.000001/1200)
+ var secondx=Math.floor((topright-1)/15)%80+1
+ var secondy=Math.floor((topright-1)/15/1200)
 var width=secondx-x+1;
 var height=secondy-y+1;
 for(var i=0;i<width;i++){
@@ -285,11 +285,11 @@ for(var i=0;i<width;i++){
    }
 }
 //for layer1
- x=Math.floor(layer2[0]/5.000001)%16+1
- y=Math.floor(layer2[0]/5.000001/80)
+ x=Math.floor((layer2[0]-1)/5)%16+1
+ y=Math.floor((layer2[0]-1)/5/80)
  location=x+y*16
-  secondx=Math.floor(layer2[layer2.length-1]/5.000001)%16+1
-  secondy=Math.floor(layer2[layer2.length-1]/5.000001/80)
+  secondx=Math.floor((layer2[layer2.length-1]-1)/5)%16+1
+  secondy=Math.floor((layer2[layer2.length-1]-1)/5/80)
  width=secondx-x+1;
  height=secondy-y+1;
 for(var i=0;i<width;i++){
@@ -306,15 +306,16 @@ console.log('layer1',layer1)
       'layer1':layer1
    }
 }
-//give it an image form layer 3 and it will spit back the upper layer
+//give it an location layer 3 and it will spit back the upper layer locations
 function getupperlayeroflocation(location){//works 100%
+   //so far never called
    var x,y,location;
    var layer1;
    var layer2;
- x=Math.floor(location/15.000001)%80+1
- y=Math.floor(location/15.000001/1200)
+ x=Math.floor((location-1)/15)%80+1
+ y=Math.floor((location-1)/15/1200)
 layer2=x+y*80
-   x=Math.floor(layer2/5.000001)%16+1
+   x=Math.floor((layer2-1)/5)%16+1
    y=Math.floor(layer2/5.0/80)
  layer1=x+y*16
 return{
@@ -322,6 +323,8 @@ return{
    'layer1':layer1
 }
 }
+
+
 function getlayer1fromlayer2(layer2location){
    x=Math.floor(layer2location/5.000001)%16+1
    y=Math.floor(layer2location/5.0/80)

@@ -94,8 +94,8 @@ def putImageIntoDatabase_layer1(image,location):
 
 #only used for getting the layer2 location of the image, for faster image load
 def getupperlayeroflocation(location):
-    x=math.floor(location/15.000001)%80+1
-    y=math.floor(location/15.000001/1200)
+    x=math.floor((location-1)/15)%80+1
+    y=math.floor((location-1)/15/1200)
     layer2=x+y*80
     return layer2
    
@@ -109,11 +109,11 @@ def getlocationlist(bottomleft,height,width):
 def getupperlayeroflocation_fromlist_layer2(bottomleft,topright):
    
     layer2=[]
-    x=math.floor(bottomleft/15.000001)%80+1
-    y=math.floor(bottomleft/15.000001/1200)
+    x=math.floor((bottomleft-1)/15%80+1)
+    y=math.floor((bottomleft-1)/15/1200)
     location=x+y*80
-    secondx=math.floor(topright/15.000001)%80+1
-    secondy=math.floor(topright/15.000001/1200)
+    secondx=math.floor((topright-1)/15)%80+1
+    secondy=math.floor((topright-1)/15/1200)
     width=int(secondx-x+1)
     height=int(secondy-y+1)
     
