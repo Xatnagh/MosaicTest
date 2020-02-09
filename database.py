@@ -9,7 +9,7 @@ def defaultdatas():
         a=ImageInfo.query(ImageInfo.level==1).fetch(1)
         if not a:          
             for i in range(1,257):
-                ImageInfo(parent=ANCESTORY_KEY,location=i,level=1,image_url='images/placeholder.jpg').put()          
+                ImageInfo(parent=ANCESTORY_KEY,location=i,level=1,image_url='images/placeholder.jpg').put_async()          
         b=ImageInfo.query(ImageInfo.level==3).fetch(1) 
         if not b:
             ImageInfo(parent=ANCESTORY_KEY,location=1,level=3,pointer=False,pointerlist=[1,2,1201,1202],image_url='/images/test.jpg',scalewidth=2,scaleheight=2,description='this is a test image',layer2location=1).put()
@@ -122,27 +122,4 @@ def getupperlayeroflocation_fromlist_layer2(bottomleft,topright):
             layer2.append(int(location+i+j*80))
     print('layer2',layer2)
     return layer2
-
-
-
-    # for(i=0;i<width;i++){
-    # for(j=0;j<height;j++){
-    #     layer2.push(location+i+j*80)
-    # }
-    # }
-    # //for layer1
-    # x=math.floor(layer2[0]/5.000001)%16+1
-    # y=math.floor(layer2[0]/5.000001/80)
-    # location=x+y*16
-    # secondx=math.floor(layer2[layer2.length-1]/5.000001)%16+1
-    # secondy=math.floor(layer2[layer2.length-1]/5.000001/80)
-    # width=secondx-x+1;
-    # height=secondy-y+1;
-    # for(i=0;i<width;i++){
-    # for(j=0;j<height;j++){
-    #     layer1.push(location+i+j*16)
-    # }
-    # }
-    # console.log('layer2',layer2)
-    # console.log('layer1',layer1)
 
