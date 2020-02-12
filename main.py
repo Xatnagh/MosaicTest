@@ -7,12 +7,14 @@ import jinja2
 import re
 from database import defaultdatas, alreadyexist, loadtest,clearlevel2,putDataintodatabase,upload_file,putImageIntoDatabase_layer1,putImageIntoDatabase_layer2,getupperlayeroflocation,getlocationlist,getupperlayeroflocation_fromlist_layer2
 from Images import ImageInfo,ANCESTORY_KEY,getImageInfo,getimagesbylocation,getImages
+from test import test
 
 the_jinja_env = jinja2.Environment(loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
 extensions=['jinja2.ext.autoescape'],autoescape=True)
 
 class Home(webapp2.RequestHandler):
     def get(self): 
+        test()
         homepage = the_jinja_env.get_template('/template/mosaic.html')  
         self.response.write(homepage.render({"data":getLayer1()}))
         

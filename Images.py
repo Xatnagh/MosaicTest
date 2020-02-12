@@ -2,7 +2,7 @@ from google.appengine.ext import ndb
 from google.appengine.api import images
 import math
 
- 
+   
 class ImageInfo(ndb.Model):
     location=ndb.IntegerProperty(required=True)
     level=ndb.IntegerProperty(required=True)

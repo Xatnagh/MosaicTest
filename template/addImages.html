@@ -73,18 +73,19 @@ console.log('layer2',layer2)
   //loadimage(scale,scaleamountX,scaleamountY,location,level,img_imgurl,finalimg=false)
 
 }
-
+var target=layer1[layer1.length-1]
 function step2(){
   var timeout=0;
     for(let i=0;i<layer2.length;i++){
   setTimeout(`blobfromlocation(layer2[${i}],2)`, 500+i*500); 
-  timeout+=i;
+  timeout++;
     }
     step3(timeout)
 }
 function step3(timeout){
+  
   for(var i=0;i<layer1.length;i++){
-    setTimeout(`blobfromlocation(layer1[${i}],1)`, timeout*500+i*500); 
+    setTimeout(`blobfromlocation(layer1[${i}],1)`, 1000+timeout*500+i*500); 
   }
 }
 

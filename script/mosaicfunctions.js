@@ -214,7 +214,7 @@ canvas.requestRenderAll()
 
 function canvastoblob(location,layer){//this location is from layer 2 or 1
     var canvas = document.getElementById('c');
- 
+
     canvas.toBlob(function(blob) {
        ///makes image appear below the page
    var newImg = document.createElement('img'),
@@ -244,12 +244,16 @@ document.body.appendChild(p)
         type: "POST",
        success: function(result) {   
         console.log('success for',location,'  layer',layer)
+        if(location==target && layer==1){
+            alert('DONE!')
+        }
     }
     });
     }); 
  }
  
-function blobfromlocation(location,level){
+function blobfromlocation(location,level){ 
+
     var scale;
     if(level==2){
        scale=80
