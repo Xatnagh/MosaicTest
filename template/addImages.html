@@ -41,7 +41,11 @@
   <canvas id='c' ></canvas>
 </section>
 
-
+<div id=loadingscreen>
+  <img id=loadingimg src="/images/loading.gif" alt="">
+  <h1 id=LoadingMessage>Loading</h1>
+  <img id=loadingscreenimg style="max-height: 40%; max-width: 90%; background:white" src="" alt="">
+  </div>
 
 
 <script>
@@ -73,8 +77,12 @@ console.log('layer2',layer2)
   //loadimage(scale,scaleamountX,scaleamountY,location,level,img_imgurl,finalimg=false)
 
 }
+console.log("Please wait while we get everything ready. Estimated time: ", (layer1.length+layer2.length)*0.5, " seconds ")
 var target=layer1[layer1.length-1]
 function step2(){
+  showloadingscreen();
+  document.getElementById('LoadingMessage').innerHTML="Please wait while we get everything ready. Estimated time: "+ (layer1.length+layer2.length)*0.5+ " seconds "
+  
   var timeout=0;
     for(let i=0;i<layer2.length;i++){
   setTimeout(`blobfromlocation(layer2[${i}],2)`, 500+i*500); 

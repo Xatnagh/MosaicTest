@@ -2,7 +2,7 @@ var locationlist=[]
 var upperlocation=[]
 var bottomleft
 var height,width;
-function makelist(l1,l2){
+function makelist(l1,l2){//given two location from any corner checks the bround, determine wheter an image is already there or not, if not, display the image
 if(l1<1||l2<1||l1>1440000||l2>1440000){
     alert("one of the squares you selected is outside of the mosaic, please choose your locations again")
     removeselected();
@@ -10,7 +10,7 @@ if(l1<1||l2<1||l1>1440000||l2>1440000){
 }
 var topcorner= Math.max(l1,l2);
 var bottomcorner=Math.min(l1,l2);
-var bottomright
+var bottomright;
 
 height =Math.floor(topcorner/1200.00001)-Math.floor(bottomcorner/1200.00001)+1
 
@@ -45,11 +45,19 @@ if((topcorner-(height-1)*1200)<bottomcorner){
     }
     console.log('width',width)
     console.log('height',height)
+
+    showloadingscreen();
+    document.getElementById('LoadingMessage').innerHTML="Please Wait while we check with the server"
+
     $.ajax({
         url: "/update_layers",
         data: arraytosend,
         type: "GET",
        success: function(layer3image) {   
+           hideloadingscreen();
+           
+
+
           layer3image=JSON.parse(layer3image)       
           imageexist=layer3image['bool']
             sendDataToLoad(layer3image['img_location'],layer3image['img_imgurl'],1200,layer3image['img_scaleX'],layer3image['img_scaleY'],layer3image['img_level']);    

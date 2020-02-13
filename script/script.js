@@ -460,7 +460,7 @@ canvas.on('mouse:dblclick',function(e){
          var location2=getCurrentCordinates(posX,posY,3)
          console.log('location1',location1,'location2',location2)
          count++
-         
+         sendDataToLoad([location2],['/images/location2.png'],1200,[1],[1],[4])
          makelist(location1,location2)
          
       }

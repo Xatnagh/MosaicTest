@@ -136,6 +136,25 @@ button img{
     height: 51px;
   }
   
-  
+
+
+#loadingscreen{
+  text-align: center;
+  justify-content: center;
+  position: fixed; 
+  width: 100vw; 
+  height: 100vh;
+  bottom: 0px;
+   background-color: rgba(0,0,0,0.3);/* this last value is the opacity */
+  overflow: auto;
+  display:none;
+}
+
+#LoadingMessage{
+  color: aliceblue;
+}
+#loadingimg{
+  margin-top:20px;
+}
   
   

@@ -227,6 +227,7 @@ function canvastoblob(location,layer){//this location is from layer 2 or 1
   p.innerHTML=location,layer; 
 document.body.appendChild(p)
   document.body.appendChild(newImg);
+  document.getElementById('loadingscreenimg').src=url;
 ///
 
       var data= new FormData();
@@ -235,20 +236,22 @@ document.body.appendChild(p)
     data.append('layer',layer);
 
     data.append('upperlayerlocation',getlayer1fromlayer2(location))
- 
-    $.ajax({
-        url: "/update_layers",
-        data: data,
-        processData: false,
-    contentType: false,
-        type: "POST",
-       success: function(result) {   
-        console.log('success for',location,'  layer',layer)
-        if(location==target && layer==1){
-            alert('DONE!')
-        }
-    }
-    });
+      
+               $.ajax({
+                  url: "/update_layers",
+                  data: data,
+                  processData: false,
+               contentType: false,
+                  type: "POST",
+                  success: function(result) {   
+                  console.log('success for',location,'  layer',layer)
+                  if(location==target && layer==1){
+                        hideloadingscreen();
+                        alert('DONE!')
+                        window.location.href="./"
+                     }
+                  }
+               });
     }); 
  }
  
@@ -342,3 +345,7 @@ function CenterCoord(){
    }
 }
 var zoom=1;
+
+
+function showloadingscreen(){$('#loadingscreen').show();}
+function hideloadingscreen(){$('#loadingscreen').hide();}
