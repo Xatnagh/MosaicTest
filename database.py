@@ -44,13 +44,14 @@ def clearlevel2():
     defaultdatas()
     
 def putDataintodatabase(pointerlocation1,locationlist,image,descriptionsendin,width,height):
-
+        
         if len(locationlist)>1:
+            print('ahdsaiudhsaiu')
             layer2spot=int(getupperlayeroflocation(pointerlocation1))
-            ImageInfo(parent=ANCESTORY_KEY,image_url=image,location=pointerlocation1,level=3,pointer=False,pointerlist=locationlist,scalewidth=width,scaleheight=height,layer2location=layer2spot,description=descriptionsendin).put_async()
+            ImageInfo(parent=ANCESTORY_KEY,image_url=image,location=pointerlocation1,level=3,pointer=False,pointerlist=locationlist,scalewidth=width,scaleheight=height,layer2location=layer2spot,description=descriptionsendin).put()
             for i in range(1,len(locationlist)):
                 layer2spot=int(getupperlayeroflocation(locationlist[i]))
-                ImageInfo(parent=ANCESTORY_KEY,location=locationlist[i],level=3,pointer=True,pointerlocation=pointerlocation1,layer2location=layer2spot).put_async()
+                ImageInfo(parent=ANCESTORY_KEY,location=locationlist[i],level=3,pointer=True,pointerlocation=pointerlocation1,layer2location=layer2spot).put()
 
 import os
 cloudstorage.set_default_retry_params(
