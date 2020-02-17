@@ -12,25 +12,21 @@ def defaultdatas():
                 ImageInfo(parent=ANCESTORY_KEY,location=i,level=1,image_url='images/placeholder.jpg').put_async()          
         b=ImageInfo.query(ImageInfo.level==3).fetch(1) 
         if not b:
-            ImageInfo(parent=ANCESTORY_KEY,location=1,level=3,pointer=False,pointerlist=[1,2,1201,1202],image_url='/images/test.jpg',scalewidth=2,scaleheight=2,description='this is a test image',layer2location=1).put()
+            ImageInfo(parent=ANCESTORY_KEY,location=1,level=3,pointer=False,image_url='/images/test.jpg',scalewidth=2,scaleheight=2,description='this is a test image',layer2location=1).put()
             ImageInfo(parent=ANCESTORY_KEY,location=2,level=3,pointer=True,pointerlocation=1,layer2location=1).put()
             ImageInfo(parent=ANCESTORY_KEY,location=1201,level=3,pointer=True,pointerlocation=1,layer2location=1).put()
             ImageInfo(parent=ANCESTORY_KEY,location=1202,level=3,pointer=True,pointerlocation=1,layer2location=1).put()
             # ImageInfo(parent=ANCESTORY_KEY,location=1,level=2,layer1location=1,image_url='/images/test.jpg',scalewidth=1,scaleheight=1).put()
 
 def alreadyexist(locationlist,upperlayerlist):  
-    load=False 
-    for i in upperlayerlist:
-        image=ImageInfo.query(ImageInfo.layer2location==i).fetch()
-        for j in image:
-            location=j.location
-            if location in locationlist:
-                load=True
-                return load
-    return load   
-def loadtest():
-    for i in range(1):
-                ImageInfo(parent=ANCESTORY_KEY,location=1,level=3,pointer=True,pointerlist=[1,2,1201,1202],image_url='/images/test.jpg',scalewidth=2,scaleheight=2).put()
+    image=ImageInfo.query(ImageInfo.layer2location.IN(upperlayerlist)).fetch()
+    for j in image:
+        location=j.location
+        if location in locationlist:
+            return True
+    return False
+
+
 def clearlevel2():
     img=ImageInfo.query(ImageInfo.level==2).fetch()
     for i in img:
@@ -44,11 +40,11 @@ def clearlevel2():
     defaultdatas()
     
 def putDataintodatabase(pointerlocation1,locationlist,image,descriptionsendin,width,height):
-        
-        if len(locationlist)>1:
-            print('ahdsaiudhsaiu')
+        priorityload=False
+        if (width*height>10000): priorityload=True
+        if len(locationlist)>1: 
             layer2spot=int(getupperlayeroflocation(pointerlocation1))
-            ImageInfo(parent=ANCESTORY_KEY,image_url=image,location=pointerlocation1,level=3,pointer=False,pointerlist=locationlist,scalewidth=width,scaleheight=height,layer2location=layer2spot,description=descriptionsendin).put()
+            ImageInfo(parent=ANCESTORY_KEY,image_url=image,location=pointerlocation1,level=3,pointer=False,scalewidth=width,scaleheight=height,layer2location=layer2spot,description=descriptionsendin,priorityload=priorityload).put()
             for i in range(1,len(locationlist)):
                 layer2spot=int(getupperlayeroflocation(locationlist[i]))
                 ImageInfo(parent=ANCESTORY_KEY,location=locationlist[i],level=3,pointer=True,pointerlocation=pointerlocation1,layer2location=layer2spot).put()

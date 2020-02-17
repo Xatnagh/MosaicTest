@@ -12,10 +12,10 @@ class ImageInfo(ndb.Model):
     scaleheight= ndb.IntegerProperty(required=False,default=1)
     pointer=ndb.BooleanProperty(required=False,default=False)
     pointerlocation=ndb.IntegerProperty(required=False)
-    pointerlist=ndb.IntegerProperty(required=False,repeated=True)
     added = ndb.DateTimeProperty(auto_now_add=True)
     layer2location=ndb.IntegerProperty(required=False)
     layer1location=ndb.IntegerProperty(required=False)
+    priorityload=ndb.BooleanProperty(required=False,default=False)
 
 
 ANCESTORY_KEY = ndb.Key("ImageInfo","ImageInfo_root")
@@ -23,23 +23,21 @@ ANCESTORY_KEY = ndb.Key("ImageInfo","ImageInfo_root")
 def getImages(locationlist,level):
     imagelist=[]
     alreadyloaded=[]
-    if level==2:
-        for i in locationlist:
-            image=ImageInfo.query(ImageInfo.layer2location==i).fetch()
-            for i in image: 
-                if i.location not in alreadyloaded:
-                    if(i.pointer==False):
-                        imagelist.append(i)
-                        alreadyloaded.extend(i.pointerlist)
-                    else:
-                        pointerimage=ImageInfo.query(ImageInfo.location==i.pointerlocation,ImageInfo.level==3).fetch()
-                        imagelist.extend(pointerimage)
-                        alreadyloaded.extend(pointerimage[0].pointerlist)
-    if level==1:
-        for i in locationlist:
-            image=ImageInfo.query(ImageInfo.layer1location==i).fetch()
-            imagelist.extend(image)
-    return imagelist;  
+    if level==2 and locationlist:
+        image=ImageInfo.query(ImageInfo.layer2location.IN(locationlist)).fetch()
+        for i in image: 
+            if i.pointerlocation not in alreadyloaded:
+                if(i.pointer==False):
+                    imagelist.append(i)
+                    alreadyloaded.append(i.location)
+                else:
+                    pointerimage=ImageInfo.query(ImageInfo.location==i.pointerlocation,ImageInfo.level==3).fetch()
+                    imagelist.extend(pointerimage)
+                    alreadyloaded.append(i.pointerlocation)  
+    if level==1 and locationlist:
+        image=ImageInfo.query(ImageInfo.layer1location.IN(locationlist)).fetch()
+        imagelist.extend(image)
+    return imagelist;  #it is a list of ImageInfo Objects
 
 def getimagesbylocation(list,level,upperlayerlist):
     from database import alreadyexist
