@@ -3,6 +3,7 @@ import cloudstorage
 from google.appengine.api import app_identity
 from google.appengine.ext import blobstore
 from google.appengine.ext import ndb
+from google.appengine.ext import db
 import math
 avaliable_spots=[]
 mosaicLength=1200
@@ -61,13 +62,7 @@ def alreadyexist(locationlist,upperlayerlist):
 
 
 def clearentiredatabase():
-    while(True):
-        images=ImageInfo.query().fetch(500)
-        if(len(images)==0):
-            break
-        for image in images:
-            image.key.delete()
-
+    db.delete(db.Query(keys_only=True))
     
 def putDataintodatabase(pointerlocation1,locationlist,image,descriptionsendin,width,height):
         priorityload=False
