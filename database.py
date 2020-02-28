@@ -62,7 +62,12 @@ def alreadyexist(locationlist,upperlayerlist):
 
 
 def clearentiredatabase():
-    db.delete(db.Query(keys_only=True))
+    image=ImageInfo.query().fetch(500)
+    if image:
+        for img in image:
+            img.key.delete()
+        return 1
+    return 0 #will return 0 if there are no images left
     
 def putDataintodatabase(pointerlocation1,locationlist,image,descriptionsendin,width,height):
         priorityload=False

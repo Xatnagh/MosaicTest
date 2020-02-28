@@ -319,16 +319,16 @@ function getupperlayeroflocation(location){//works 100%
    var x,y,location;
    var layer1;
    var layer2;
- x=Math.floor((location-1)/15)%80+1
- y=Math.floor((location-1)/15/1200)
-layer2=x+y*80
-   x=Math.floor((layer2-1)/5)%16+1
-   y=Math.floor(layer2/5.0/80)
- layer1=x+y*16
-return{
-   'layer2':layer2,
-   'layer1':layer1
-}
+   x=Math.floor((location-1)/15)%80+1
+   y=Math.floor((location-1)/15/1200)
+   layer2=x+y*80
+      x=Math.floor((layer2-1)/5)%16+1
+      y=Math.floor(layer2/5.0/80)
+   layer1=x+y*16
+   return{
+      'layer2':layer2,
+      'layer1':layer1
+   }
 }
 
 
@@ -345,7 +345,18 @@ function CenterCoord(){
    }
 }
 var zoom=1;
-
+function cleardatabase(){
+   $.ajax({
+      url: "/clear",
+      type: "POST",
+      success: function(result) {   
+      console.log(result)
+      if(result==1){
+         cleardatabase() //keep clearing as long as there is still stuff in the database
+      }
+      }
+   });
+}
 
 function showloadingscreen(){$('#loadingscreen').show();}
 function hideloadingscreen(){$('#loadingscreen').hide();}

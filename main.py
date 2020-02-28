@@ -103,6 +103,9 @@ class cleardatabase(webapp2.RequestHandler):
         clearentiredatabase()
         homepage = the_jinja_env.get_template('/template/mosaic.html')
         self.response.write(homepage.render( {"data":getLayer1()}))
+    def post(self):
+        result=clearentiredatabase()
+        self.response.write(result)
 class getImageIinfo(webapp2.RequestHandler):
     def get(self):
         location=int(self.request.GET.get('location'))  
@@ -114,7 +117,7 @@ class getImageIinfo(webapp2.RequestHandler):
         }
         self.response.headers['Access-Control-Allow-Origin'] = '*'
         self.response.write(json.dumps(data))
-   
+
 def getLayer1():
       return ImageInfo.query(ImageInfo.level==1).fetch()
 
