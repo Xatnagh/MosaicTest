@@ -102,7 +102,7 @@ function checkifallimageisloaded(){
  var layer1length=1;
  var layer2length=1;   
  var userimageloaded=false;
-function loadlocationimage(locationlist,layer,layercount,alreadyloaded=[],){//give it a location and a layer and it will load everything in it
+function loadlocationimage(locationlist,layer,alreadyloaded=[],){//give it a location and a layer and it will load everything in it
    modeUpdatinglayers=true
    // if(layer==1){
    //    layer1length=1

@@ -55,9 +55,6 @@ if((topcorner-(height-1)*1200)<bottomcorner){
         type: "GET",
        success: function(layer3image) {   
            hideloadingscreen();
-           
-
-
           layer3image=JSON.parse(layer3image)       
           imageexist=layer3image['bool']
             sendDataToLoad(layer3image['img_location'],layer3image['img_imgurl'],1200,layer3image['img_scaleX'],layer3image['img_scaleY'],layer3image['img_level']);    

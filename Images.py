@@ -48,7 +48,6 @@ def getimagesbylocation(list,level,upperlayerlist):
     img_scalewidth=[]
     img_scaleheight=[]
     imagelist=getImages(list,level)
-    print('length of imagelist',len(imagelist), 'for level',level)
     if len(imagelist)!=0:
         for i in imagelist:
             img_location.append(i.location)
@@ -56,7 +55,6 @@ def getimagesbylocation(list,level,upperlayerlist):
             img_scalewidth.append(i.scalewidth)
             img_scaleheight.append(i.scaleheight)
             img_level.append(i.level)
-        print('saddsadsad',imagelist[0].image_url)
     if len(upperlayerlist)!=0:
         exist=alreadyexist(list,upperlayerlist)
     return{

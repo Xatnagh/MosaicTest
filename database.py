@@ -4,6 +4,38 @@ from google.appengine.api import app_identity
 from google.appengine.ext import blobstore
 from google.appengine.ext import ndb
 import math
+avaliable_spots=[]
+mosaicLength=1200
+def generateavaliable_spots():
+    for i in range(0,mosaicLength):
+        for j in range(0,mosaicLength):
+            avaliable_spots.append(1)
+
+
+def turnoffavaliable_spots(location,width,height):
+  x=(location-1)%mosaicLength
+  y=math.floor(location-1)/mosaicLength
+  print('x',x)
+  print('y',int(y))
+  for i in range(x,x+width):
+    for j in range(0,height):
+      avaliable_spots[i+(j*mosaicLength)]=0
+
+
+def checkavaliablity(location,width,height):
+  x=(location-1)%mosaicLength
+  y=math.floor(location-1)/mosaicLength
+  print('x',x)
+  print('y',int(y))
+  for i in range(x,x+width):
+    for j in range(0,height):
+      if(avaliable_spots[i+(j*mosaicLength)]==0):
+        return False
+  return True
+
+
+
+
 def defaultdatas():
         a=0
         a=ImageInfo.query(ImageInfo.level==1).fetch(1)
@@ -20,24 +52,22 @@ def defaultdatas():
 
 def alreadyexist(locationlist,upperlayerlist):  
     image=ImageInfo.query(ImageInfo.layer2location.IN(upperlayerlist)).fetch()
-    for j in image:
-        location=j.location
-        if location in locationlist:
-            return True
+    if(image):   
+        for j in image:
+            location=j.location
+            if location in locationlist:
+                return True
     return False
 
 
-def clearlevel2():
-    img=ImageInfo.query(ImageInfo.level==2).fetch()
-    for i in img:
-        i.key.delete()
-    img=ImageInfo.query(ImageInfo.level==1).fetch()
-    for i in img:
-        i.key.delete()
-    img=ImageInfo.query(ImageInfo.level==3).fetch()
-    for i in img:
-        i.key.delete()
-    defaultdatas()
+def clearentiredatabase():
+    while(True):
+        images=ImageInfo.query().fetch(500)
+        if(len(images)==0):
+            break
+        for image in images:
+            image.key.delete()
+
     
 def putDataintodatabase(pointerlocation1,locationlist,image,descriptionsendin,width,height):
         priorityload=False
@@ -47,7 +77,7 @@ def putDataintodatabase(pointerlocation1,locationlist,image,descriptionsendin,wi
             ImageInfo(parent=ANCESTORY_KEY,image_url=image,location=pointerlocation1,level=3,pointer=False,scalewidth=width,scaleheight=height,layer2location=layer2spot,description=descriptionsendin,priorityload=priorityload).put()
             for i in range(1,len(locationlist)):
                 layer2spot=int(getupperlayeroflocation(locationlist[i]))
-                ImageInfo(parent=ANCESTORY_KEY,location=locationlist[i],level=3,pointer=True,pointerlocation=pointerlocation1,layer2location=layer2spot).put()
+                ImageInfo(parent=ANCESTORY_KEY,location=locationlist[i],level=3,pointer=True,pointerlocation=pointerlocation1,layer2location=layer2spot).put_async()
 
 import os
 cloudstorage.set_default_retry_params(

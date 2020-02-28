@@ -5,7 +5,7 @@ import urllib2
 import random
 import jinja2
 import re
-from database import defaultdatas, alreadyexist,clearlevel2,putDataintodatabase,upload_file,putImageIntoDatabase_layer1,putImageIntoDatabase_layer2,getupperlayeroflocation,getlocationlist,getupperlayeroflocation_fromlist_layer2
+from database import defaultdatas, alreadyexist,clearentiredatabase,putDataintodatabase,upload_file,putImageIntoDatabase_layer1,putImageIntoDatabase_layer2,getupperlayeroflocation,getlocationlist,getupperlayeroflocation_fromlist_layer2,generateavaliable_spots
 from Images import ImageInfo,ANCESTORY_KEY,getImageInfo,getimagesbylocation,getImages
 from test import test
 
@@ -28,6 +28,7 @@ class AddImage(webapp2.RequestHandler):
 class loadImages(webapp2.RequestHandler):
     def get(self):
         defaultdatas()
+        generateavaliable_spots()
         homepage = the_jinja_env.get_template('/template/mosaic.html')
         self.response.write(homepage.render({"data":getLayer1()}))
 
@@ -99,7 +100,7 @@ class LoginPage(webapp2.RequestHandler):
 
 class cleardatabase(webapp2.RequestHandler):
     def get(self):
-        clearlevel2()
+        clearentiredatabase()
         homepage = the_jinja_env.get_template('/template/mosaic.html')
         self.response.write(homepage.render( {"data":getLayer1()}))
 class getImageIinfo(webapp2.RequestHandler):
