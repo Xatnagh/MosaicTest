@@ -5,7 +5,7 @@ loadheader()
 });
 
 function homebtn(){
-  if (window.location.href.split('/').pop() === ""||Number(window.location.href.split('#').pop())>0) { 
+  if (window.location.href.split('/').pop() === ""||Number(window.location.href.split('#').pop())>0||window.location.href.split('/').pop() === "load") { 
     
       return '<a onclick="modeUPLOAD();"id= uploadbtn>Upload</a>'
 }

@@ -5,60 +5,24 @@ from google.appengine.ext import blobstore
 from google.appengine.ext import ndb
 from google.appengine.ext import db
 import math
-avaliable_spots=[]
+import json
 mosaicLength=1200
-def generateavaliable_spots():
-    for i in range(0,mosaicLength):
-        for j in range(0,mosaicLength):
-            avaliable_spots.append(1)
 
-
-def turnoffavaliable_spots(location,width,height):
-  x=(location-1)%mosaicLength
-  y=math.floor(location-1)/mosaicLength
-  print('x',x)
-  print('y',int(y))
-  for i in range(x,x+width):
-    for j in range(0,height):
-      avaliable_spots[i+(j*mosaicLength)]=0
-
-
-def checkavaliablity(location,width,height):
-  x=(location-1)%mosaicLength
-  y=math.floor(location-1)/mosaicLength
-  print('x',x)
-  print('y',int(y))
-  for i in range(x,x+width):
-    for j in range(0,height):
-      if(avaliable_spots[i+(j*mosaicLength)]==0):
-        return False
+def checkavaliablity(location,width,height,upperlocationlist):
+  image=ImageInfo.query(ImageInfo.layer2location.IN(upperlocationlist)).fetch()
+  if image:
+      return False
   return True
 
-
-
-
 def defaultdatas():
-        a=0
+        
         a=ImageInfo.query(ImageInfo.level==1).fetch(1)
-        if not a:          
+        if not a:
             for i in range(1,257):
-                ImageInfo(parent=ANCESTORY_KEY,location=i,level=1,image_url='images/placeholder.jpg').put_async()          
+                ImageInfo(parent=ANCESTORY_KEY,location=i,level=1,image_url='images/placeholder.jpg').put_async()    
         b=ImageInfo.query(ImageInfo.level==3).fetch(1) 
         if not b:
-            ImageInfo(parent=ANCESTORY_KEY,location=1,level=3,pointer=False,image_url='/images/test.jpg',scalewidth=2,scaleheight=2,description='this is a test image',layer2location=1).put()
-            ImageInfo(parent=ANCESTORY_KEY,location=2,level=3,pointer=True,pointerlocation=1,layer2location=1).put()
-            ImageInfo(parent=ANCESTORY_KEY,location=1201,level=3,pointer=True,pointerlocation=1,layer2location=1).put()
-            ImageInfo(parent=ANCESTORY_KEY,location=1202,level=3,pointer=True,pointerlocation=1,layer2location=1).put()
-            # ImageInfo(parent=ANCESTORY_KEY,location=1,level=2,layer1location=1,image_url='/images/test.jpg',scalewidth=1,scaleheight=1).put()
-
-def alreadyexist(locationlist,upperlayerlist):  
-    image=ImageInfo.query(ImageInfo.layer2location.IN(upperlayerlist)).fetch()
-    if(image):   
-        for j in image:
-            location=j.location
-            if location in locationlist:
-                return True
-    return False
+            putDataintodatabase(1,'/images/test.jpg',"this is a test beep beep beep",2,2)
 
 
 def clearentiredatabase():
@@ -69,15 +33,20 @@ def clearentiredatabase():
         return 1
     return 0 #will return 0 if there are no images left
     
-def putDataintodatabase(pointerlocation1,locationlist,image,descriptionsendin,width,height):
+def putDataintodatabase(imagelocation,image,descriptionsendin,width,height):
         priorityload=False
+        cordinates=corner_coord_of_image(imagelocation,width,height)
+
         if (width*height>10000): priorityload=True
-        if len(locationlist)>1: 
-            layer2spot=int(getupperlayeroflocation(pointerlocation1))
-            ImageInfo(parent=ANCESTORY_KEY,image_url=image,location=pointerlocation1,level=3,pointer=False,scalewidth=width,scaleheight=height,layer2location=layer2spot,description=descriptionsendin,priorityload=priorityload).put()
-            for i in range(1,len(locationlist)):
-                layer2spot=int(getupperlayeroflocation(locationlist[i]))
-                ImageInfo(parent=ANCESTORY_KEY,location=locationlist[i],level=3,pointer=True,pointerlocation=pointerlocation1,layer2location=layer2spot).put_async()
+        layer2spot=getupperlayeroflocation_fromlist_layer2(imagelocation,width,height)
+        image=ImageInfo(parent=ANCESTORY_KEY,image_url=image,location=int(imagelocation),level=3,scalewidth=width,scaleheight=height,layer2location=layer2spot,
+        description=descriptionsendin,priorityload=priorityload,
+        leftX=cordinates['x1'],
+        rightX=cordinates['x2'],
+        topY=cordinates['y1'],
+        bottomY=cordinates['y2']
+        )
+        image.put()
 
 import os
 cloudstorage.set_default_retry_params(
@@ -123,7 +92,7 @@ def putImageIntoDatabase_layer1(image,location):
 def getupperlayeroflocation(location):
     x=math.floor((location-1)/15)%80+1
     y=math.floor((location-1)/15/1200)
-    layer2=x+y*80
+    layer2=int(x+y*80)
     return layer2
    
 def getlocationlist(bottomleft,height,width):
@@ -133,8 +102,8 @@ def getlocationlist(bottomleft,height,width):
             locationlist.append(j+i*1200)
     return locationlist
     
-def getupperlayeroflocation_fromlist_layer2(bottomleft,topright):
-   
+def getupperlayeroflocation_fromlist_layer2(bottomleft,width,height):
+    topright=bottomleft+width+(height*5)
     layer2=[]
     x=math.floor((bottomleft-1)/15%80+1)
     y=math.floor((bottomleft-1)/15/1200)
@@ -150,3 +119,19 @@ def getupperlayeroflocation_fromlist_layer2(bottomleft,topright):
     print('layer2',layer2)
     return layer2
 
+def corner_coord_of_image(location,width,height):
+    x1=(location-1)%mosaicLength+1
+    y1=int(math.floor(location-1)/mosaicLength+1)
+    x2=x1+width-1
+    y2=y1+height-1
+    print('x',x1)
+    print('y',y1)
+    print('x2',x2)
+    print('y2',y2)
+    return{
+        'x1':x1,
+        'y1':y1,
+        'x2':x2,
+        'y2':y2
+    }
+    

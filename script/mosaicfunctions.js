@@ -104,11 +104,8 @@ function checkifallimageisloaded(){
  var userimageloaded=false;
 function loadlocationimage(locationlist,layer,alreadyloaded=[],){//give it a location and a layer and it will load everything in it
    modeUpdatinglayers=true
-   // if(layer==1){
-   //    layer1length=1
-   // }else{layer2length=1
-   // }
-   locationlist = locationlist.filter( ( el ) => !alreadyloaded.includes( el ) );
+   console.log(alreadyloaded)
+    locationlist = locationlist.filter( ( el ) => !alreadyloaded.includes( el ) );
        loadlayer(locationlist,layer,true)
     } 
 

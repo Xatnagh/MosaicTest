@@ -5,7 +5,7 @@ import urllib2
 import random
 import jinja2
 import re
-from database import defaultdatas, alreadyexist,clearentiredatabase,putDataintodatabase,upload_file,putImageIntoDatabase_layer1,putImageIntoDatabase_layer2,getupperlayeroflocation,getlocationlist,getupperlayeroflocation_fromlist_layer2,generateavaliable_spots
+from database import checkavaliablity, defaultdatas,clearentiredatabase,putDataintodatabase,upload_file,putImageIntoDatabase_layer1,putImageIntoDatabase_layer2,getupperlayeroflocation,getlocationlist,getupperlayeroflocation_fromlist_layer2
 from Images import ImageInfo,ANCESTORY_KEY,getImageInfo,getimagesbylocation,getImages
 from test import test
 
@@ -14,10 +14,8 @@ extensions=['jinja2.ext.autoescape'],autoescape=True)
 
 class Home(webapp2.RequestHandler):
     def get(self): 
-        test()
         homepage = the_jinja_env.get_template('/template/mosaic.html')  
         self.response.write(homepage.render({"data":getLayer1()}))
-        
 
 class AddImage(webapp2.RequestHandler):
     def get(self):
@@ -28,7 +26,6 @@ class AddImage(webapp2.RequestHandler):
 class loadImages(webapp2.RequestHandler):
     def get(self):
         defaultdatas()
-        generateavaliable_spots()
         homepage = the_jinja_env.get_template('/template/mosaic.html')
         self.response.write(homepage.render({"data":getLayer1()}))
 
@@ -40,7 +37,7 @@ class update(webapp2.RequestHandler):
         imagebylocation=getimagesbylocation(parsedlist,level,[])
         self.response.write(json.dumps(imagebylocation))
 
-    #this is for the layer 3 images
+    #this is for uploading layer 3 images
     def post(self):
         pointerlocation=int(self.request.POST.get('pointerlocation'))
         image=str(self.request.get('image'))
@@ -48,11 +45,11 @@ class update(webapp2.RequestHandler):
         height=int(self.request.POST.get('height'))
         width=int(self.request.POST.get('width'))
         locationlist=getlocationlist(pointerlocation,height,width)
-        if len(image)>500:
+        if len(image)>500: #this is here cus if the image is in base64, then it will be greather than 500, while normal urls won't be
             imageurl= upload_file(image,pointerlocation) 
         else:
            imageurl=image
-        putDataintodatabase(pointerlocation,locationlist,imageurl,description,width,height)
+        putDataintodatabase(pointerlocation,imageurl,description,width,height)
         self.response.write("success")
         
 class updatelayers(webapp2.RequestHandler):
@@ -60,10 +57,9 @@ class updatelayers(webapp2.RequestHandler):
         bottomleft=int(self.request.get('bottomleft'))
         height=int(self.request.get('height'))
         width=int(self.request.get('width'))
-        locationlist=getlocationlist(bottomleft,height,width)
-        upperlayerlist=getupperlayeroflocation_fromlist_layer2(locationlist[0],locationlist[len(locationlist)-1])
-        imagebylocation=getimagesbylocation(locationlist,2,upperlayerlist)
-        self.response.write(json.dumps(imagebylocation))
+        upperlayerlocation=getupperlayeroflocation_fromlist_layer2(bottomleft,width,height)
+        allspotsavaliable=checkavaliablity(bottomleft,width,height,upperlayerlocation)
+        self.response.write(allspotsavaliable)
 
     def post(self):
         self.response.headers.add_header('Access-Control-Allow-Origin', '*')
