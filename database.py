@@ -13,16 +13,15 @@ def checkavaliablity(location,width,height,upperlocationlist):
   if image:
       return False
   return True
-
+    
 def defaultdatas():
-        
-        a=ImageInfo.query(ImageInfo.level==1).fetch(1)
-        if not a:
-            for i in range(1,257):
-                ImageInfo(parent=ANCESTORY_KEY,location=i,level=1,image_url='images/placeholder.jpg').put_async()    
-        b=ImageInfo.query(ImageInfo.level==3).fetch(1) 
-        if not b:
-            putDataintodatabase(1,'/images/test.jpg',"this is a test beep beep beep",2,2)
+    a=ImageInfo.query(ImageInfo.level==1).fetch(1)
+    if not a:
+        for i in range(1,257):
+            ImageInfo(parent=ANCESTORY_KEY,location=i,level=1,image_url='images/placeholder.jpg').put_async()    
+    b=ImageInfo.query(ImageInfo.level==3).fetch(1) 
+    if not b:
+        putDataintodatabase(1,'/images/test.jpg',"this is a test beep beep beep",2,2)
 
 
 def clearentiredatabase():
