@@ -343,10 +343,14 @@ function CenterCoord(){
    }
 }
 var zoom=1;
-function cleardatabase(){
+function cleardatabase(password){
+   data={
+      'password':password
+   }
    $.ajax({
       url: "/clear",
       type: "POST",
+      data:data,
       success: function(result) {   
       console.log(result)
       if(result==1){

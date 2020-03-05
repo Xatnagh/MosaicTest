@@ -67,23 +67,22 @@ class updatelayers(webapp2.RequestHandler):
         location=int(self.request.get('location'))
         layer=int(self.request.get('layer'))
         layer1location1=int(self.request.get('upperlayerlocation'))
+        imageexist=ImageInfo.query(ImageInfo.location==location,ImageInfo.level==layer).fetch()
         if(layer==2):
-            imageurl=putImageIntoDatabase_layer2(image,location)
+            imageurl=putImageIntoDatabase_layer2(image,location)#upload image into GCS
         else:
-            imageurl=putImageIntoDatabase_layer1(image,location)
-        image=ImageInfo(parent=ANCESTORY_KEY,image_url=imageurl,location=location,level=layer)
-        if(layer==2):
-            image.layer1location=layer1location1
+            imageurl=putImageIntoDatabase_layer1(image,location)#upload image into GCS
+        if imageexist:
+            imageexist[0].image_url=imageurl
+            if(layer==2):
+                imageexist[0].layer1location=layer1location1
+            imageexist[0].put()
+        else:
+            image=ImageInfo(parent=ANCESTORY_KEY,image_url=imageurl,location=location,level=layer)
+            if(layer==2):
+               image.layer1location=layer1location1
             image.put()
-
-        # imageexist=ImageInfo.query(ImageInfo.location==location,ImageInfo.level==layer).fetch()
-       
-        # if imageexist:
-        #     imageexist[0].image_url=imageurl
-        #     if(layer==2):
-        #         imageexist[0].layer1location=layer1location1
-        #     imageexist[0].put()
-        # else:
+        
             
         
 
@@ -103,7 +102,10 @@ class cleardatabase(webapp2.RequestHandler):
         homepage = the_jinja_env.get_template('/template/mosaic.html')
         self.response.write(homepage.render( {"data":getLayer1()}))
     def post(self):
-        result=clearentiredatabase()
+        result=5
+        password=self.request.get('password')
+        if(password=="261221151221"):
+            result=clearentiredatabase()
         self.response.write(result)
 class getImageIinfo(webapp2.RequestHandler):
     def get(self):
