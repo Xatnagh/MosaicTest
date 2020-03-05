@@ -9,10 +9,10 @@ import json
 mosaicLength=1200
 
 def checkavaliablity(location,width,height,upperlocationlist):
-  image=ImageInfo.query(ImageInfo.layer2location.IN(upperlocationlist)).fetch()
-  if image:
-      return False
-  return True
+    image=ImageInfo.query(ImageInfo.layer2location.IN(upperlocationlist)).fetch()
+    if image:
+        return False
+    return True
     
 def defaultdatas():
     a=ImageInfo.query(ImageInfo.level==1).fetch(1)
@@ -102,16 +102,16 @@ def getlocationlist(bottomleft,height,width):
     return locationlist
     
 def getupperlayeroflocation_fromlist_layer2(bottomleft,width,height):
-    topright=bottomleft+width+(height*5)
+    topright=bottomleft+width+(height*1200)
     layer2=[]
     x=math.floor((bottomleft-1)/15%80+1)
     y=math.floor((bottomleft-1)/15/1200)
     location=x+y*80
-    secondx=math.floor((topright-1)/15)%80+1
+    secondx=math.floor((topright-1)/15%80+1)
     secondy=math.floor((topright-1)/15/1200)
     width=int(secondx-x+1)
     height=int(secondy-y+1)
-    
+
     for i in range(0,width):
         for j in range(0,height):
             layer2.append(int(location+i+j*80))

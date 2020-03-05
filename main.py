@@ -67,21 +67,24 @@ class updatelayers(webapp2.RequestHandler):
         location=int(self.request.get('location'))
         layer=int(self.request.get('layer'))
         layer1location1=int(self.request.get('upperlayerlocation'))
-        imageexist=ImageInfo.query(ImageInfo.location==location,ImageInfo.level==layer).fetch()
         if(layer==2):
             imageurl=putImageIntoDatabase_layer2(image,location)
         else:
             imageurl=putImageIntoDatabase_layer1(image,location)
-        if imageexist:
-            imageexist[0].image_url=imageurl
-            if(layer==2):
-                imageexist[0].layer1location=layer1location1
-            imageexist[0].put()
-        else:
-            image=ImageInfo(parent=ANCESTORY_KEY,image_url=imageurl,location=location,level=layer)
-            if(layer==2):
-               image.layer1location=layer1location1
+        image=ImageInfo(parent=ANCESTORY_KEY,image_url=imageurl,location=location,level=layer)
+        if(layer==2):
+            image.layer1location=layer1location1
             image.put()
+
+        # imageexist=ImageInfo.query(ImageInfo.location==location,ImageInfo.level==layer).fetch()
+       
+        # if imageexist:
+        #     imageexist[0].image_url=imageurl
+        #     if(layer==2):
+        #         imageexist[0].layer1location=layer1location1
+        #     imageexist[0].put()
+        # else:
+            
         
 
 class contact(webapp2.RequestHandler):

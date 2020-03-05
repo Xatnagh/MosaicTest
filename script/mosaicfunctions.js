@@ -231,8 +231,8 @@ document.body.appendChild(p)
     data.append('image',blob );
     data.append('location',location );
     data.append('layer',layer);
-
     data.append('upperlayerlocation',getlayer1fromlayer2(location))
+    console.log(...data)
       
                $.ajax({
                   url: "/update_layers",
@@ -240,7 +240,7 @@ document.body.appendChild(p)
                   processData: false,
                contentType: false,
                   type: "POST",
-                  success: function(result) {   
+                  success: function() {   
                   console.log('success for',location,'  layer',layer)
                   if(location==target && layer==1){
                         hideloadingscreen();
@@ -248,6 +248,7 @@ document.body.appendChild(p)
                         window.location.href="./"
                      }
                   }
+               
                });
     }); 
  }
@@ -261,7 +262,7 @@ function blobfromlocation(location,level){
     var tolocation=locationforcanvas(location,scale)
     var locationx=tolocation.x;
     var locationy=tolocation.y;
-    var pointx=(1450/scale)*(locationx-1);
+    var pointx=(1450/scale)*(locationx-1);//1450 and 900 is the size of mosaic in add image
     var pointy=(900/scale)*locationy;
     var point=new fabric.Point(pointx,pointy)
     canvas.absolutePan(point)
