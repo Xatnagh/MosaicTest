@@ -58,17 +58,17 @@ def getimagesbylocation(list,level,upperlayerlist):
 
 
 
-def getImageInfo(location): #need to add the check x and y thing, cus rn, the image will show up even if you didn't click it
-    from database import getupperlayeroflocation
-    #for when user click on an image
+def getImageInfo(location):# for when user double clicks on an image
+    from database import overlappingRectangles,getupperlayeroflocation,corner_coord_of_image
     upperlocation=getupperlayeroflocation(location)
-    imageExist=ImageInfo.query(ImageInfo.layer2location==upperlocation,ImageInfo.level==3).fetch()
-    if not imageExist:
-            placeholderImage=[ImageInfo( description=u'Upload your own today!', image_url=u'/images/uploadYourOwn.jpg', location=location)]
-            return placeholderImage
-    if len(imageExist)==1:
-        return imageExist
-    
+    locationcoord=corner_coord_of_image(location,1,1)
+    imageExist=ImageInfo.query(ImageInfo.level==3,ImageInfo.layer2location==upperlocation).fetch()   
+    for i in imageExist:
+        avaliable= overlappingRectangles(locationcoord,i)
+        if(avaliable):
+            return i
+    placeholderImage=[ImageInfo( description=u'Upload your own today!', image_url=u'/images/uploadYourOwn.jpg', location=location)]
+    return placeholderImage[0]
     
     
     

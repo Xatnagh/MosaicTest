@@ -19,7 +19,7 @@ class Home(webapp2.RequestHandler):
 
 class AddImage(webapp2.RequestHandler):
     def get(self):
-        self.response.headers['Access-Control-Allow-Origin'] = '*'
+        
         homepage = the_jinja_env.get_template('/template/addImages.html')
         self.response.write(homepage.render())
     
@@ -62,12 +62,11 @@ class updatelayers(webapp2.RequestHandler):
         self.response.write(allspotsavaliable)
 
     def post(self):
-        self.response.headers.add_header('Access-Control-Allow-Origin', '*')
         image=str(self.request.get('image'))
         location=int(self.request.get('location'))
         layer=int(self.request.get('layer'))
         layer1location1=int(self.request.get('upperlayerlocation'))
-        imageexist=ImageInfo.query(ImageInfo.location==location,ImageInfo.level==layer).fetch()
+        imageexist=ImageInfo.query(ImageInfo.location==location,ImageInfo.level==layer).fetch()#this is to update level 1 and 2, DO NOT TOUCH
         if(layer==2):
             imageurl=putImageIntoDatabase_layer2(image,location)#upload image into GCS
         else:
@@ -82,7 +81,17 @@ class updatelayers(webapp2.RequestHandler):
             if(layer==2):
                image.layer1location=layer1location1
             image.put()
-        
+class getImageIinfo(webapp2.RequestHandler):
+    def get(self):
+        location=int(self.request.GET.get('location'))  
+        image=getImageInfo(location)
+        data={
+            'image_imgUrl':image.image_url,
+            'image_description':image.description,
+            'location':location
+        }
+        self.response.write(json.dumps(data))
+       
             
         
 
@@ -107,17 +116,6 @@ class cleardatabase(webapp2.RequestHandler):
         if(password=="261221151221"):
             result=clearentiredatabase()
         self.response.write(result)
-class getImageIinfo(webapp2.RequestHandler):
-    def get(self):
-        location=int(self.request.GET.get('location'))  
-        image=getImageInfo(location)
-        data={
-            'image_imgUrl':image[0].image_url,
-            'image_description':image[0].description,
-            'location':location
-        }
-        self.response.headers['Access-Control-Allow-Origin'] = '*'
-        self.response.write(json.dumps(data))
 
 def getLayer1():
       return ImageInfo.query(ImageInfo.level==1).fetch()

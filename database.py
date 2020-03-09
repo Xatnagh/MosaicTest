@@ -6,12 +6,19 @@ from google.appengine.ext import ndb
 from google.appengine.ext import db
 import math
 import json
+import time
 mosaicLength=1200
 
 def checkavaliablity(location,width,height,upperlocationlist):
-    image=ImageInfo.query(ImageInfo.layer2location.IN(upperlocationlist)).fetch()
-    if image:
-        return False
+    s=time.time()
+    image=ImageInfo.query(ImageInfo.layer2location>=upperlocationlist[0],ImageInfo.layer2location<=upperlocationlist[-1], ImageInfo.layer2location.IN(upperlocationlist)).fetch()
+    e=time.time()
+    print(e-s)
+    rec1=corner_coord_of_image(location,width,height)
+    for i in image:
+        avaliable= overlappingRectangles(rec1,i)
+        if avaliable:
+            return False
     return True
     
 def defaultdatas():
@@ -35,7 +42,6 @@ def clearentiredatabase():
 def putDataintodatabase(imagelocation,image,descriptionsendin,width,height):
         priorityload=False
         cordinates=corner_coord_of_image(imagelocation,width,height)
-
         if (width*height>10000): priorityload=True
         layer2spot=getupperlayeroflocation_fromlist_layer2(imagelocation,width,height)
         image=ImageInfo(parent=ANCESTORY_KEY,image_url=image,location=int(imagelocation),level=3,scalewidth=width,scaleheight=height,layer2location=layer2spot,
@@ -115,7 +121,7 @@ def getupperlayeroflocation_fromlist_layer2(bottomleft,width,height):
     for i in range(0,width):
         for j in range(0,height):
             layer2.append(int(location+i+j*80))
-    print('layer2',layer2)
+
     return layer2
 
 def corner_coord_of_image(location,width,height):
@@ -123,10 +129,11 @@ def corner_coord_of_image(location,width,height):
     y1=int(math.floor(location-1)/mosaicLength+1)
     x2=x1+width-1
     y2=y1+height-1
-    print('x',x1)
-    print('y',y1)
-    print('x2',x2)
-    print('y2',y2)
+    print('dasidhj',y1)
+    # print('x1',x1)
+    # print('x2',x2)
+    # print('y1',y1)
+    # print('y2',y2)
     return{
         'x1':x1,
         'y1':y1,
@@ -134,3 +141,16 @@ def corner_coord_of_image(location,width,height):
         'y2':y2
     }
     
+def overlappingRectangles(rec1,rec2):
+    print('x1',rec1['x1'])
+    print('x2',rec1['x2'])
+    print('y1',rec1['y1'])
+    print('y2',rec1['y2'])
+    print('images x1', rec2.leftX)
+    print('images x2', rec2.rightX)
+    print('images y1', rec2.topY)
+    print('images y2', rec2.bottomY)
+    
+    if(rec1['x1']>rec2.rightX or rec1['x2']<rec2.leftX or rec1['y1']>rec2.bottomY or rec1['y2']<rec2.topY):
+         return False
+    return True

@@ -272,8 +272,8 @@ function blobfromlocation(location,level){
  }
 
 //give it the corners from layer 3 and it will spit back locationlist for layer 2 and 1
-function getlayersoflocation(bottomleft,topright){
-   
+function getlayersoflocation(bottomleft,width,height){
+var topright=bottomleft+width+(height*1200)   
 var layer2=[];
 var layer1=[];
 //for layer2

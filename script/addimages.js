@@ -5,7 +5,7 @@ var height,width;
 function makelist(l1,l2){//given two location from any corner checks the bround, determine wheter an image is already there or not, if not, display the image
 if(l1<1||l2<1||l1>1440000||l2>1440000){
     alert("one of the squares you selected is outside of the mosaic, please choose your locations again")
-    removeselected();
+    setTimeout('removeselected()',100) //timeout because sometimes button 2 won't get deleted
     return;
 }
 var topcorner= Math.max(l1,l2);
@@ -25,18 +25,18 @@ if((topcorner-(height-1)*1200)<bottomcorner){
   
     width= bottomright-bottomleft+1;
 
-    if(width*height>10000){
+    if(width*height>1000000){
         alert('the area you chose is absolutely massive, please wait while the computer processes it, you might want to reset your browser if the website begin to lag')
     }
     //this makes the locationlist
-    for(var i=0;i<height;i++){
-        for(var j=bottomleft;j<=bottomright;j++){
-        locationlist.push(j+i*1200)
-        }
-    }
+    // for(var i=0;i<height;i++){
+    //     for(var j=bottomleft;j<=bottomright;j++){
+    //     locationlist.push(j+i*1200)
+    //     }
+    // }
    
     uploading=false
-    upperlocation=getlayersoflocation(bottomleft,locationlist[locationlist.length-1])
+    upperlocation=getlayersoflocation(bottomleft,width,height)
     arraytosend={
         'bottomleft':bottomleft,
         'width':width,
@@ -62,7 +62,12 @@ if((topcorner-(height-1)*1200)<bottomcorner){
           }else{
             sendDataToLoad([bottomleft],[image],1200,[width],[height],[4])
           }
+           },
+           error: function(){
+               alert("something went wrong")
+               hideloadingscreen();
            }
+        
     });
     
 }
@@ -96,7 +101,7 @@ function modeUPLOAD_2(){
    locationlist=[]
 }
 function confirmupload(){//confirm after user had uploaded
-    if(locationlist.length!=0){
+    if(upperlocation['layer2']!=0){
         var layer1=upperlocation['layer1']
         var layer2=upperlocation['layer2']
 
@@ -123,7 +128,6 @@ function removeselected(){
     location2=''
     locationlist=[]
     canvas.requestRenderAll()
-    uploading=true
 }
 function cancelimageselection(){
     $('#cancelbtn').hide()
@@ -138,12 +142,13 @@ function cancelimageselection(){
 
 }
 function exitupload(){
-    uploading=false;
+    
     cancelimageselection()
     removeselected()
     $('#confirm').toggle()
     $('#exitupload').toggle()
     $('#uploadbtn').show()
+    uploading=false;
 }
 
 $('#confirmbtn').click(function(){

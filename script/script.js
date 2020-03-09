@@ -56,7 +56,7 @@ for(var i=location-unitsinY-1;i<location-unitsinY+2;i++){
       list.push(i+unitsinY*j)
    }
 }
-//filters out less than and maxindex
+//filters out indexes outside of mosaic
 list= list.filter(function(list) {
    return list >0;
  });
@@ -320,7 +320,7 @@ function zoomcanvasbutton(zommingin){
 var centerX=CenterCoord().x
 var centerY= CenterCoord().y
 var delta=53;
-   if(firefox) {
+   if(isfirefox) {
       delta=delta/4
    }
    if(zommingin=='false'){
@@ -435,27 +435,8 @@ canvas.on('mouse:dblclick',function(e){
    posX=canvas.getPointer(touch).x
    posY=canvas.getPointer(touch).y
    var location=getCurrentCordinates(posX,posY,3)
-  if(uploading==false){ 
-      if(location>0&&location<1440001){
-      
-         console.log('show info for',location)
-         data={
-            location:location
-         }
-         $.ajax({
-            url:'/imageinfo',
-            data:data,
-            type:'GET',
-            success:function(recieved){
-               recieved=JSON.parse(recieved);
-               location=recieved['location'];
-               imgUrl=recieved['image_imgUrl'];
-               description=recieved['image_description'];
-               imageInfoPage(imgUrl,description)
-            }
-         })
-      }    
-   }else{
+   if(uploading){
+      console.log(uploading)
       if(count==1){ 
          var location2=getCurrentCordinates(posX,posY,3)
          console.log('location1',location1,'location2',location2)
@@ -475,7 +456,27 @@ canvas.on('mouse:dblclick',function(e){
          location1=''
          
       }
-   }
+   }else{
+      if(location>0&&location<1440001){
+      
+         console.log('show info for',location)
+         data={
+            location:location
+         }
+         $.ajax({
+            url:'/imageinfo',
+            data:data,
+            type:'GET',
+            success:function(recieved){
+               recieved=JSON.parse(recieved);
+               location=recieved['location'];
+               imgUrl=recieved['image_imgUrl'];
+               description=recieved['image_description'];
+               imageInfoPage(imgUrl,description)
+            }
+         })
+      }   
+   } 
 });
 function imageInfoPage(imgUrl,description){
   document.getElementById('pop_image').src=`${imgUrl}`;
