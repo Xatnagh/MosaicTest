@@ -13,7 +13,7 @@ handlers:
 - url: .*
   script: main.app
   http_headers:
-    Access-Control-Allow-Origin: *
+    Access-Control-Allow-Origin: https://fortest099.appspot.com
 
     
 libraries:
