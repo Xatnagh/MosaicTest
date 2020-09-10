@@ -9,11 +9,11 @@ handlers:
   static_dir: script
 - url: /images
   static_dir: images
-
+  http_headers:
+    Access-Control-Allow-Origin: "*"
 - url: .*
   script: main.app
-  http_headers:
-    Access-Control-Allow-Origin: https://fortest099.appspot.com
+
 
     
 libraries:
