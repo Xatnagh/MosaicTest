@@ -1,103 +1,97 @@
-
 <html>
-    <head>
-        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1">
-    <script src="/script/libraries/jquery-3.4.1.min.js"></script>
-    <script src="/script/libraries/fabric_with_touch.js"></script>
-    <script src="/script/libraries/linkify.min.js"></script>
-    <script src="/script/libraries/linkify-jquery.min.js"></script>
-      <script src="/script/libraries/dropzone.js"></script>
-      <link rel="stylesheet" href="/css/home.css">
-      <link rel="stylesheet" href="/css/headers.css">
-      <link rel="stylesheet" href="/css/canvasbuttons.css">
-      <title>Mosaic Tokyo 2.0!</title>
-    </head>
-    <body>
-        
-      <nav id="topbar"></nav>
-          
-<div id='canvasDiv'>
-   <canvas id="c"></canvas>
-   <button id='exitupload' onclick='exitupload()'>Exit</button>
-   <div id=confirm>
-     <img id=removeselected style="width: 100px; height: 100px;" onclick="removeselected()" src="/images/cancel.png" alt="">
-<img id=confirmupload style="width: 140px;height: 105px;" onclick="confirmupload()"  src="/images/confirm.png" alt="">
 
-</div>
+<head>
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1">
+  <script src="/script/libraries/jquery-3.4.1.min.js"></script>
+  <script src="/script/libraries/fabric_with_touch.js"></script>
+  <script src="/script/libraries/linkify.min.js"></script>
+  <script src="/script/libraries/linkify-jquery.min.js"></script>
+  <script src="/script/libraries/dropzone.js"></script>
+  <link rel="stylesheet" href="/css/home.css">
+  <link rel="stylesheet" href="/css/headers.css">
+  <link rel="stylesheet" href="/css/canvasbuttons.css">
+  <title>Mosaic Tokyo 2.0!</title>
+</head>
 
+<body>
 
-
-    <div id='canvasbtn'>
-    <button id="reset"></button>
-   <button id="zoomin" onclick="zoomcanvasbutton('true')"></button>
-   <button id='zoomout' onclick="zoomcanvasbutton('false')"> </button>
-   </div>
-   
-</div>
-
-
-<section id="overlay" class=overlay>
-    <div id='pop'>
-   <img id ='pop_image' src="" alt="">
-   <button class='pop_close'>Close </button>
-   <p id='headers'>Description: </p> 
-   <text id='pop_description'  placeholder="This user didn't include a description" style="white-space: pre-wrap;" ></text>
-   <button class='pop_close'>Close</button>
-   </div>
- </section>
-
-<div id=dropzone class=overlay>
-  <h2>Use Url of Image</h2>
-    <input type="text" name="Image Url goes here" id=imageurl>
-    <input type="submit" id=submit>
-  <h1>Or</h1>
-  <form action="/file-upload" class="dropzone" id=dz>
-    <div class="fallback">
-      <input name="file" type="file" multiple />
+  <nav id="topbar"></nav>
+  <div id='canvasDiv'>
+    <canvas id="c"></canvas>
+    <button id='exitupload' onclick='exitupload()'>Exit</button>
+    <div id=confirm>
+      <img id=removeselected style="width: 100px; height: 100px;" onclick="removeselected()" src="/images/cancel.png"alt="">
+      <img id=confirmupload style="width: 140px;height: 105px;" onclick="confirmupload()" src="/images/confirm.png"alt="">
     </div>
-    
-  </form>
+    <div id='canvasbtn'>
+      <button id="reset"></button>
+      <button id="zoomin" onclick="zoomcanvasbutton('true')"></button>
+      <button id='zoomout' onclick="zoomcanvasbutton('false')"> </button>
+    </div>
 
-  <section id=imagezone class=overlay> 
-     <span class=helper></span> <!--this is to help with aligning image to bottom -->
-    <img id=pewviewimg src="" alt="">
-</section>
-  <img id=confirmbtn src="/images/confirm.png" alt="Confirm">
-  <img id=cancelbtn src="/images/cancel.png" onclick='cancelimageselection()'  alt="Click me to remove the file." /> 
-</div>
-
-<div id=loadingscreen>
-<img id=loadingimg src="/images/loading.gif" alt="">
-<h1 id=LoadingMessage>This is a message</h1>
-
-</div>
+  </div>
 
 
+  <section id="overlay" class=overlay>
+    <div id='pop'>
+      <img id='pop_image' src="" alt="">
+      <button class='pop_close'>Close </button>
+      <p id='headers'>Description: </p>
+      <text id='pop_description' placeholder="This user didn't include a description"
+        style="white-space: pre-wrap;"></text>
+      <button class='pop_close'>Close</button>
+    </div>
+  </section>
+
+  <div id=dropzone class=overlay>
+    <h2>Use Url of Image</h2>
+    <input type="text" name="Image Url goes here" id=imageurl style="margin-left: 10px;">
+    <input type="submit" id=submit>
+    <h4>Example: https://upload.wikimedia.org/wikipedia/en/b/b0/Rick_and_Morty_characters.jpg</h4>
+    <h1>Or</h1>
+    <form action="/file-upload" class="dropzone" id=dz>
+      <div class="fallback">
+        <input name="file" type="file" multiple />
+      </div>
+
+    </form>
+
+    <section id=imagezone class=overlay>
+      <span class=helper></span>
+      <!--this is to help with aligning image to bottom -->
+      <img id=pewviewimg src="" alt="">
+    </section>
+    <img id=confirmbtn src="/images/confirm.png" alt="Confirm">
+    <img id=cancelbtn src="/images/cancel.png" onclick='cancelimageselection()' alt="Click me to remove the file." />
+  </div>
+
+  <div id=loadingscreen>
+    <img id=loadingimg src="/images/loading.gif" alt="">
+    <h1 id=LoadingMessage>This is a message</h1>
+  </div>
 
 
-<script>
-    var readystate=false;
-     var readystate_layer1=false;
-var jdata_location=[];
-var jdata_imageurl=[];
-var jdata_level;
-</script>
+  <script>
+    var readystate = false;
+    var readystate_layer1 = false;
+    var jdata_location = [];
+    var jdata_imageurl = [];
+    var jdata_level;
+  </script>
 
-            {% for entry in data %}
-            <script>    
-            jdata_location.push("{{entry.location}}");
-            jdata_imageurl.push("{{entry.image_url}}");
-            jdata_level='{{entry.level}}' 
-         </script>              
-            {% endfor %}
-        
-      <script src="/script/mosaicfunctions.js"></script>    
-      <script src="/script/script.js"></script>
-      <script src="/script/addimages.js"></script>
-      <script src="/script/flexibleview.js"></script>
-         
-    </body>
-    </html>
-    
-    
-    
+  {% for entry in data %}
+  <script>
+    jdata_location.push("{{entry.location}}");
+    jdata_imageurl.push("{{entry.image_url}}");
+    jdata_level = '{{entry.level}}' 
+  </script>
+  {% endfor %}
+
+  <script src="/script/mosaicfunctions.js"></script>
+  <script src="/script/script.js"></script>
+  <script src="/script/addimages.js"></script>
+  <script src="/script/flexibleview.js"></script>
+
+</body>
+
+</html>

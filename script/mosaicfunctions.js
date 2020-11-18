@@ -1,6 +1,5 @@
 
-//I cannot thank this post enough
-//https://medium.com/@selom/how-to-fix-a-no-access-control-allow-origin-error-message-on-google-cloud-storage-90dd9b7e3ddb
+
 var modeUpdatinglayers=false;
 function sendDataToLoad(img_location,img_imgurl,img_scale,img_scaleX,img_scaleY,img_level){
    if(modeUpdatinglayers&&img_level){
@@ -11,9 +10,6 @@ function sendDataToLoad(img_location,img_imgurl,img_scale,img_scaleX,img_scaleY,
       if(img_location.length==0&&img_level==3){
          loadedlayer2_count++
          console.log('loadedlayer2count:',loadedlayer2_count)
-      }
-      if(loadedlayer2_count==layer2length ||loadedlayer1_count==layer1length){
-         checkifallimageisloaded()
       }
       
    }    
@@ -67,16 +63,11 @@ function sendDataToLoad(img_location,img_imgurl,img_scale,img_scaleX,img_scaleY,
           if(level==3){
             loadedlayer2_count++
             console.log('loadedlayer2:',loadedlayer2_count)
-            if(loadedlayer2_count==layer2length){
-               checkifallimageisloaded()
-            }
+
           }
           if(level==2){
             loadedlayer1_count++
             console.log('loadedlayer1:',loadedlayer1_count)
-            if(loadedlayer1_count==layer1length){
-               checkifallimageisloaded()
-            }
           }
           if(level==4){
             userimageloaded=true;
@@ -90,13 +81,6 @@ function sendDataToLoad(img_location,img_imgurl,img_scale,img_scaleX,img_scaleY,
  
 
 
-function checkifallimageisloaded(){
-   console.log('checkifallimageisloaded')
-      if(loadedlayer1_count==layer1length&&loadedlayer2_count==layer2length){
-         var displayimage=localStorage.getItem('image');
-         loadimage(1200,width,height,pointerlocation,4,displayimage,true);
-      }
-}
  var loadedlayer1_count=0;
  var loadedlayer2_count=0;
  var layer1length=1;
@@ -141,10 +125,10 @@ function locationforcanvas(location,scaleamountX){
     if(level==2){
        alreadyloaded_level2.push(location)
     }
-    if(level==3){
-       alreadyloaded_level3.push(location)
-    }
-    }
+   //  if(level==3){
+   //     alreadyloaded_level3.push(location)
+   //  }
+   }
 //give it a location and layer and it will return the array for that location
     function getlocationarray(locationstart,layer,alreadyloaded=[]){
         var arrayofcurrentlayer=[];
@@ -191,6 +175,10 @@ function locationforcanvas(location,scaleamountX){
            arraytosend:JSON.stringify(location),
            level:layer
            }
+           console.log(data)
+           if(data["arraytosend"]=="[]"){
+              return;
+           }
            $.ajax({
             url: "/update",
             data: data,
@@ -234,22 +222,22 @@ document.body.appendChild(p)
     data.append('upperlayerlocation',getlayer1fromlayer2(location))
     console.log(...data)
       
-               $.ajax({
-                  url: "/update_layers",
-                  data: data,
-                  processData: false,
-               contentType: false,
-                  type: "POST",
-                  success: function() {   
-                  console.log('success for',location,'  layer',layer)
-                  if(location==target && layer==1){
-                        hideloadingscreen();
-                        alert('DONE!')
-                        window.location.href="./"
-                     }
-                  }
-               
-               });
+      $.ajax({
+         url: "/update_layers",
+         data: data,
+         processData: false,
+      contentType: false,
+         type: "POST",
+         success: function() {   
+         console.log('success for',location,'  layer',layer)
+         if(location==target && layer==1){
+               hideloadingscreen();
+               alert('DONE!')
+               window.location.href="./"
+            }
+         }
+      
+      });
     }); 
  }
  
@@ -304,8 +292,6 @@ for(var i=0;i<width;i++){
 }
 console.log('layer2',layer2)
 console.log('layer1',layer1)
-
-
    return {
       'layer2':layer2,
       'layer1':layer1
@@ -336,13 +322,14 @@ function getlayer1fromlayer2(layer2location){
  var layer1=x+y*16
  return layer1
 }
-function CenterCoord(){
+function CenterCoord(){//gets center locaion of current screen
    return{
       x:fabric.util.invertTransform(canvas.viewportTransform)[4]+(canvas.width/zoom)/2,
       y:fabric.util.invertTransform(canvas.viewportTransform)[5]+(canvas.height/zoom)/2
    }
 }
 var zoom=1;
+
 function cleardatabase(password){
    data={
       'password':password
