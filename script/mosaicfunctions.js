@@ -175,10 +175,11 @@ function locationforcanvas(location,scaleamountX){
            arraytosend:JSON.stringify(location),
            level:layer
            }
-           console.log(data)
+           
            if(data["arraytosend"]=="[]"){
               return;
            }
+           console.log(data)
            $.ajax({
             url: "/update",
             data: data,
